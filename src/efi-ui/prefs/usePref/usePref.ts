@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useQuery, useQueryClient } from "react-query";
 
-import efiLocalStorage from "efi/base/localStorage";
+import { useLocalStorage, LocalStorage } from "efi-ui/base/useLocalStorage";
 import { makePrefEnvelope, PrefEnvelope } from "efi/prefs/prefEnvelope";
 
 interface PrefResult<T> {
@@ -10,6 +10,8 @@ interface PrefResult<T> {
 }
 
 export function usePref<T>(id: string, defaultValue: T): PrefResult<T> {
+  const efiLocalStorage = useLocalStorage();
+  const getPrefFromLocalStorage = useGetPrefFromLocalStorage(efiLocalStorage);
   const queryClient = useQueryClient();
   const queryKey = usePrefQueryKey(id);
 
@@ -46,12 +48,16 @@ function usePrefQueryKey(id: string) {
   return queryKey;
 }
 
-function getPrefFromLocalStorage<T>(id: string): PrefEnvelope<T> | undefined {
-  const prefString = efiLocalStorage.getItem(id);
-  if (!prefString) {
-    return;
-  }
+const useGetPrefFromLocalStorage = (localStorage: LocalStorage) =>
+  useCallback(
+    function <T>(id: string): PrefEnvelope<T> | undefined {
+      const prefString = localStorage.getItem(id);
+      if (!prefString) {
+        return;
+      }
 
-  const prefEnvelope: PrefEnvelope<T> = JSON.parse(prefString);
-  return prefEnvelope;
-}
+      const prefEnvelope: PrefEnvelope<T> = JSON.parse(prefString);
+      return prefEnvelope;
+    },
+    [localStorage]
+  );

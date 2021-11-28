@@ -63,7 +63,7 @@ export function useSwap(
       },
       onError: (error) => {
         const serializedError = serializeError(error);
-        AppToaster.show(makeErrorToast(serializedError.message));
+        AppToaster?.show(makeErrorToast(serializedError.message));
       },
     }
   );

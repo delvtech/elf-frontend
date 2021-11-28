@@ -14,4 +14,5 @@ export function consoleEther(
   console.log(name, formatUnits(value, units));
 }
 
-window.consoleEther = consoleEther;
+// why is this being added to window?
+// window.consoleEther = consoleEther;

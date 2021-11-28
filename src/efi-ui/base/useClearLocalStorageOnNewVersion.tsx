@@ -1,5 +1,5 @@
 import versionJson from "version.output.json";
-import useLocalStorage from "./useLocalStorage";
+import { useLocalStorage } from "./useLocalStorage";
 import { useEffect } from "react";
 
 export function useClearLocalStorageOnNewVersion(): void {

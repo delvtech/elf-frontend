@@ -18,7 +18,7 @@ export function useToastWrongChain(connectedChainId: number | undefined): void {
     }
     if (AddressesJson.chainId !== connectedChainId) {
       const chainName = ChainNames[AddressesJson.chainId as ChainId];
-      AppToaster.show(
+      AppToaster?.show(
         makeErrorToast(
           t`Wrong chain detected! Please connect to ${chainName}`,
           undefined,
@@ -37,7 +37,7 @@ export function useToastWrongChain(connectedChainId: number | undefined): void {
       AddressesJson.chainId === connectedChainId
     ) {
       const chainName = ChainNames[AddressesJson.chainId as ChainId];
-      AppToaster.show(
+      AppToaster?.show(
         makeSuccessToast(t`Connected to ${chainName}!`, undefined, 0)
       );
     }

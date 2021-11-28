@@ -18,16 +18,19 @@ import { IconName, IconNames } from "@blueprintjs/icons";
  *
  * import { AppToaster } from 'efi-ui/app/AppToaster';
  *
- * AppToaster.show({ message: "Toasted." });
+ * AppToaster?.show({ message: "Toasted." });
  */
-export const AppToaster = Toaster.create({
-  position: Position.TOP,
+export const AppToaster =
+  typeof document !== "undefined"
+    ? Toaster.create({
+        position: Position.TOP,
 
-  // TODO: Figure out a way to change this dynamically via user pref. Might need
-  // to contribute a Toaster.setClassName() method back to Blueprint for this,
-  // or have multiple toasters.
-  className: Classes.DARK,
-});
+        // TODO: Figure out a way to change this dynamically via user pref. Might need
+        // to contribute a Toaster.setClassName() method back to Blueprint for this,
+        // or have multiple toasters.
+        className: Classes.DARK,
+      })
+    : null;
 export function makeToast(
   message: string,
   action?: ActionProps & LinkProps

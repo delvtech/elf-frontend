@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from "react";
+import React, { FC, Fragment, useEffect } from "react";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import { Button, FocusStyleManager, H1, Overlay } from "@blueprintjs/core";
@@ -19,6 +19,7 @@ import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 import { AddressesJson } from "efi/addresses";
 import { ChainId, ChainNames } from "efi/ethereum";
+import { consoleEther } from "efi/debug/consoleEther";
 import { getConnectorName } from "efi/wallets/connectors";
 
 import styles from "./App.module.css";
@@ -42,6 +43,10 @@ const App: FC<AppProps> = ({ children }) => {
   useEagerConnect();
   useToastWrongChain(chainId);
   useTransactionToasts();
+
+  useEffect(() => {
+    window.consoleEther = consoleEther;
+  }, []);
 
   return (
     <Fragment>
