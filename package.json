@@ -156,7 +156,7 @@
     "build:coingecko-json": "bash ./scripts/build-coingecko-json.sh",
     "build:new": "bash ./scripts/build.sh",
     "build:prod": "bash ./scripts/build-prod.sh",
-    "build:tailwind": "tailwindcss build src/tailwind.css -o src/tailwind.output.css",
+    "build:tailwind": "tailwindcss build src/styles/tailwind.css -o src/styles/tailwind.output.css",
     "build:tailwindcss-classnames": "tailwindcss-classnames --config tailwind.config.js -o src/efi-tailwindcss-classnames/index.ts",
     "build:version-json": "bash ./scripts/build-version-json.sh",
     "depcruise": "depcruise --config .dependency-cruiser.js src",
