@@ -1,5 +1,5 @@
 // This will be redirected to /fixedrates.
-// see next.conofig.js
+// see /next.config.js
 // TODO: Add placeholder page.
 export default function empty(): null {
   return null;
