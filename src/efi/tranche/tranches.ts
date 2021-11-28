@@ -25,6 +25,9 @@ export const principalTokenInfos: PrincipalTokenInfo[] =
     isPrincipalToken(tokenInfo)
   );
 
+export const getAllPrincipalTokenAddresses = (): string[] =>
+  principalTokenInfos.map(({ address }) => address);
+
 export const trancheContracts = principalTokenInfos.map(({ address }) =>
   Tranche__factory.connect(address, defaultProvider)
 );

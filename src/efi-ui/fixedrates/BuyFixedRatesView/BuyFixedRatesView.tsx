@@ -1,12 +1,13 @@
 import { Fragment, ReactElement, useCallback, useState } from "react";
 import { Helmet } from "react-helmet";
+import { GetStaticPropsContext } from "next";
 
 import { Button, Card, Classes, Colors, Icon, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { commify } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo, PrincipalPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -31,6 +32,7 @@ import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists";
+import { getAllPrincipalTokenAddresses } from "efi/tranche/tranches";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
 import { SwapKind } from "efi-balancer/SwapKind";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
@@ -39,13 +41,41 @@ import { IconNames } from "@blueprintjs/icons";
 import { useNavigation } from "efi-ui/app/navigation/hooks/useNavigation";
 import { Navigation } from "efi-ui/app/navigation/navigation";
 
-interface BuyFixedRatesViewProp {
-  // principalTokenAddress comes from the url, so it's intentionally optional as
-  // per https://reach.tech/router/typescript
+export async function getStaticProps({ params }: GetStaticPropsContext) {
+  // Used for the Term picker, since base assets can have multiple terms (ie:
+  // principal tokens) running at the same time.
+  const availablePrincipalTokens = useOpenPrincipalTokensWithSameBaseAsset(
+    params?.principalTokenAddress as string
+  );
+  const principalTokenInfo = getTokenInfo<PrincipalTokenInfo>(
+    params?.principalTokenAddress as string
+  );
+  const principalTokenPoolInfo = getPoolInfoForPrincipalToken(
+    params?.principalTokenAddress as string
+  );
+  return {
+    props: {
+      availablePrincipalTokens,
+      principalTokenInfo,
+      principalTokenPoolInfo,
+      principalTokenAddress: params?.principalTokenAddress,
+    },
+  };
+}
+
+interface BuyFixedRatesViewProps {
+  availablePrincipalTokens: PrincipalTokenInfo[];
+  principalTokenInfo: PrincipalTokenInfo;
+  principalTokenPoolInfo: PrincipalPoolTokenInfo;
+  // principalTokenAddress comes from the url params whos type is
+  // `parsedUrlQuery | undefined` so it must be optional.
   principalTokenAddress?: string;
 }
 
 export function BuyFixedRatesView({
+  availablePrincipalTokens,
+  principalTokenInfo,
+  principalTokenPoolInfo,
   principalTokenAddress,
 }: BuyFixedRatesViewProps): ReactElement | null {
   const { account, library } = useWeb3React<Web3Provider>();
@@ -63,16 +93,6 @@ export function BuyFixedRatesView({
   // Tailwind mindset is mobile-first, but sometimes we need to know at runtime
   // if a large screen is being used.
   const isLargeScreen = useIsTailwindLargeScreen();
-
-  // Used for the Term picker, since base assets can have multiple terms (ie:
-  // principal tokens) running at the same time.
-  const availablePrincipalTokens = useOpenPrincipalTokensWithSameBaseAsset(
-    principalTokenAddress
-  );
-
-  const principalTokenInfo = getTokenInfo<PrincipalTokenInfo>(
-    principalTokenAddress as string
-  );
 
   const {
     extensions: { underlying },
@@ -104,9 +124,9 @@ export function BuyFixedRatesView({
   // Deposit Amount stuff
   const { stringValue: baseAssetInputValue, setValue: onBaseAssetInputChange } =
     useNumericInput();
-  const principalTokenPoolInfo = getPoolInfoForPrincipalToken(
-    principalTokenAddress as string
-  );
+  // const principalTokenPoolInfo = getPoolInfoForPrincipalToken(
+  //   principalTokenAddress as string
+  // );
   const { tokenOutError, tokenInError } = useValidateBuyPrincipalTokenInput(
     library,
     account,
@@ -352,4 +372,15 @@ export function BuyFixedRatesView({
 
 function buttonLabelRenderer(term: PrincipalTokenInfo): ReactElement {
   return <PrincipalTokenTermButtonLabel2 principalTokenInfo={term} />;
+}
+
+export async function getStaticPaths() {
+  const addresses = getAllPrincipalTokenAddresses();
+  const paths = addresses.map((principalTokenAddress) => ({
+    params: { principalTokenAddress },
+  }));
+  return {
+    paths,
+    fallback: false,
+  };
 }
