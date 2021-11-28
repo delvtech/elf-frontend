@@ -124,9 +124,6 @@ export function BuyFixedRatesView({
   // Deposit Amount stuff
   const { stringValue: baseAssetInputValue, setValue: onBaseAssetInputChange } =
     useNumericInput();
-  // const principalTokenPoolInfo = getPoolInfoForPrincipalToken(
-  //   principalTokenAddress as string
-  // );
   const { tokenOutError, tokenInError } = useValidateBuyPrincipalTokenInput(
     library,
     account,
