@@ -1,5 +1,5 @@
 set -e
 
-export REACT_APP_CHAIN_NAME=$1
+export NEXT_PUBLIC_CHAIN_NAME=$1
 
 npm run build && npx compress-cra

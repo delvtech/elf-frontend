@@ -12,7 +12,7 @@ function getAddressesJsonId() {
     return "mock";
   }
 
-  return process.env.REACT_APP_CHAIN_NAME || "testnet";
+  return process.env.NEXT_PUBLIC_CHAIN_NAME || "testnet";
 }
 
 function getAddressesJson(): AddressesJsonFile {
