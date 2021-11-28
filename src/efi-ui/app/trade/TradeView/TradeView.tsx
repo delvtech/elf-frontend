@@ -1,11 +1,11 @@
 import { Fragment, ReactElement, useState } from "react";
-import { Helmet } from "react-helmet";
 
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { Classes, Divider, H2, H4, Tab, Tabs } from "@blueprintjs/core";
 import { assertNever } from "efi/base/assertNever";
+import { Title } from "efi-ui/base/Title";
 import classNames from "classnames";
 import { PrincipalPoolCardList } from "efi-ui/pools/PrincipalPoolCardList/PrincipalPoolCardList";
 import { YieldPoolCardList } from "efi-ui/pools/YieldPoolCardList/YieldPoolCardList";
@@ -33,9 +33,7 @@ export function TradeView(unusedProps: TradeViewProps): ReactElement {
 
   return (
     <Fragment>
-      <Helmet>
-        <title>{t`Pools | Element.fi`}</title>
-      </Helmet>
+      <Title text={t`Pools | Element.fi`} />
       <div
         data-testid="pools-view"
         className={tw(

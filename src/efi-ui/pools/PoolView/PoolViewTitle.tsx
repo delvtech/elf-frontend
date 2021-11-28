@@ -1,9 +1,9 @@
 import { ReactElement } from "react";
-import { Helmet } from "react-helmet";
 
 import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
+import { Title } from "efi-ui/base/Title";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
@@ -22,9 +22,5 @@ export function PoolViewTitle({ poolInfo }: PoolViewTitleProps): ReactElement {
     termAssetInfo as PrincipalTokenInfo | YieldTokenInfo
   );
 
-  return (
-    <Helmet>
-      <title>{t`${baseAssetSymbol} - ${termAssetSymbol} | Element`}</title>
-    </Helmet>
-  );
+  return <Title text={t`${baseAssetSymbol} - ${termAssetSymbol} | Element`} />;
 }

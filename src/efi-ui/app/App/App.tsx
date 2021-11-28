@@ -11,6 +11,7 @@ import { t } from "ttag";
 import { tw } from "efi-tailwindcss-classnames";
 import { AppHamburgerButton } from "efi-ui/app/AppHamburgerButton/AppHamburgerButton";
 import { AppHeader } from "efi-ui/app/AppHeader/AppHeader";
+import { Title } from "efi-ui/base/Title";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useToastWrongChain } from "efi-ui/provider/useBlockFromTag/useToastWrongChain";
 import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
@@ -50,6 +51,7 @@ const App: FC<AppProps> = ({ children }) => {
 
   return (
     <Fragment>
+      <Title />
       <div
         className={classNames(
           styles.appBackground,

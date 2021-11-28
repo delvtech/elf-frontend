@@ -1,10 +1,10 @@
 import { Fragment, ReactElement } from "react";
-import { Helmet } from "react-helmet";
 
 import { Card } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { Title } from "efi-ui/base/Title";
 import { useTotalValueLockedForPlatform } from "efi-ui/stats/useTotalValueLockedForPlatform";
 import { formatMoney } from "efi/money/formatMoney";
 
@@ -14,9 +14,7 @@ export function StatsView(unusedProps: StatsViewProps): ReactElement {
   const tvl = useTotalValueLockedForPlatform();
   return (
     <Fragment>
-      <Helmet>
-        <title>{t`Stats | Element.fi`}</title>
-      </Helmet>
+      <Title text={t`Stats | Element.fi`} />
       {/* Main content */}
       <div
         data-testid="stats-view"

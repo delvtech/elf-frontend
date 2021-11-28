@@ -1,9 +1,9 @@
 import { Fragment, ReactElement, useMemo } from "react";
-import { Helmet } from "react-helmet";
 
 import { jt, t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
+import { Title } from "efi-ui/base/Title";
 import { FixedRateCardList } from "efi-ui/fixedrates/FixedRateCardList/FixedRateCardList";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipalTokenInfos";
@@ -31,9 +31,9 @@ export function FixedRatesListView(
 
   return (
     <Fragment>
-      <Helmet>
-        <title>{t`Earn fixed yield from buying at a discount. Exit anytime.`}</title>
-      </Helmet>
+      <Title
+        text={t`Earn fixed yield from buying at a discount. Exit anytime.`}
+      />
       {/* Top-level route components should specify their own containers. */}
       <div className={tw("flex", "flex-col", "h-full", "items-center")}>
         <div

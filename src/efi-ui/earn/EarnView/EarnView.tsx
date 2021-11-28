@@ -1,5 +1,4 @@
 import { CSSProperties, Fragment, ReactElement } from "react";
-import { Helmet } from "react-helmet";
 
 import { NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
@@ -9,6 +8,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
+import { Title } from "efi-ui/base/Title";
 import { EarnCardList } from "efi-ui/earn/EarnCardList/EarnCardList";
 import { EarnTable } from "efi-ui/earn/EarnTable/EarnTable";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
@@ -30,9 +30,7 @@ export function EarnView(unusedProps: EarnViewProps): ReactElement {
   const earnViewStyle: CSSProperties = { maxWidth: 610 };
   return (
     <Fragment>
-      <Helmet>
-        <title>{t`Earn | Element.fi`}</title>
-      </Helmet>
+      <Title text={t`Earn | Element.fi`} />
       <div
         data-testid="earn-view"
         className={tw(

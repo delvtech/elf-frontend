@@ -1,5 +1,4 @@
 import { Fragment, ReactElement, useCallback, useState } from "react";
-import { Helmet } from "react-helmet";
 import { GetStaticPropsContext } from "next";
 
 import { Button, Card, Classes, Colors, Icon, Intent } from "@blueprintjs/core";
@@ -14,6 +13,7 @@ import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
+import { Title } from "efi-ui/base/Title";
 import { useCalculatePrincipalTokenAmountOut } from "efi-ui/ccpools/useCalculatePrincipalTokenAmountOut";
 import { useMarketPrice } from "efi-ui/ccpools/useMarketPrice";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
@@ -150,9 +150,9 @@ export function BuyFixedRatesView({
 
   return (
     <Fragment>
-      <Helmet>
-        <title>{t`Earn fixed yield from buying at a discount. Exit anytime.`}</title>
-      </Helmet>
+      <Title
+        text={t`Earn fixed yield from buying at a discount. Exit anytime.`}
+      />
       {/* Top-level route components should specify their own containers. */}
       <div className={tw("flex", "flex-col", "h-full", "items-center")}>
         <div

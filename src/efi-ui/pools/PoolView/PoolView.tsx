@@ -1,10 +1,8 @@
 import { Fragment, ReactElement } from "react";
-import { Helmet } from "react-helmet";
 import { GetStaticPropsContext } from "next";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
-import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { PoolDetails } from "efi-ui/pools/PoolDetails/PoolDetails";
@@ -37,9 +35,6 @@ export function PoolView({
 
   return (
     <Fragment>
-      <Helmet>
-        <title>{t`${poolInfo.name} | Element.fi`}</title>
-      </Helmet>
       <PoolViewTitle poolInfo={poolInfo} />
       <div
         data-testid="pool-view"
