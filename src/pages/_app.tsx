@@ -1,11 +1,39 @@
 // CRA requires that this file live at the top-level, ie: src/index.tsx
 // this file should only be used for development as it bundles all apps together
 
-import "./stylesheets";
-import "./index.css";
+// Next.js:
+// Global CSS cannot be imported from files other than pages/_app.
+// Read more: https://nextjs.org/docs/messages/css-global
+
+// Normalize before everything else
+import "normalize.css/normalize.css";
+
+// Tailwind provides some modern low-level resets that don't need to be compiled
+// into the main tailwind.output.css file.
+import "tailwindcss/dist/base.css";
+
+// custom fonts
+import "@fontsource/rubik";
+import "@fontsource/inter";
+// end custom fonts
+
+// Third party libraries
+import "@blueprintjs/core/lib/css/blueprint.css";
+import "@blueprintjs/icons/lib/css/blueprint-icons.css";
+import "@blueprintjs/select/lib/css/blueprint-select.css";
+import "@blueprintjs/popover2/lib/css/blueprint-popover2.css";
+// end Third party libraries
+
+// Tailwind compiled
+import "styles/tailwind.output.css";
+
+// Our CSS
+import "styles/variables.css";
+import "styles/index.css";
+// end our CSS
+
 import "efi/debug/consoleEther";
 import "efi/addresses";
-// end our CSS
 
 import { Web3ReactProvider } from "@web3-react/core";
 import type { AppProps } from "next/app";
