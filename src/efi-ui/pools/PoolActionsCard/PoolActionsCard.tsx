@@ -52,7 +52,6 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
 
   // safety measure to make sure we end up on a tab that exists
   useEffect(() => {
-    console.log("TEST");
     if (isRedeemable && activeTab === PoolAction.BUY) {
       navigate(`${currentPath}?action=${PoolAction.REDEEM}`, undefined, {
         shallow: true,
