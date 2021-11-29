@@ -54,7 +54,8 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         formDisabled={formDisabled}
         submitDisabled={submitDisabled}
         buttonIntent={Intent.PRIMARY}
-        children={(inputProps) => {
+      >
+        {(inputProps) => {
           const {
             termAssetInputProps,
             baseAssetInputProps,
@@ -121,7 +122,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
             </Fragment>
           );
         }}
-      ></StakingForm>
+      </StakingForm>
     </div>
   );
 }

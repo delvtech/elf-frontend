@@ -36,7 +36,8 @@ export function StakeYieldTokensForm(
       formDisabled={formDisabled}
       submitDisabled={submitDisabled}
       buttonIntent={Intent.PRIMARY}
-      children={(inputProps) => {
+    >
+      {(inputProps) => {
         const { termAssetInputProps, baseAssetInputProps, submitButtonProps } =
           inputProps;
         return (
@@ -103,6 +104,6 @@ export function StakeYieldTokensForm(
           </Fragment>
         );
       }}
-    ></StakingForm>
+    </StakingForm>
   );
 }
