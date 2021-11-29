@@ -124,9 +124,12 @@
     "eslint-plugin-jest": "^25.2.2",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^4.3.8",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.4.0",
     "lint-staged": "^12.0.2",
     "prettier": "^2.4.1",
     "react-test-renderer": "^17.0.2",
+    "ts-node": "^10.4.0",
     "ttag-cli": "^1.9.3",
     "typechain": "^5.2.0"
   },
@@ -134,14 +137,6 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/efi/**/**/*.{ts,tsx}"
-    ],
-    "coverageReporters": [
-      "lcov"
-    ]
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
@@ -178,7 +173,7 @@
     "start:dev-goerli-app": "npm run start:dev goerli",
     "start:dev-mainnet-app": "npm run start:dev mainnet",
     "start:dev-testnet-app": "npm run start:dev testnet",
-    "test": "next test",
+    "test": "jest",
     "test:coverage": "npm run test -- --coverage --watchAll=false",
     "update-elf-contracts-typechain": "npm install git+https://github.com/element-fi/elf-contracts-typechain.git",
     "update-elf-tokenlist": "npm install git+https://github.com/element-fi/elf-tokenlist.git",
