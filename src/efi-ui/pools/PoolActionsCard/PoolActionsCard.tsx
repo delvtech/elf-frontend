@@ -45,29 +45,40 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
   const { unlockTimestamp } = principalTokenInfo.extensions;
   const isRedeemable = getIsMature(unlockTimestamp);
 
-  const { push: navigate } = useRouter();
+  const { push: navigate, asPath: currentPath } = useRouter();
 
   // The active tab state is kept in a URL query parameter.
-  const { action: activeTab } = useParams();
+  const { action: activeTab = PoolAction.BUY } = useParams();
 
   // safety measure to make sure we end up on a tab that exists
   useEffect(() => {
+    console.log("TEST");
     if (isRedeemable && activeTab === PoolAction.BUY) {
-      navigate(`?action=${PoolAction.REDEEM}`);
+      navigate(`${currentPath}?action=${PoolAction.REDEEM}`, undefined, {
+        shallow: true,
+      });
     }
     if (isRedeemable && activeTab === PoolAction.SELL) {
-      navigate(`?action=${PoolAction.REDEEM}`);
+      navigate(`${currentPath}?action=${PoolAction.REDEEM}`, undefined, {
+        shallow: true,
+      });
     }
     if (isRedeemable && activeTab === PoolAction.ADD_LIQUIDITY) {
-      navigate(`?action=${PoolAction.REMOVE_LIQUIDITY}`);
+      navigate(
+        `${currentPath}?action=${PoolAction.REMOVE_LIQUIDITY}`,
+        undefined,
+        { shallow: true }
+      );
     }
     if (!isRedeemable && activeTab === PoolAction.REDEEM) {
-      navigate(`?action=${PoolAction.BUY}`);
+      navigate(`${currentPath}?action=${PoolAction.BUY}`, undefined, {
+        shallow: true,
+      });
     }
   }, [activeTab, isRedeemable]);
 
   const onTabChange = useCallback((newTab: PoolAction) => {
-    navigate(`?action=${newTab}`);
+    navigate(`${currentPath}?action=${newTab}`, undefined, { shallow: true });
   }, []);
 
   const oppositePoolInfo = getOppositePoolInfo(poolInfo);
