@@ -26,7 +26,7 @@ const config: Config.InitialOptions = {
       "<rootDir>/__mocks__/fileMock.js",
   },
   rootDir: "src",
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
   testPathIgnorePatterns: ["node_modules/", ".next/"],
   testEnvironment: "jsdom",
   transform: {
