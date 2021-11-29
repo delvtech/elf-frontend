@@ -45,10 +45,13 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
   const { unlockTimestamp } = principalTokenInfo.extensions;
   const isRedeemable = getIsMature(unlockTimestamp);
 
-  const { push: navigate, asPath: currentPath } = useRouter();
+  const { push: navigate, asPath } = useRouter();
 
   // The active tab state is kept in a URL query parameter.
   const { action: activeTab = PoolAction.BUY } = useParams();
+
+  // remove possible query sring and/or hash from url
+  const currentPath = asPath.replace(/(\?|#).*/, "");
 
   // safety measure to make sure we end up on a tab that exists
   useEffect(() => {
