@@ -1,5 +1,4 @@
 import { Fragment, ReactElement, useCallback, useState } from "react";
-import { GetStaticPropsContext } from "next";
 
 import { Button, Card, Classes, Colors, Icon, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -24,15 +23,11 @@ import { TokenAmountInput2 } from "efi-ui/token/TokenAmountInput/TokenAmountInpu
 import { getMarketRateLabel } from "efi-ui/tranche/getMarketRateLabel";
 import { PrincipalTokenTermButtonLabel2 } from "efi-ui/tranche/TermPicker/PrincipalTokenTermButtonLabel2";
 import { TermPicker2 } from "efi-ui/tranche/TermPicker/TermPicker2";
-import { useOpenPrincipalTokensWithSameBaseAsset } from "efi-ui/tranche/useOpenPrincipalTokensWithSameBaseAsset";
 import { formatBalance } from "efi/base/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
-import { getTokenInfo } from "efi/tokenlists";
-import { getAllPrincipalTokenAddresses } from "efi/tranche/tranches";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
 import { SwapKind } from "efi-balancer/SwapKind";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
@@ -40,28 +35,6 @@ import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalan
 import { IconNames } from "@blueprintjs/icons";
 import { useNavigation } from "efi-ui/app/navigation/hooks/useNavigation";
 import { Navigation } from "efi-ui/app/navigation/navigation";
-
-export async function getStaticProps({ params }: GetStaticPropsContext) {
-  // Used for the Term picker, since base assets can have multiple terms (ie:
-  // principal tokens) running at the same time.
-  const availablePrincipalTokens = useOpenPrincipalTokensWithSameBaseAsset(
-    params?.principalTokenAddress as string
-  );
-  const principalTokenInfo = getTokenInfo<PrincipalTokenInfo>(
-    params?.principalTokenAddress as string
-  );
-  const principalTokenPoolInfo = getPoolInfoForPrincipalToken(
-    params?.principalTokenAddress as string
-  );
-  return {
-    props: {
-      availablePrincipalTokens,
-      principalTokenInfo,
-      principalTokenPoolInfo,
-      principalTokenAddress: params?.principalTokenAddress,
-    },
-  };
-}
 
 interface BuyFixedRatesViewProps {
   availablePrincipalTokens: PrincipalTokenInfo[];
@@ -369,15 +342,4 @@ export function BuyFixedRatesView({
 
 function buttonLabelRenderer(term: PrincipalTokenInfo): ReactElement {
   return <PrincipalTokenTermButtonLabel2 principalTokenInfo={term} />;
-}
-
-export async function getStaticPaths() {
-  const addresses = getAllPrincipalTokenAddresses();
-  const paths = addresses.map((principalTokenAddress) => ({
-    params: { principalTokenAddress },
-  }));
-  return {
-    paths,
-    fallback: false,
-  };
 }

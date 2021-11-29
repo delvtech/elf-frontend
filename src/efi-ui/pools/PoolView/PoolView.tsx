@@ -1,5 +1,4 @@
-import { Fragment, ReactElement } from "react";
-import { GetStaticPropsContext } from "next";
+import { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
@@ -7,19 +6,11 @@ import { useWeb3React } from "@web3-react/core";
 import tw from "efi-tailwindcss-classnames";
 import { PoolDetails } from "efi-ui/pools/PoolDetails/PoolDetails";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
-import { getAllPoolAddresses, getPoolInfo } from "efi/pools/getPoolInfo";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 import { PoolViewHeader } from "./PoolViewHeader";
 import { PoolViewTitle } from "./PoolViewTitle";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
-
-export async function getStaticProps({ params }: GetStaticPropsContext) {
-  const poolInfo = await getPoolInfo(params?.poolAddress as string);
-  return {
-    props: { poolInfo },
-  };
-}
 
 interface PoolViewProps {
   poolInfo: PoolInfo;
@@ -34,7 +25,7 @@ export function PoolView({
   const signer = useSigner(account, library);
 
   return (
-    <Fragment>
+    <>
       <PoolViewTitle poolInfo={poolInfo} />
       <div
         data-testid="pool-view"
@@ -51,7 +42,6 @@ export function PoolView({
           "lg:px-12"
         )}
       >
-        {/* page title */}
         <div className={tw("flex", "justify-between")}>
           <PoolViewHeader poolInfo={poolInfo} />
         </div>
@@ -65,17 +55,6 @@ export function PoolView({
           />
         </div>
       </div>
-    </Fragment>
+    </>
   );
-}
-
-export async function getStaticPaths() {
-  const addresses = getAllPoolAddresses();
-  const paths = addresses.map((poolAddress) => ({
-    params: { poolAddress },
-  }));
-  return {
-    paths,
-    fallback: false,
-  };
 }
