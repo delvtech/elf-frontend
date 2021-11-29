@@ -12,7 +12,7 @@ import { PoolViewHeader } from "./PoolViewHeader";
 import { PoolViewTitle } from "./PoolViewTitle";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 
-interface PoolViewProps {
+export interface PoolViewProps {
   poolInfo: PoolInfo;
   poolAction?: PoolAction;
 }

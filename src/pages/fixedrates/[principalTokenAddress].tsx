@@ -1,4 +1,8 @@
-import { GetStaticPropsContext } from "next";
+import {
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+  GetStaticPathsResult,
+} from "next";
 
 import { PrincipalTokenInfo } from "tokenlists/types";
 
@@ -7,7 +11,16 @@ import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists";
 import { getAllPrincipalTokenAddresses } from "efi/tranche/tranches";
 
-export async function getStaticProps({ params }: GetStaticPropsContext) {
+import {
+  BuyFixedRatesView,
+  BuyFixedRatesViewProps,
+} from "efi-ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
+
+export async function getStaticProps({
+  params,
+}: GetStaticPropsContext): Promise<
+  GetStaticPropsResult<BuyFixedRatesViewProps>
+> {
   // Used for the Term picker, since base assets can have multiple terms (ie:
   // principal tokens) running at the same time.
   const availablePrincipalTokens = getOpenPrincipalTokensWithSameBaseAsset(
@@ -24,14 +37,16 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
       availablePrincipalTokens,
       principalTokenInfo,
       principalTokenPoolInfo,
-      principalTokenAddress: params?.principalTokenAddress,
+      principalTokenAddress: params?.principalTokenAddress as
+        | string
+        | undefined,
     },
   };
 }
 
-export { BuyFixedRatesView as default } from "efi-ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
+export default BuyFixedRatesView;
 
-export async function getStaticPaths() {
+export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const addresses = getAllPrincipalTokenAddresses();
   const paths = addresses.map((principalTokenAddress) => ({
     params: { principalTokenAddress },

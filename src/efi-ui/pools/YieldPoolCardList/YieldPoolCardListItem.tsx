@@ -58,7 +58,7 @@ export function YieldPoolCardListItem(
   const nowMs = useNowMs();
   const goToTrade = useCallback(() => {
     navigate(`/pools/${poolAddress}`);
-  }, [poolAddress]);
+  }, [poolAddress, navigate]);
 
   // Base asset
   const baseAsset = getCryptoAssetForToken(underlying);

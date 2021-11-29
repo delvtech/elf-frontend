@@ -36,7 +36,7 @@ import { IconNames } from "@blueprintjs/icons";
 import { useNavigation } from "efi-ui/app/navigation/hooks/useNavigation";
 import { Navigation } from "efi-ui/app/navigation/navigation";
 
-interface BuyFixedRatesViewProps {
+export interface BuyFixedRatesViewProps {
   availablePrincipalTokens: PrincipalTokenInfo[];
   principalTokenInfo: PrincipalTokenInfo;
   principalTokenPoolInfo: PrincipalPoolTokenInfo;

@@ -1,16 +1,24 @@
-import { GetStaticPropsContext } from "next";
+import {
+  GetStaticPropsContext,
+  GetStaticPropsResult,
+  GetStaticPathsResult,
+} from "next";
 import { getAllPoolAddresses, getPoolInfo } from "efi/pools/getPoolInfo";
 
-export async function getStaticProps({ params }: GetStaticPropsContext) {
+import { PoolView, PoolViewProps } from "efi-ui/pools/PoolView/PoolView";
+
+export async function getStaticProps({
+  params,
+}: GetStaticPropsContext): Promise<GetStaticPropsResult<PoolViewProps>> {
   const poolInfo = await getPoolInfo(params?.poolAddress as string);
   return {
     props: { poolInfo },
   };
 }
 
-export { PoolView as default } from "efi-ui/pools/PoolView/PoolView";
+export default PoolView;
 
-export async function getStaticPaths() {
+export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const addresses = getAllPoolAddresses();
   const paths = addresses.map((poolAddress) => ({
     params: { poolAddress },

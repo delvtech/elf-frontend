@@ -34,7 +34,7 @@ export function usePref<T>(id: string, defaultValue: T): PrefResult<T> {
       // Invalidate this pref so callers will re-ensure the data as needed
       queryClient.invalidateQueries(queryKey);
     },
-    [id, queryClient, queryKey]
+    [id, queryClient, queryKey, efiLocalStorage]
   );
 
   return {

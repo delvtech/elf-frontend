@@ -25,5 +25,5 @@ export function useClearLocalStorageOnNewVersion(): void {
       elfLocalStorage.clear();
       elfLocalStorage.setItem("app-version", versionJson.version);
     }
-  }, []);
+  }, [elfLocalStorage]);
 }

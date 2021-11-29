@@ -72,7 +72,7 @@ export function YieldPoolTableRow(
   const { push: navigate } = useRouter();
   const goToTrade = useCallback(() => {
     navigate(`/pools/${poolAddress}`);
-  }, [poolAddress]);
+  }, [poolAddress, navigate]);
 
   const dataToLoad = [liquidity, fees, stakingYield];
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.

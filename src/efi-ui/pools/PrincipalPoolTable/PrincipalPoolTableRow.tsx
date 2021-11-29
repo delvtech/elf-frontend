@@ -53,7 +53,7 @@ export function PrincipalPoolTableRow(
   const { push: navigate } = useRouter();
   const goToTrade = useCallback(() => {
     navigate(`/pools/${poolAddress}`);
-  }, [poolAddress]);
+  }, [poolAddress, navigate]);
 
   // Base asset
   const baseAsset = getCryptoAssetForToken(underlying);

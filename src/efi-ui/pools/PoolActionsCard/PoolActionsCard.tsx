@@ -74,11 +74,14 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
         shallow: true,
       });
     }
-  }, [activeTab, isRedeemable]);
+  }, [activeTab, isRedeemable, currentPath, navigate]);
 
-  const onTabChange = useCallback((newTab: PoolAction) => {
-    navigate(`${currentPath}?action=${newTab}`, undefined, { shallow: true });
-  }, []);
+  const onTabChange = useCallback(
+    (newTab: PoolAction) => {
+      navigate(`${currentPath}?action=${newTab}`, undefined, { shallow: true });
+    },
+    [currentPath, navigate]
+  );
 
   const oppositePoolInfo = getOppositePoolInfo(poolInfo);
   const oppositePoolType = isYieldPool(oppositePoolInfo)

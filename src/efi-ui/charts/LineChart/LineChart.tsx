@@ -268,7 +268,7 @@ function makeSliceTooltip(
   tooltipColor: string,
   currency: Currency
 ) {
-  return ({ slice }: SliceTooltipProps) => {
+  return function SliceTooltip({ slice }: SliceTooltipProps) {
     const value = slice.points[0].data.y as number;
     const money = Money.fromDecimal(value, currency, Math.round);
     return (
@@ -287,7 +287,7 @@ function makeSliceTooltip(
 }
 
 function makeBarLayer(dataColor: string) {
-  return ({ xScale, yScale, data }: CustomLayerProps) => {
+  return function BarLayer({ xScale, yScale, data }: CustomLayerProps) {
     const serieData = data[0].data;
     const pathStrings = serieData
       ?.map((datum) => {
@@ -318,8 +318,9 @@ function makeBarLayer(dataColor: string) {
 
     return (
       <g>
-        {pathStrings.map((pathString) => (
+        {pathStrings.map((pathString, i) => (
           <path
+            key={i}
             style={{ pointerEvents: "none" }}
             d={pathString}
             stroke={dataColor}
@@ -334,7 +335,11 @@ function makeBarLayer(dataColor: string) {
 }
 
 function makeVerticalLineLayer(dataColor: string) {
-  return ({ xScale, yScale, data }: CustomLayerProps) => {
+  return function VerticalLineLayer({
+    xScale,
+    yScale,
+    data,
+  }: CustomLayerProps) {
     const serieData = data[0].data;
     const pathStrings = serieData
       ?.map((datum) => {
@@ -348,8 +353,9 @@ function makeVerticalLineLayer(dataColor: string) {
 
     return (
       <g>
-        {pathStrings.map((pathString) => (
+        {pathStrings.map((pathString, i) => (
           <path
+            key={i}
             style={{ pointerEvents: "none" }}
             d={pathString}
             stroke={dataColor}
