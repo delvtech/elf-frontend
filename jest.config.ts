@@ -7,6 +7,7 @@ const config: Config.InitialOptions = {
     "!**/*.d.ts",
     "!**/node_modules/**",
   ],
+  coverageDirectory: "<rootDir>/../coverage",
   coverageReporters: ["lcov"],
   moduleDirectories: [
     "node_modules",
