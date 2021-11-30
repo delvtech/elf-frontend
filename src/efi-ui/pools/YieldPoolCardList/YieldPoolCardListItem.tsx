@@ -7,7 +7,7 @@ import {
   Intent,
   ProgressBar,
 } from "@blueprintjs/core";
-import { navigate } from "@reach/router";
+import { useRouter } from "next/router";
 import classNames from "classnames";
 import {
   PrincipalTokenInfo,
@@ -54,10 +54,11 @@ export function YieldPoolCardListItem(
     },
   } = props;
 
+  const { push: navigate } = useRouter();
   const nowMs = useNowMs();
   const goToTrade = useCallback(() => {
     navigate(`/pools/${poolAddress}`);
-  }, [poolAddress]);
+  }, [poolAddress, navigate]);
 
   // Base asset
   const baseAsset = getCryptoAssetForToken(underlying);

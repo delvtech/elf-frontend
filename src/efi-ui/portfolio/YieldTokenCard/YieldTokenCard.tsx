@@ -11,7 +11,7 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
-import { Link } from "@reach/router";
+import Link from "next/link";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { InterestToken } from "elf-contracts-typechain/dist/types/InterestToken";
@@ -159,8 +159,8 @@ export function YieldTokenCard({
               "font-semibold"
             )}
           >
-            <Link to={`/pools/${pool?.address}`}>
-              {t`${baseAssetSymbol} Yield Token` || null}
+            <Link href={`/pools/${pool?.address}`}>
+              <a>{t`${baseAssetSymbol} Yield Token` || null}</a>
             </Link>
             <a
               className={tw("flex", "items-center")}

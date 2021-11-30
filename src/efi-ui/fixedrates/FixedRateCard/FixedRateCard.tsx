@@ -2,7 +2,7 @@ import { ReactElement, useCallback } from "react";
 
 import { Button, Card, Elevation, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { useNavigate } from "@reach/router";
+import { useRouter } from "next/router";
 import classNames from "classnames";
 import { AssetProxyTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -35,10 +35,10 @@ export function FixedRateCard(props: FixedRateCardProps): ReactElement | null {
     },
   } = props;
 
-  const navigateToBuyPage = useNavigate();
+  const { push: navigate } = useRouter();
   const onCardClick = useCallback(() => {
-    navigateToBuyPage(`/${Navigation.FIXED_RATES}/${address}`);
-  }, [address, navigateToBuyPage]);
+    navigate(`/${Navigation.FIXED_RATES}/${address}`);
+  }, [address, navigate]);
 
   const { name: positionName } = getTokenInfo<AssetProxyTokenInfo>(position);
   const principalPool = getPoolInfoForPrincipalToken(address);

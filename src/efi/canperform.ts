@@ -8,7 +8,7 @@ function getCanPerformJsonId() {
     return "mock";
   }
 
-  return process.env.REACT_APP_CHAIN_NAME || "testnet";
+  return process.env.NEXT_PUBLIC_CHAIN_NAME || "testnet";
 }
 
 // Import statements in TS are statically checked, and will throw compile-time
@@ -21,7 +21,7 @@ export const canPerformJson: CanPerformJsonFile = require(`canperform/${chainNam
 
 export const CAN_PERFORM_URL = getCanPerformJsonUrl();
 function getCanPerformJsonUrl() {
-  if (process.env.REACT_APP_CHAIN_NAME === "mainnet") {
+  if (process.env.NEXT_PUBLIC_CHAIN_NAME === "mainnet") {
     return "https://elementfi.s3.us-east-2.amazonaws.com/mainnet.canperform.json";
   }
 

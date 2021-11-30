@@ -1,22 +1,21 @@
 import { CSSProperties, Fragment, ReactElement } from "react";
-import { Helmet } from "react-helmet";
 
 import { NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
-import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
+import { Title } from "efi-ui/base/Title";
 import { EarnCardList } from "efi-ui/earn/EarnCardList/EarnCardList";
 import { EarnTable } from "efi-ui/earn/EarnTable/EarnTable";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipalTokenInfos";
 
-interface EarnViewProps extends RouteComponentProps {}
+interface EarnViewProps {}
 
 export function EarnView(unusedProps: EarnViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
@@ -31,9 +30,7 @@ export function EarnView(unusedProps: EarnViewProps): ReactElement {
   const earnViewStyle: CSSProperties = { maxWidth: 610 };
   return (
     <Fragment>
-      <Helmet>
-        <title>{t`Earn | Element.fi`}</title>
-      </Helmet>
+      <Title text={t`Earn | Element.fi`} />
       <div
         data-testid="earn-view"
         className={tw(

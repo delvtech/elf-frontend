@@ -16,16 +16,23 @@ export function FixedRateCardList(props: FixedRateCardListProps): ReactElement {
   const isLargeScreen = useIsTailwindLargeScreen();
   return (
     <div className={tw("flex", "flex-col", "space-y-4", "items-center")}>
-      <FixedRateCardListHeader hide={!isLargeScreen} />
+      {/* TODO:
+          Understand better what's going on here and if there is a better way
+          to handle it. */}
+      {process.browser && ( // required for blueprint to render correctly
+        <>
+          <FixedRateCardListHeader hide={!isLargeScreen} />
 
-      {principalTokens.map((principalToken) => {
-        return (
-          <FixedRateCard
-            key={principalToken.address}
-            principalToken={principalToken}
-          />
-        );
-      })}
+          {principalTokens.map((principalToken) => {
+            return (
+              <FixedRateCard
+                key={principalToken.address}
+                principalToken={principalToken}
+              />
+            );
+          })}
+        </>
+      )}
     </div>
   );
 }

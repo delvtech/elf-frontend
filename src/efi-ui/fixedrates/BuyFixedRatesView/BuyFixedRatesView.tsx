@@ -1,19 +1,18 @@
 import { Fragment, ReactElement, useCallback, useState } from "react";
-import { Helmet } from "react-helmet";
 
 import { Button, Card, Classes, Colors, Icon, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { commify } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo, PrincipalPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
+import { Title } from "efi-ui/base/Title";
 import { useCalculatePrincipalTokenAmountOut } from "efi-ui/ccpools/useCalculatePrincipalTokenAmountOut";
 import { useMarketPrice } from "efi-ui/ccpools/useMarketPrice";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
@@ -24,14 +23,11 @@ import { TokenAmountInput2 } from "efi-ui/token/TokenAmountInput/TokenAmountInpu
 import { getMarketRateLabel } from "efi-ui/tranche/getMarketRateLabel";
 import { PrincipalTokenTermButtonLabel2 } from "efi-ui/tranche/TermPicker/PrincipalTokenTermButtonLabel2";
 import { TermPicker2 } from "efi-ui/tranche/TermPicker/TermPicker2";
-import { useOpenPrincipalTokensWithSameBaseAsset } from "efi-ui/tranche/useOpenPrincipalTokensWithSameBaseAsset";
 import { formatBalance } from "efi/base/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
-import { getTokenInfo } from "efi/tokenlists";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
 import { SwapKind } from "efi-balancer/SwapKind";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
@@ -40,13 +36,19 @@ import { IconNames } from "@blueprintjs/icons";
 import { useNavigation } from "efi-ui/app/navigation/hooks/useNavigation";
 import { Navigation } from "efi-ui/app/navigation/navigation";
 
-interface BuyFixedRatesViewProps extends RouteComponentProps {
-  // principalTokenAddress comes from the url, so it's intentionally optional as
-  // per https://reach.tech/router/typescript
+export interface BuyFixedRatesViewProps {
+  availablePrincipalTokens: PrincipalTokenInfo[];
+  principalTokenInfo: PrincipalTokenInfo;
+  principalTokenPoolInfo: PrincipalPoolTokenInfo;
+  // principalTokenAddress comes from the url params whos type is
+  // `parsedUrlQuery | undefined` so it must be optional.
   principalTokenAddress?: string;
 }
 
 export function BuyFixedRatesView({
+  availablePrincipalTokens,
+  principalTokenInfo,
+  principalTokenPoolInfo,
   principalTokenAddress,
 }: BuyFixedRatesViewProps): ReactElement | null {
   const { account, library } = useWeb3React<Web3Provider>();
@@ -64,16 +66,6 @@ export function BuyFixedRatesView({
   // Tailwind mindset is mobile-first, but sometimes we need to know at runtime
   // if a large screen is being used.
   const isLargeScreen = useIsTailwindLargeScreen();
-
-  // Used for the Term picker, since base assets can have multiple terms (ie:
-  // principal tokens) running at the same time.
-  const availablePrincipalTokens = useOpenPrincipalTokensWithSameBaseAsset(
-    principalTokenAddress
-  );
-
-  const principalTokenInfo = getTokenInfo<PrincipalTokenInfo>(
-    principalTokenAddress as string
-  );
 
   const {
     extensions: { underlying },
@@ -105,9 +97,6 @@ export function BuyFixedRatesView({
   // Deposit Amount stuff
   const { stringValue: baseAssetInputValue, setValue: onBaseAssetInputChange } =
     useNumericInput();
-  const principalTokenPoolInfo = getPoolInfoForPrincipalToken(
-    principalTokenAddress as string
-  );
   const { tokenOutError, tokenInError } = useValidateBuyPrincipalTokenInput(
     library,
     account,
@@ -131,9 +120,9 @@ export function BuyFixedRatesView({
 
   return (
     <Fragment>
-      <Helmet>
-        <title>{t`Earn fixed yield from buying at a discount. Exit anytime.`}</title>
-      </Helmet>
+      <Title
+        text={t`Earn fixed yield from buying at a discount. Exit anytime.`}
+      />
       {/* Top-level route components should specify their own containers. */}
       <div className={tw("flex", "flex-col", "h-full", "items-center")}>
         <div

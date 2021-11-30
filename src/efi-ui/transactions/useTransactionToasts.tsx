@@ -22,7 +22,7 @@ function useToastOnPending() {
   const { transactionHash, transactionStatus } = usePendingTransactionPref();
   useEffect(() => {
     if (transactionHash && transactionStatus === TransactionStatus.SUBMITTED) {
-      AppToaster.show({
+      AppToaster?.show({
         ...makeToast(t`Transaction pending`, {
           text: (
             <a
@@ -55,7 +55,7 @@ function useToastOnMined() {
     }
 
     const handleTransactionMined = () => {
-      AppToaster.show(
+      AppToaster?.show(
         makeSuccessToast(t`Transaction complete`, {
           href: `${ETHERSCAN_DOMAIN}/tx/${transactionHash}`,
           target: "_blank",

@@ -1,18 +1,17 @@
 import { Fragment, ReactElement } from "react";
-import { Helmet } from "react-helmet";
 
 import { Web3Provider } from "@ethersproject/providers";
-import { RouteComponentProps } from "@reach/router";
 import { useWeb3React } from "@web3-react/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
+import { Title } from "efi-ui/base/Title";
 
 import { PortfolioViewOriginal } from "./PortfolioViewOriginal";
 import { PortfolioViewSmallScreen } from "./PortfolioViewSmallScreen";
 
-interface PortfolioViewProps extends RouteComponentProps {}
+interface PortfolioViewProps {}
 
 export function PortfolioView(unusedProps: PortfolioViewProps): ReactElement {
   const {
@@ -26,9 +25,7 @@ export function PortfolioView(unusedProps: PortfolioViewProps): ReactElement {
 
   return (
     <Fragment>
-      <Helmet>
-        <title>{t`Portfolio | Element.fi`}</title>
-      </Helmet>
+      <Title text={t`Portfolio | Element.fi`} />
       <div
         data-testid="portfolio-view"
         className={tw(

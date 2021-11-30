@@ -178,7 +178,7 @@ module.exports = {
       comment: "Importing from ui/ is prohibited outside of the ui/ directory",
       severity: "error",
       from: {
-        pathNot: `(${["index.tsx", "efi-ui"].join("|")})`,
+        pathNot: `(${["index.tsx", "efi-ui", "pages"].join("|")})`,
       },
       to: {
         path: "efi-ui/",
@@ -190,7 +190,7 @@ module.exports = {
         "Importing from portfolio/ is prohibited outside of the app/ and  directories.",
       severity: "error",
       from: {
-        pathNot: `(${["efi-ui/app", "efi-ui/portfolio"].join("|")})`,
+        pathNot: `(${["efi-ui/app", "efi-ui/portfolio", "pages"].join("|")})`,
       },
       to: {
         path: "efi-ui/portfolio",
@@ -202,7 +202,7 @@ module.exports = {
       comment: "Importing react from outside the ui/ directory is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${["index.tsx", "setupTests.ts", "efi-ui"].join("|")})`,
+        pathNot: `(${["index.tsx", "setupTests.ts", "efi-ui", "pages"].join("|")})`,
       },
       to: {
         path: "node_modules/react/index.js",
@@ -217,7 +217,6 @@ module.exports = {
           "efi/prefs",
           "setupTests.ts",
           "efi-ui/prefs",
-          "clearLocalStorageOnNewVersion.tsx",
         ].join("|")})`,
       },
       to: {

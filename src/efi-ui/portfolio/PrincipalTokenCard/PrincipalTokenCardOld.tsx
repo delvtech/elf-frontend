@@ -10,7 +10,7 @@ import {
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
-import { Link } from "@reach/router";
+import Link from "next/link";
 import classNames from "classnames";
 import { PrincipalTokenInfo } from "tokenlists/types";
 import { jt, t } from "ttag";
@@ -160,8 +160,8 @@ export function PrincipalTokenCardOld(
               "font-semibold"
             )}
           >
-            <Link to={`/pools/${pool?.address}`}>
-              {t`${baseAssetSymbol} Principal Token` || null}
+            <Link href={`/pools/${pool?.address}`}>
+              <a>{t`${baseAssetSymbol} Principal Token` || null}</a>
             </Link>
             <a
               className={tw("flex", "items-center")}

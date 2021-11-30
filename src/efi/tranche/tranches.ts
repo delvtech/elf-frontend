@@ -10,7 +10,9 @@ import {
   YieldTokenInfo,
 } from "tokenlists/types";
 
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { getTokenInfo, tokenListJson } from "efi/tokenlists";
+import { getIsMature } from "efi/tranche/getIsMature";
 import { vaultContractsByAddress } from "efi/tranche/vaults";
 import { defaultProvider } from "efi/providers/providers";
 
@@ -24,6 +26,9 @@ export const principalTokenInfos: PrincipalTokenInfo[] =
   tokenListJson.tokens.filter((tokenInfo): tokenInfo is PrincipalTokenInfo =>
     isPrincipalToken(tokenInfo)
   );
+
+export const getAllPrincipalTokenAddresses = (): string[] =>
+  principalTokenInfos.map(({ address }) => address);
 
 export const trancheContracts = principalTokenInfos.map(({ address }) =>
   Tranche__factory.connect(address, defaultProvider)
@@ -72,4 +77,23 @@ export function getYieldTokenForPrincipalToken(
   } = getTokenInfo<PrincipalTokenInfo>(principalTokenAddress);
 
   return getTokenInfo<YieldTokenInfo>(interestToken);
+}
+
+export function getOpenPrincipalTokensWithSameBaseAsset(
+  principalTokenAddress: string | undefined
+): PrincipalTokenInfo[] {
+  if (!principalTokenAddress) {
+    return EMPTY_ARRAY as PrincipalTokenInfo[];
+  }
+
+  const {
+    extensions: { underlying },
+  } = getTokenInfo<PrincipalTokenInfo>(principalTokenAddress);
+
+  return principalTokenInfos.filter((principalToken) => {
+    const isSameUnderlying =
+      principalToken.extensions.underlying === underlying;
+    const isMature = getIsMature(principalToken.extensions.unlockTimestamp);
+    return !isMature && isSameUnderlying;
+  });
 }

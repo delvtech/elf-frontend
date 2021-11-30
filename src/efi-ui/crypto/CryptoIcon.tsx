@@ -36,7 +36,7 @@ const CryptoIconSvg: Record<string, TokenIcon> = {
 };
 
 function makeTagIcon(cryptoAsset: CryptoAsset) {
-  return ({ style, className }: IconProps): ReactElement => {
+  return function TagIcon({ style, className }: IconProps): ReactElement {
     const symbol = getCryptoSymbol(cryptoAsset);
     return (
       <Tag large minimal className={className} style={style}>

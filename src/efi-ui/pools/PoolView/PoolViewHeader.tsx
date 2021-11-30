@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-import { Link } from "@reach/router";
+import Link from "next/link";
 import classNames from "classnames";
 import { format } from "date-fns";
 import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
@@ -81,10 +81,11 @@ export function PoolViewHeader({
             {t`${termLength} - ${format(maturityTime || 0, "MMM d, y") || 0}`}
           </span>
           {isLargeScreen && (
-            <Link
-              to={`/pools/${oppositePoolInfo.address}`}
-              className={tw("text-center")}
-            >{t`Go to ${oppositePoolType} Pool`}</Link>
+            <Link href={`/pools/${oppositePoolInfo.address}`}>
+              <a className={tw("text-center")}>
+                {t`Go to ${oppositePoolType} Pool`}
+              </a>
+            </Link>
           )}
         </div>
       </div>

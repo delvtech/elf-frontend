@@ -1,7 +1,7 @@
 import { ReactElement, useCallback } from "react";
 
 import { Card, Classes, Elevation } from "@blueprintjs/core";
-import { navigate } from "@reach/router";
+import { useRouter } from "next/router";
 import classNames from "classnames";
 import { YieldPoolTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -69,9 +69,10 @@ export function YieldPoolTableRow(
   const { apy } = vaultInfo || {};
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
 
+  const { push: navigate } = useRouter();
   const goToTrade = useCallback(() => {
     navigate(`/pools/${poolAddress}`);
-  }, [poolAddress]);
+  }, [poolAddress, navigate]);
 
   const dataToLoad = [liquidity, fees, stakingYield];
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.

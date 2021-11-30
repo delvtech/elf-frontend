@@ -7,7 +7,7 @@ import {
   Intent,
   ProgressBar,
 } from "@blueprintjs/core";
-import { navigate } from "@reach/router";
+import { useRouter } from "next/router";
 import classNames from "classnames";
 import { PrincipalPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
@@ -51,10 +51,11 @@ export function PrincipalPoolCardListItem(
     },
   } = props;
 
+  const { push: navigate } = useRouter();
   const nowMs = useNowMs();
   const goToTrade = useCallback(() => {
     navigate(`/pools/${poolAddress}`);
-  }, [poolAddress]);
+  }, [poolAddress, navigate]);
 
   // Base asset
   const baseAsset = getCryptoAssetForToken(underlying);

@@ -3,6 +3,9 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getPoolInfoForYieldToken, yieldPools } from "efi/pools/weightedPool";
 
+export const getAllPoolAddresses = (): string[] =>
+  [...yieldPools, ...principalPools].map(({ address }) => address);
+
 export function getPoolTokenInfoFromContract(
   poolContract: PoolContract | undefined
 ): PoolInfo | undefined {

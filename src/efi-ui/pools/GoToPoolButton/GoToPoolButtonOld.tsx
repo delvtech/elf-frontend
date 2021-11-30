@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 
 import { Classes } from "@blueprintjs/core";
-import { Link } from "@reach/router";
+import Link from "next/link";
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
@@ -35,21 +35,22 @@ export function GoToPoolButtonOld(props: GoToPoolButtonProps): ReactElement {
   // clicking a link doesn't cause a full-page refresh (like with an anchor
   // tag).
   return (
-    <Link
-      to={`/pools/${poolAddress}?action=${poolAction}`}
-      className={classNames(
-        Classes.BUTTON,
-        Classes.MINIMAL,
-        {
-          [Classes.OUTLINED]: outlined,
-          [Classes.SMALL]: small,
-          [Classes.FILL]: fill,
-        },
-        Classes.INTENT_PRIMARY,
-        className
-      )}
-    >
-      <div className={tw({ "p-2": !small, "p-0": small })}>{label}</div>
+    <Link href={`/pools/${poolAddress}?action=${poolAction}`}>
+      <a
+        className={classNames(
+          Classes.BUTTON,
+          Classes.MINIMAL,
+          {
+            [Classes.OUTLINED]: outlined,
+            [Classes.SMALL]: small,
+            [Classes.FILL]: fill,
+          },
+          Classes.INTENT_PRIMARY,
+          className
+        )}
+      >
+        <div className={tw({ "p-2": !small, "p-0": small })}>{label}</div>
+      </a>
     </Link>
   );
 }

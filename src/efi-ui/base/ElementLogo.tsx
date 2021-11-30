@@ -1,9 +1,9 @@
 import { CSSProperties, ReactElement, useMemo } from "react";
 
-import logoDark from "efi-static-assets/logos/svg/ELEMENT-dark.svg";
-import logo from "efi-static-assets/logos/svg/ELEMENT-light.svg";
-import wordLogoDark from "efi-static-assets/logos/svg/logo--dark.svg";
-import wordLogo from "efi-static-assets/logos/svg/logo--light.svg";
+import logoDark from "efi-static-assets/logos/svg/ELEMENT-dark.svg?url";
+import logo from "efi-static-assets/logos/svg/ELEMENT-light.svg?url";
+import wordLogoDark from "efi-static-assets/logos/svg/logo--dark.svg?url";
+import wordLogo from "efi-static-assets/logos/svg/logo--light.svg?url";
 
 interface ElementLogoProps {
   iconOnly?: boolean;

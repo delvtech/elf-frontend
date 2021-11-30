@@ -3,10 +3,10 @@ import { Fragment, ReactElement } from "react";
 import { MenuItem } from "@blueprintjs/core";
 import { t } from "ttag";
 
-import discordLogo from "efi-static-assets/logos/svg/DISCORD.svg";
-import mediumLogo from "efi-static-assets/logos/svg/MEDIUM.svg";
-import telegramLogo from "efi-static-assets/logos/svg/TELEGRAM.svg";
-import twitterLogo from "efi-static-assets/logos/svg/TWITTER.svg";
+import discordLogo from "efi-static-assets/logos/svg/DISCORD.svg?url";
+import mediumLogo from "efi-static-assets/logos/svg/MEDIUM.svg?url";
+import telegramLogo from "efi-static-assets/logos/svg/TELEGRAM.svg?url";
+import twitterLogo from "efi-static-assets/logos/svg/TWITTER.svg?url";
 import tw from "efi-tailwindcss-classnames";
 
 export function SocialMediaMenuItems(): ReactElement {

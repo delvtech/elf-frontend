@@ -56,7 +56,7 @@ export function WalletDrawer({
           "flex-col",
           "justify-between",
           "text-base",
-          "overflow-scroll",
+          "overflow-auto",
           "p-10",
           "pt-8",
           {

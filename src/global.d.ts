@@ -26,3 +26,8 @@ interface Window {
    */
   consoleEther: (name: string, value: BigNumber | undefined) => void;
 }
+
+declare module "*.svg?url" {
+  const content: any;
+  export default content;
+}

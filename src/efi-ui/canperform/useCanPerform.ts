@@ -13,7 +13,7 @@ export function useCanPerform(): CanPerformJsonFile {
     queryKey: ["can-perform"],
     queryFn: async () => {
       // Don't try to fetch anything if we're testing locally
-      if (process.env.REACT_APP_CHAIN_NAME === "testnet") {
+      if (process.env.NEXT_PUBLIC_CHAIN_NAME === "testnet") {
         return canPerformJsonFromBuild;
       }
 

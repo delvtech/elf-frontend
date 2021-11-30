@@ -29,7 +29,7 @@ export function ConnectWalletDialog({
     <Dialog
       isCloseButtonShown={true}
       style={isSmallScreen ? smallScreenStyle : undefined}
-      className={classNames(darkModeClassName, tw("pb-0", "overflow-scroll"))}
+      className={classNames(darkModeClassName, tw("pb-0", "overflow-auto"))}
       isOpen={isOpen}
       onClose={onClose}
       title={
