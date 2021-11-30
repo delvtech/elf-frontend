@@ -15,7 +15,10 @@ npm run build:new goerli
 
 In the project directory, run:
 
-### `npm ci`
+```bash
+npm ci
+next build
+```
 
 Then start the development server with
 
