@@ -13,6 +13,3 @@ export function consoleEther(
   // eslint-disable-next-line no-console
   console.log(name, formatUnits(value, units));
 }
-
-// why is this being added to window?
-// window.consoleEther = consoleEther;

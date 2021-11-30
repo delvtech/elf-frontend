@@ -20,7 +20,6 @@ import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 import { AddressesJson } from "efi/addresses";
 import { ChainId, ChainNames } from "efi/ethereum";
-import { consoleEther } from "efi/debug/consoleEther";
 import { getConnectorName } from "efi/wallets/connectors";
 
 import styles from "./App.module.css";
@@ -44,10 +43,6 @@ const App: FC<AppProps> = ({ children }) => {
   useEagerConnect();
   useToastWrongChain(chainId);
   useTransactionToasts();
-
-  useEffect(() => {
-    window.consoleEther = consoleEther;
-  }, []);
 
   return (
     <Fragment>
