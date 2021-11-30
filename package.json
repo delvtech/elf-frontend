@@ -156,7 +156,6 @@
     "build:tailwindcss-classnames": "tailwindcss-classnames --config tailwind.config.js -o src/efi-tailwindcss-classnames/index.ts",
     "build:version-json": "bash ./scripts/build-version-json.sh",
     "depcruise": "depcruise --config .dependency-cruiser.js src",
-    "eject": "next eject",
     "lint": "tsc --noEmit && eslint src/**/*.ts{,x}",
     "lint:fix": "tsc --noEmit && eslint --fix src/**/*.ts{,x}",
     "postinstall": "npm run build:version-json",
