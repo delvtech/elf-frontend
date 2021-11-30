@@ -10,7 +10,7 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { useParams } from "efi-ui/next/useParams";
+import { useParams } from "efi-ui/router/useParams";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { StakingPanel } from "efi-ui/pools/StakingPanel/StakingPanel";
 import { UnstakeCard } from "efi-ui/pools/UnstakingPanel/UnstakingCard";
