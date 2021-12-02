@@ -33,7 +33,7 @@ import { getIsMature } from "efi/tranche/getIsMature";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 
 import { EarnSummaryCard } from "./EarnSummaryCard";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 
 interface EarnCardProps {

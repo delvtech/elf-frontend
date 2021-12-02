@@ -5,7 +5,7 @@ import {
 } from "elf-contracts-typechain/dist/types";
 import { WETH__factory } from "elf-contracts-typechain/dist/types/factories/WETH__factory";
 
-import { AddressesJson } from "efi/addresses";
+import { AddressesJson } from "efi/addresses/addresses";
 import { defaultProvider } from "efi/providers/providers";
 
 const {

@@ -11,7 +11,7 @@ import {
 } from "tokenlists/types";
 
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
-import { getTokenInfo, tokenListJson } from "efi/tokenlists";
+import { getTokenInfo, tokenListJson } from "efi/tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { vaultContractsByAddress } from "efi/tranche/vaults";
 import { defaultProvider } from "efi/providers/providers";

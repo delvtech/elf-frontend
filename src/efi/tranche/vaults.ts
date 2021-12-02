@@ -3,7 +3,7 @@ import { TestYVault__factory } from "elf-contracts-typechain/dist/types/factorie
 import keyBy from "lodash.keyby";
 import { TokenListTag, VaultTokenInfo } from "tokenlists/types";
 
-import { tokenListJson } from "efi/tokenlists";
+import { tokenListJson } from "efi/tokenlists/tokenlists";
 import { assetProxyTokenInfos } from "efi/tranche/positions";
 import { defaultProvider } from "efi/providers/providers";
 

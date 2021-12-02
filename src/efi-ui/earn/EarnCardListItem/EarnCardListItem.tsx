@@ -39,7 +39,7 @@ import {
   getPoolInfoForYieldToken,
   yieldPoolContractsByAddress,
 } from "efi/pools/weightedPool";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";

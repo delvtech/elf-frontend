@@ -1,4 +1,4 @@
-import { AddressesJson } from "efi/addresses";
+import { AddressesJson } from "efi/addresses/addresses";
 import { defaultProvider } from "efi/providers/providers";
 import { Vault__factory } from "elf-contracts-typechain/dist/types/factories/Vault__factory";
 

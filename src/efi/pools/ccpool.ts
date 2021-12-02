@@ -5,7 +5,7 @@ import keyBy from "lodash.keyby";
 import { PrincipalPoolTokenInfo, TokenListTag } from "tokenlists/types";
 
 import { defaultProvider } from "efi/providers/providers";
-import { tokenListJson } from "efi/tokenlists";
+import { tokenListJson } from "efi/tokenlists/tokenlists";
 
 /**
  * The list of all principal token pools. This includes pools with mature

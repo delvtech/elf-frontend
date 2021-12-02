@@ -25,8 +25,8 @@ import {
 } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer";
-import { formatBalance } from "efi/base/formatBalance";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
+import { formatBalance } from "efi/base/formatBalance/formatBalance";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";

@@ -33,16 +33,16 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
-import { calculateProgress } from "efi/base/calculateProgress";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { formatAbbreviatedDate } from "efi/base/dates";
-import { formatPercent } from "efi/base/formatPercent";
+import { calculateProgress } from "efi/base/calculateProgress/calculateProgress";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
+import { formatAbbreviatedDate } from "efi/base/dates/dates";
+import { formatPercent } from "efi/base/formatPercent/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import {
   getVaultContractForTranche,
   getVaultTokenInfoForTranche,

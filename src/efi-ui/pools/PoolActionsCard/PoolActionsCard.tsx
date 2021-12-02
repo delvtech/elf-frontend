@@ -19,7 +19,7 @@ import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
 
 import styles from "./PoolActionsCard.module.css";

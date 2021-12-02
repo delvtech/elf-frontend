@@ -1,5 +1,5 @@
 import { PendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
-import ContractAddresses from "efi/addresses";
+import ContractAddresses from "efi/addresses/addresses";
 
 /**
  * Returns true if the given pendingTransactionPref is for a UserProxy mint

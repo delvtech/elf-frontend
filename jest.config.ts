@@ -1,4 +1,4 @@
-import type { Config } from '@jest/types';
+import type { Config } from "@jest/types";
 
 // https://nextjs.org/docs/testing#jest-and-react-testing-library
 const config: Config.InitialOptions = {
@@ -9,10 +9,7 @@ const config: Config.InitialOptions = {
   ],
   coverageDirectory: "<rootDir>/../coverage",
   coverageReporters: ["lcov"],
-  moduleDirectories: [
-    "node_modules",
-    "src"
-  ],
+  moduleDirectories: ["node_modules", "src"],
   moduleNameMapper: {
     /* Handle CSS imports (with CSS modules)
     https://jestjs.io/docs/webpack#mocking-css-modules */
@@ -23,11 +20,10 @@ const config: Config.InitialOptions = {
 
     /* Handle image imports
     https://jestjs.io/docs/webpack#handling-static-assets */
-    "^.+\\.(jpg|jpeg|png|gif|webp|avif|svg)$":
-      "<rootDir>/efi/base/fileMock.js",
+    "^.+\\.(jpg|jpeg|png|gif|webp|avif|svg)$": "<rootDir>/efi/base/fileMock.js",
   },
   rootDir: "src",
-  setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
+  setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
   testPathIgnorePatterns: ["node_modules/", ".next/"],
   testEnvironment: "jsdom",
   transform: {
@@ -36,9 +32,9 @@ const config: Config.InitialOptions = {
     "^.+\\.(js|jsx|ts|tsx)$": ["babel-jest", { presets: ["next/babel"] }],
   },
   transformIgnorePatterns: [
-    "/node_modules/",
+    "node_modules/(?!d3-)",
     "^.+\\.module\\.(css|sass|scss)$",
   ],
-}
+};
 
 export default config;

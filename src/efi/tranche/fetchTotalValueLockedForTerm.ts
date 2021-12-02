@@ -6,7 +6,7 @@ import { fetchAccumulatedInterestForTranche } from "efi/tranche/fetchAccumulated
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { fetchBaseAssetReservesInPool } from "efi/pools/fetchBaseAssetReservesInPool";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 
 export async function fetchTotalValueLockedForTerm(

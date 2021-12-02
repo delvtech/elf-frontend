@@ -1,4 +1,4 @@
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 
 export function getPrincipalTokenForYieldToken(

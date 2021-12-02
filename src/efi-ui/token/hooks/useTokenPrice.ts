@@ -15,9 +15,9 @@ import {
   useTriCryptoPrice,
 } from "efi-ui/curve/pools";
 import { useCurveStablecoinPoolVirtualPrice } from "efi-ui/curve/stablePools";
-import { AddressesJson } from "efi/addresses";
-import { isMainnet } from "efi/ethereum";
-import { getTokenInfo } from "efi/tokenlists";
+import { AddressesJson } from "efi/addresses/addresses";
+import { isMainnet } from "efi/ethereum/ethereum";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 
 const {
   chainId,

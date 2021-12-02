@@ -9,13 +9,13 @@ import { YieldPoolTokenInfo } from "tokenlists/types";
 import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import ContractAddresses from "efi/addresses";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer";
+import ContractAddresses from "efi/addresses/addresses";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { WeightedPoolExitKind } from "efi/pools/weightedPool";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { balancerVaultContract } from "efi-balancer/vault";
 
 export function useExitWeightedPool(

@@ -16,7 +16,7 @@ import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { IconProps } from "efi-ui/token/TokenIcon";
 
 import styles from "./styles.module.css";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { PrincipalTokenInfo } from "tokenlists/types";
 
 interface RedeemFormProps {

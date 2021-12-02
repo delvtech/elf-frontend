@@ -1,9 +1,9 @@
 import { Vault } from "elf-contracts-typechain/dist/types/Vault";
 
 import { PendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
-import ContractAddresses from "efi/addresses";
+import ContractAddresses from "efi/addresses/addresses";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 
 /**
  * Returns true if the given pending transaction is for a principal token swap.

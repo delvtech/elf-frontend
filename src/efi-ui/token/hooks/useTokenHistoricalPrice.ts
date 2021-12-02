@@ -3,7 +3,7 @@ import { Currency, Money } from "ts-money";
 
 import { getCoinGeckoId } from "efi-coingecko";
 import { useCoinGeckoHistoricalPrice } from "efi-ui/coingecko/useCoinGeckoHistoricalPrice";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { QueryObserverResult } from "react-query";
 
 export function useTokenHistoricalPrice<TContract extends ERC20>(

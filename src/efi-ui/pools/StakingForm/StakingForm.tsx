@@ -26,9 +26,9 @@ import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { IconProps } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
-import ContractAddresses from "efi/addresses";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer";
-import { formatBalance } from "efi/base/formatBalance";
+import ContractAddresses from "efi/addresses/addresses";
+import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
+import { formatBalance } from "efi/base/formatBalance/formatBalance";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
@@ -37,7 +37,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { trancheContracts } from "efi/tranche/tranches";
 
 interface StakingAssetInputProps {

@@ -5,7 +5,7 @@ import keyBy from "lodash.keyby";
 import { TokenListTag, YieldPoolTokenInfo } from "tokenlists/types";
 
 import { defaultProvider } from "efi/providers/providers";
-import { tokenListJson } from "efi/tokenlists";
+import { tokenListJson } from "efi/tokenlists/tokenlists";
 
 // hard limit set by Balancer.  Cannot trade in/out more than 30% of the pool
 export const MAX_WEIGHTED_POOL_PRICE_IMPACT = 0.3;

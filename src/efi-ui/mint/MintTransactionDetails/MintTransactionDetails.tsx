@@ -4,7 +4,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { formatFullDate } from "efi/base/dates";
+import { formatFullDate } from "efi/base/dates/dates";
 
 /**
  * Generalize this further to handle any transaction confirmation

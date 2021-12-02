@@ -11,7 +11,7 @@ import tw from "efi-tailwindcss-classnames";
 import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
 import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { formatPercent } from "efi/base/formatPercent";
+import { formatPercent } from "efi/base/formatPercent/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";

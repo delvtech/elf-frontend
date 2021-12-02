@@ -1,5 +1,5 @@
-import { AddressesJson } from "efi/addresses";
-import { ChainId } from "efi/ethereum";
+import { AddressesJson } from "efi/addresses/addresses";
+import { ChainId } from "efi/ethereum/ethereum";
 
 export const ETHERSCAN_DOMAIN =
   AddressesJson.chainId === ChainId.GOERLI

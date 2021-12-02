@@ -23,7 +23,7 @@ import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
-import { formatPercent } from "efi/base/formatPercent";
+import { formatPercent } from "efi/base/formatPercent/formatPercent";
 import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
@@ -34,7 +34,7 @@ import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { TermTag } from "efi-ui/tranche/TermTag";
 import { format } from "date-fns";
-import { calculateProgress } from "efi/base/calculateProgress";
+import { calculateProgress } from "efi/base/calculateProgress/calculateProgress";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 
 interface PrincipalPoolCardListItemProps {

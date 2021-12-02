@@ -10,9 +10,9 @@ import tw from "efi-tailwindcss-classnames";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { usePrincipalTokenYield } from "efi-ui/pools/hooks/usePrincipalTokenYield";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { formatAbbreviatedDate } from "efi/base/dates";
-import { formatPercent } from "efi/base/formatPercent";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
+import { formatAbbreviatedDate } from "efi/base/dates/dates";
+import { formatPercent } from "efi/base/formatPercent/formatPercent";
 import { ONE_DAY_IN_MILLISECONDS } from "efi/base/time";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 
