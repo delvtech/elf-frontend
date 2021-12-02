@@ -5,9 +5,9 @@ import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { sortAddresses } from "efi/base/sortAddresses";
+import { sortAddresses } from "efi/base/sortAddresses/sortAddresses";
 
 interface PoolTokens {
   baseAssetInfo: TokenInfo;

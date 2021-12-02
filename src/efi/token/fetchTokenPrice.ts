@@ -13,10 +13,10 @@ import {
   curveVirtualPriceContractsByAddress,
   isCurveStablePool,
 } from "efi-curve/stablePools";
-import { AddressesJson } from "efi/addresses";
-import { formatBalance } from "efi/base/formatBalance";
-import { isGoerli, NUM_ETH_DECIMALS, ONE_ETHER } from "efi/ethereum";
-import { getTokenInfo } from "efi/tokenlists";
+import { AddressesJson } from "efi/addresses/addresses";
+import { formatBalance } from "efi/base/formatBalance/formatBalance";
+import { isGoerli, NUM_ETH_DECIMALS, ONE_ETHER } from "efi/ethereum/ethereum";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 
 const {
   addresses: { crvtricryptoAddress, stecrvAddress, crv3cryptoAddress },

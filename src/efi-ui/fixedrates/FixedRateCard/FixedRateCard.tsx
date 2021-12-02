@@ -13,13 +13,13 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import styles from "efi-ui/fixedrates/grid.module.css";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { formatAbbreviatedDate } from "efi/base/dates";
-import { formatPercent } from "efi/base/formatPercent";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
+import { formatAbbreviatedDate } from "efi/base/dates/dates";
+import { formatPercent } from "efi/base/formatPercent/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { usePrincipalTokenYield } from "efi-ui/pools/hooks/usePrincipalTokenYield";
 

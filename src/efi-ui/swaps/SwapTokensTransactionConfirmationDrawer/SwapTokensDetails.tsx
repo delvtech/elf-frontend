@@ -4,7 +4,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
-import { formatPercent } from "efi/base/formatPercent";
+import { formatPercent } from "efi/base/formatPercent/formatPercent";
 import { TermAssetType } from "efi/tranche/TermAssetType";
 
 /**

@@ -14,9 +14,14 @@ import {
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { AddressesJson } from "efi/addresses";
+import { AddressesJson } from "efi/addresses/addresses";
 import { ONE_MINUTE_IN_MILLISECONDS } from "efi/base/time";
-import { isGoerli, isMainnet, NUM_ETH_DECIMALS, ONE_ETHER } from "efi/ethereum";
+import {
+  isGoerli,
+  isMainnet,
+  NUM_ETH_DECIMALS,
+  ONE_ETHER,
+} from "efi/ethereum/ethereum";
 
 interface HookPriceOptions {
   enabled: boolean;

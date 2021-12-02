@@ -8,10 +8,10 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import { flushPromises } from "efi/base/flush";
+import { flushPromises } from "efi/base/flush/flush";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { userProxyContract } from "efi/userProxy/contract";
 
 // list of shitty principal and yield token contracts whose names are messed up.  they change their

@@ -7,7 +7,7 @@ import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/hooks/usePoolTotalSupply";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import {
   calcSwapPrincipalPool,
   PrincipalPoolCalcSwapResult,

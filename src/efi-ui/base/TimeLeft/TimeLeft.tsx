@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { calculateProgress } from "efi/base/calculateProgress";
+import { calculateProgress } from "efi/base/calculateProgress/calculateProgress";
 import { formatTimeLeft } from "efi/base/formatTImeLeft/formatTimeLeft";
 import { formatLengthOfTime } from "efi/time/formatLengthOfTime/formatLengthOfTime";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";

@@ -22,8 +22,8 @@ import {
   BALANCER_ETH_SENTINEL,
   mapETHSentinalToWETH,
   mapWETHToETHSentinal,
-} from "efi/balancer";
-import { sortAddresses } from "efi/base/sortAddresses";
+} from "efi/balancer/balancer";
+import { sortAddresses } from "efi/base/sortAddresses/sortAddresses";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { serializeError } from "eth-rpc-errors";

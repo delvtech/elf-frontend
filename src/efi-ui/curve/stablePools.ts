@@ -7,10 +7,10 @@ import { Currencies, Money } from "ts-money";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { AddressesJson } from "efi/addresses";
-import { formatBalance } from "efi/base/formatBalance";
+import { AddressesJson } from "efi/addresses/addresses";
+import { formatBalance } from "efi/base/formatBalance/formatBalance";
 import { ONE_MINUTE_IN_MILLISECONDS } from "efi/base/time";
-import { isGoerli } from "efi/ethereum";
+import { isGoerli } from "efi/ethereum/ethereum";
 
 // Goerli curve stable pools can be inferred to be $1
 const GOERLI_STUB_VIRTUAL_PRICE = {

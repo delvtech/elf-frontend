@@ -14,7 +14,7 @@ import { AVG_MINE_RATE_SECONDS } from "efi/ethereum/miningRate";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { TimeData } from "efi/charts/TimeData";
 import { balancerVaultContract } from "efi-balancer/vault";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";

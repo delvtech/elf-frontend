@@ -1,6 +1,6 @@
 import { CRVLUSD__factory } from "elf-contracts-typechain/dist/types/factories/CRVLUSD__factory";
 
-import { AddressesJson } from "efi/addresses";
+import { AddressesJson } from "efi/addresses/addresses";
 import { defaultProvider } from "efi/providers/providers";
 
 /**

@@ -2,7 +2,7 @@ import { TokenInfo } from "@uniswap/token-lists";
 import { InterestToken__factory } from "elf-contracts-typechain/dist/types/factories/InterestToken__factory";
 import { TokenListTag, YieldTokenInfo } from "tokenlists/types";
 
-import { tokenListJson } from "efi/tokenlists";
+import { tokenListJson } from "efi/tokenlists/tokenlists";
 import keyBy from "lodash.keyby";
 import { defaultProvider } from "efi/providers/providers";
 

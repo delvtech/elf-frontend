@@ -2,7 +2,7 @@ import { CanPerformPoolActions } from "canperform/CanPerformJsonFile";
 import { useCanPerform } from "efi-ui/canperform/useCanPerform";
 import { isPrincipalPool } from "efi/pools/ccpool";
 import { isYieldPool } from "efi/pools/weightedPool";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 
 export function useCanPerformPool(
   poolAddress: string,

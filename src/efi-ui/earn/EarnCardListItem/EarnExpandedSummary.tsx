@@ -7,7 +7,7 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
-import { formatPercent } from "efi/base/formatPercent";
+import { formatPercent } from "efi/base/formatPercent/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import classNames from "classnames";

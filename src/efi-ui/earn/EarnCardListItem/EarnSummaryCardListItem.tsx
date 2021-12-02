@@ -12,7 +12,7 @@ import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { IconProps } from "efi-ui/token/TokenIcon";
-import { formatPercent } from "efi/base/formatPercent";
+import { formatPercent } from "efi/base/formatPercent/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
 import classNames from "classnames";
 

@@ -1,4 +1,4 @@
-import { AddressesJson } from "efi/addresses";
+import { AddressesJson } from "efi/addresses/addresses";
 import {
   CryptoAsset,
   CryptoAssetType,

@@ -17,7 +17,7 @@ import {
   CrvMimIcon,
   CrvEursIcon,
 } from "efi-ui/token/TokenIcon";
-import ContractAddresses from "efi/addresses";
+import ContractAddresses from "efi/addresses/addresses";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 

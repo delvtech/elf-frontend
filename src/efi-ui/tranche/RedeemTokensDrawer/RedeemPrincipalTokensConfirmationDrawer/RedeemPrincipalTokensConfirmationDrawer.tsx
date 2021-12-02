@@ -11,8 +11,8 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
-import { formatFullDate } from "efi/base/dates";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
+import { formatFullDate } from "efi/base/dates/dates";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 
 import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";

@@ -7,7 +7,7 @@ import {
 } from "tokenlists/types";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import {
   getVaultContractForTranche,
   trancheContractsByAddress,

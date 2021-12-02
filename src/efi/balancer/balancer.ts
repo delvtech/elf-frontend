@@ -1,5 +1,5 @@
-import ContractAddresses from "efi/addresses";
-import { ETH_ZERO_ADDRESS } from "efi/ethereum";
+import ContractAddresses from "efi/addresses/addresses";
+import { ETH_ZERO_ADDRESS } from "efi/ethereum/ethereum";
 
 export const BALANCER_ETH_SENTINEL = ETH_ZERO_ADDRESS;
 

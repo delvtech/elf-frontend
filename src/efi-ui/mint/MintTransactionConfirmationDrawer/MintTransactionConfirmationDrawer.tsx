@@ -27,13 +27,13 @@ import { MintTransactionDetails } from "efi-ui/mint/MintTransactionDetails/MintT
 import { SwapDetailsForm } from "efi-ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
 import { TransactionDrawer } from "efi-ui/transactions/TransactionDrawer/TransactionDrawer";
-import ContractAddresses from "efi/addresses";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate";
+import ContractAddresses from "efi/addresses/addresses";
+import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import {
   isUnderlyingAddressERC20Permit,

@@ -4,7 +4,7 @@ import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
-import { getTokenInfo } from "efi/tokenlists";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { useOpenTrancheContracts } from "efi-ui/tranche/useOpenTrancheContracts";
 
 export function useOpenTrancheBaseAssets(): CryptoAsset[] {

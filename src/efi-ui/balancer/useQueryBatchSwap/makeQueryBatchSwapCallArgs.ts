@@ -9,8 +9,8 @@ import {
   BALANCER_ETH_SENTINEL,
   mapETHSentinalToWETH,
   mapWETHToETHSentinal,
-} from "efi/balancer";
-import { sortAddresses } from "efi/base/sortAddresses";
+} from "efi/balancer/balancer";
+import { sortAddresses } from "efi/base/sortAddresses/sortAddresses";
 import { StaticContractMethodArgs } from "efi/contracts/types";
 
 /**

@@ -4,7 +4,7 @@ import { Icon, Intent, Tag } from "@blueprintjs/core";
 import { IconName, IconNames } from "@blueprintjs/icons";
 import { t } from "ttag";
 
-import { formatPercent } from "efi/base/formatPercent";
+import { formatPercent } from "efi/base/formatPercent/formatPercent";
 
 interface TrendIndicatorProps {
   value: number | undefined;
