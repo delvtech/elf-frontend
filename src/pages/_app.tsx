@@ -1,6 +1,3 @@
-// CRA requires that this file live at the top-level, ie: src/index.tsx
-// this file should only be used for development as it bundles all apps together
-
 // Next.js:
 // Global CSS cannot be imported from files other than pages/_app.
 // Read more: https://nextjs.org/docs/messages/css-global

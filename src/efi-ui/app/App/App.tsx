@@ -52,7 +52,7 @@ const App: FC<AppProps> = ({ children }) => {
           styles.appBackground,
           { [styles.appBackgroundDark]: isDarkMode },
           darkModeClassName,
-          tw("w-full", "h-full", "overflow-auto")
+          tw("w-full", "h-screen", "overflow-auto")
         )}
       >
         <AppHeader
