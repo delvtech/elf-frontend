@@ -42,7 +42,8 @@ export function usePrincipalTokenYield(
     // fixed apy = fixed interest * one_year / term_length
     if (timeLeftInSeconds > 0) {
       fixedAPR =
-        ((1 - principalPrice) * ONE_YEAR_IN_SECONDS) / timeLeftInSeconds;
+        (((1 - principalPrice) / principalPrice) * ONE_YEAR_IN_SECONDS) /
+        timeLeftInSeconds;
     } else {
       fixedAPR = 0;
     }
