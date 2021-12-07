@@ -14,7 +14,7 @@ First install the dependencies. Open the directory in your terminal and run:
 npm ci
 ```
 
-  > **note:** Running `npm ci` instead of just `npm i` or `npm install` will ensure that the package-lock.json isn'tmodified if you're using a different version of npm. See the [npm-ci docs](https://docs.npmjs.com/cli/v8/commands/npm-ci) for more info.
+  > **note:** Running `npm ci` instead of just `npm i` or `npm install` will ensure that the package-lock.json isn't modified if you're using a different version of npm. See the [npm-ci docs](https://docs.npmjs.com/cli/v8/commands/npm-ci) for more info.
 
 To start the app in development mode:
 
