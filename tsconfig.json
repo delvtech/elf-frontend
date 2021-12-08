@@ -19,7 +19,8 @@
     "noEmit": true,
     "jsx": "preserve",
     "baseUrl": "src",
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
