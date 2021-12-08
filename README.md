@@ -42,19 +42,19 @@ This app is deployed to 3 different projects in [Vercel](https://vercel.com/elem
 
 ### 1. [elf-frontend-staging](https://vercel.com/element-finance/elf-frontend-staging)
 
-This is a password protected app accessible at [staging.element.fi][staging-app-url]. It uses `main` as it's production branch and will create a new [preview deployment](https://vercel.com/docs/concepts/deployments/environments#preview) each time there's a push to *any* branch or a deployment is made using the [`vercel` command](https://vercel.com/docs/concepts/deployments/overview#vercel-cli).
+This is a password protected app accessible at [staging.element.fi][staging-app-url]. It uses `main` as its production branch and will create a new [preview deployment](https://vercel.com/docs/concepts/deployments/environments#preview) each time there's a push to *any* branch or a deployment is made using the [`vercel` command](https://vercel.com/docs/concepts/deployments/overview#vercel-cli).
 
 Once a branch has been merged into `main`, it will be deployed to [staging.element.fi][staging-app-url].
 
 ### 2. [elf-frontend-testnet](https://vercel.com/element-finance/elf-frontend-testnet)
 
-This is the Goerli app accessible at [testnet.element.fi][testnet-app-url] and uses `testnet` as it's production branch.
+This is the Goerli app accessible at [testnet.element.fi][testnet-app-url] and uses `testnet` as its production branch.
 
 After merging a branch into `main`, merge `main` into `testnet` to deploy to [testnet.element.fi][testnet-app-url].
 
 ### 3. [elf-frontend](https://vercel.com/element-finance/elf-frontend)
 
-This is the main app accessible at [app.element.fi][mainnet-app-url] and uses `mainnet` as it's production branch.
+This is the main app accessible at [app.element.fi][mainnet-app-url] and uses `mainnet` as its production branch.
 
 After merging a branch into `main`, merge `main` into `mainnet` to deploy to [app.element.fi][mainnet-app-url].
 
