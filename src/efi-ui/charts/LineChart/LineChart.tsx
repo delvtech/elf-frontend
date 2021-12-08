@@ -11,7 +11,7 @@ import {
   Serie,
   SliceTooltipProps,
 } from "@nivo/line";
-import { LinearScale, TimeScale } from "@nivo/scales";
+import { ScaleLinearSpec, ScaleTimeSpec } from "@nivo/scales";
 import { line } from "d3-shape";
 import { Currency, Money } from "ts-money";
 import { t } from "ttag";
@@ -89,7 +89,7 @@ export function LineChart(props: LineChartProps): ReactElement {
   // give the chart a 20% cushion from the highest data value so it looks nice
   const maxYScale = Math.round(maxDataValue * 1.2) || 100;
 
-  const yScale: LinearScale = {
+  const yScale: ScaleLinearSpec = {
     type: "linear",
     min: 0,
     max: maxYScale,
@@ -115,7 +115,7 @@ export function LineChart(props: LineChartProps): ReactElement {
     currency
   );
 
-  const xScale: TimeScale = useXScale(chartType, groupBarData, data);
+  const xScale: ScaleTimeSpec = useXScale(chartType, groupBarData, data);
 
   const isLargeScreen = useIsTailwindLargeScreen();
   const bottomAxis = isLargeScreen ? defaultBottomAxis : smallScreenBottomAxis;
@@ -195,7 +195,7 @@ function useXScale(chartType: string, groupVolumeData: boolean, data: Serie[]) {
     const xScaleMax =
       chartType === "bars" && groupVolumeData ? noonToday : today;
 
-    const xScale: TimeScale = {
+    const xScale: ScaleTimeSpec = {
       type: "time",
       min: xScaleMin,
       max: xScaleMax,
@@ -292,10 +292,14 @@ function makeBarLayer(dataColor: string) {
     const pathStrings = serieData
       ?.map((datum) => {
         const timeStamp = (datum.x as Date).getTime();
-        const xMin = xScale(new Date(timeStamp - ONE_DAY_IN_MILLISECONDS / 2));
-        const xMax = xScale(new Date(timeStamp + ONE_DAY_IN_MILLISECONDS / 2));
-        const yMin = yScale(0);
-        const yMax = yScale(datum.y as number);
+        const xMin = xScale(
+          new Date(timeStamp - ONE_DAY_IN_MILLISECONDS / 2)
+        ) as number;
+        const xMax = xScale(
+          new Date(timeStamp + ONE_DAY_IN_MILLISECONDS / 2)
+        ) as number;
+        const yMin = yScale(0) as number;
+        const yMax = yScale(datum.y as number) as number;
 
         const width = Math.abs(xMax - xMin);
         const height = Math.abs(yMax - yMin);
@@ -345,8 +349,11 @@ function makeVerticalLineLayer(dataColor: string) {
       ?.map((datum) => {
         const lineGenerator = line();
         return lineGenerator([
-          [xScale(datum.x as Date), yScale(0)],
-          [xScale(datum.x as Date), yScale(datum.y as number)],
+          [xScale(datum.x as Date) as number, yScale(0) as number],
+          [
+            xScale(datum.x as Date) as number,
+            yScale(datum.y as number) as number,
+          ],
         ]);
       })
       ?.filter(Boolean) as string[];
