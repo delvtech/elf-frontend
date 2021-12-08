@@ -65,7 +65,7 @@
     "@web3-react/lattice-connector": "^6.1.9",
     "@web3-react/ledger-connector": "^6.1.9",
     "@web3-react/trezor-connector": "^6.1.9",
-    "@web3-react/walletconnect-connector": "^6.2.7",
+    "@web3-react/walletconnect-connector": "^6.2.8",
     "@web3-react/walletlink-connector": "^6.2.7",
     "calendar-link": "^2.1.1",
     "classnames": "^2.3.1",
