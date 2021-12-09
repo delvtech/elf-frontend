@@ -55,3 +55,5 @@ export function EarnCardList({
     </div>
   );
 }
+
+export default EarnCardList;

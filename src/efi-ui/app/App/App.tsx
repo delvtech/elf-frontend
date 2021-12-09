@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useEffect } from "react";
+import React, { FC, Fragment } from "react";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import { Button, FocusStyleManager, H1, Overlay } from "@blueprintjs/core";
