@@ -1,7 +1,7 @@
 import { Currency, Money } from "ts-money";
 
 import { format, subDays } from "date-fns";
-import coinsJSON from "efi-coingecko/coins.json";
+import coinsJSON from "efi-coingecko/coins-shortlist.json";
 
 /**
  * Lookup object for getting the CoinGecko coin id from the coin or token's
