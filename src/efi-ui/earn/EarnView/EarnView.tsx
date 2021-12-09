@@ -4,16 +4,23 @@ import { NonIdealState } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
+import dynamic from "next/dynamic";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
 import { Title } from "efi-ui/base/Title";
-import { EarnCardList } from "efi-ui/earn/EarnCardList/EarnCardList";
-import { EarnTable } from "efi-ui/earn/EarnTable/EarnTable";
 import { ViewTitle } from "efi-ui/page/ViewTitle/ViewTitle";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipalTokenInfos";
+
+const DynamicEarnTable = dynamic(
+  () => import("efi-ui/earn/EarnTable/EarnTable")
+);
+
+const DynamicEarnCardList = dynamic(
+  () => import("efi-ui/earn/EarnCardList/EarnCardList")
+);
 
 interface EarnViewProps {}
 
@@ -60,10 +67,18 @@ export function EarnView(unusedProps: EarnViewProps): ReactElement {
         )}
 
         {showSmallScreenView && (
-          <EarnCardList library={library} account={account} signer={signer} />
+          <DynamicEarnCardList
+            library={library}
+            account={account}
+            signer={signer}
+          />
         )}
         {showLargeScreenView && (
-          <EarnTable library={library} account={account} signer={signer} />
+          <DynamicEarnTable
+            library={library}
+            account={account}
+            signer={signer}
+          />
         )}
       </div>
     </Fragment>
