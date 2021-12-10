@@ -1,6 +1,6 @@
 import { TokenInfo, TokenList } from "@uniswap/token-lists";
 import TokenListJsonFileGoerli from "elf-tokenlist/dist/goerli.tokenlist.json";
-import TokenListJsonFileMainnet from "elf-tokenlist/dist/mainnet.tokenlist.json";
+import { mainnetTokenList as TokenListJsonFileMainnet } from "elf-tokenlist";
 import keyBy from "lodash.keyby";
 import TokenListJsonFileTestnet from "tokenlists/testnet.tokenlist.json";
 import { AnyTokenListInfo } from "tokenlists/types";

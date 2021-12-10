@@ -32,7 +32,7 @@ export function FixedRatesListView(
   return (
     <Fragment>
       <Title
-        text={t`Earn fixed yield from buying at a discount. Exit anytime. `}
+        text={t`Earn fixed yield from buying at a discount. Exit anytime.`}
       />
       {/* Top-level route components should specify their own containers. */}
       <div className={tw("flex", "flex-col", "h-full", "items-center")}>
