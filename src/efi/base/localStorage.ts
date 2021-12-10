@@ -1,3 +1,3 @@
 // eslint-disable-next-line no-restricted-syntax
-export const efiLocalStorage = window.localStorage;
-export default efiLocalStorage;
+export const elfLocalStorage = window.localStorage;
+export default elfLocalStorage;

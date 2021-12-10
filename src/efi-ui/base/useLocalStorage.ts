@@ -1,3 +1,5 @@
+import { elfLocalStorage } from "efi/base/localStorage";
+
 export type LocalStorage = {
   getItem: (key: string) => string;
   setItem: (key: string, value: string) => boolean;
@@ -8,12 +10,12 @@ export function useLocalStorage(): LocalStorage {
   const isBrowser: boolean = typeof window !== "undefined";
 
   const getItem = (key: string): string => {
-    return isBrowser ? window.localStorage[key] : "";
+    return isBrowser ? elfLocalStorage[key] : "";
   };
 
   const setItem = (key: string, value: string): boolean => {
     if (isBrowser) {
-      window.localStorage.setItem(key, value);
+      elfLocalStorage.setItem(key, value);
       return true;
     }
 
@@ -21,7 +23,7 @@ export function useLocalStorage(): LocalStorage {
   };
 
   const clear = (): void => {
-    window.localStorage.clear();
+    elfLocalStorage.clear();
   };
 
   return {

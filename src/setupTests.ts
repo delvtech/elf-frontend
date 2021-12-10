@@ -3,8 +3,8 @@
 // https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom/extend-expect";
 
-import efiLocalStorage from "efi/base/localStorage";
+import elfLocalStorage from "efi/base/localStorage";
 
 beforeEach(() => {
-  efiLocalStorage.clear();
+  elfLocalStorage.clear();
 });

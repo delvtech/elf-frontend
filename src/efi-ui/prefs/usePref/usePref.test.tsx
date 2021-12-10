@@ -6,7 +6,7 @@ import userEvent from "@testing-library/user-event";
 import { usePref } from "efi-ui/prefs/usePref/usePref";
 import { renderHookWithClient } from "efi-ui/testing/renderHookWithClient";
 import { renderWithClient } from "efi-ui/testing/renderWithClient";
-import efiLocalStorage from "efi/base/localStorage";
+import elfLocalStorage from "efi/base/localStorage";
 import { makePrefEnvelope } from "efi/prefs/prefEnvelope";
 import { createQueryClient } from "efi/queryClient";
 
@@ -18,7 +18,7 @@ test.skip("Default value is provided when no pref exists", () => {
 
 test.skip("Stored value is provided when a pref already exists", () => {
   const prefEnvelope = makePrefEnvelope("this is a previously stored value");
-  efiLocalStorage.setItem("test-pref", JSON.stringify(prefEnvelope));
+  elfLocalStorage.setItem("test-pref", JSON.stringify(prefEnvelope));
 
   const { result } = renderUsePref();
 
