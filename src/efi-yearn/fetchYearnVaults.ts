@@ -10,10 +10,7 @@ export async function fetchYearnVaults(): Promise<YearnVaultResult[]> {
 export function getYearnVaultAPY(
   apyFromYearn: YearnVaultResult["apy"]
 ): number {
-  const { points, net_apy } = apyFromYearn;
-  if (points) {
-    return points.week_ago;
-  }
+  const { net_apy } = apyFromYearn;
   return net_apy;
 }
 
