@@ -6,7 +6,7 @@
 | Goerli           | `npm run build:goerli-app`  |
 | Ethereum Mainnet | `npm run build:mainnet-app` |
 
-## Developer setup
+## Developer Setup
 
 First install the dependencies. Open the directory in your terminal and run:
 
