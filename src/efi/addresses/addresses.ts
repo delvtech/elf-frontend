@@ -1,8 +1,8 @@
 import { AddressesJsonFile } from "addresses/AddressesJsonFile";
 import AddressesJsonFileMock from "addresses/mock.addresses.json";
 import AddressesJsonFileTestnet from "addresses/testnet.addresses.json";
-import AddressesJsonFileGoerli from "elf-tokenlist/dist/goerli.addresses.json";
-import AddressesJsonFileMainnet from "elf-tokenlist/dist/mainnet.addresses.json";
+import AddressesJsonFileGoerli from "@elementfi/tokenlist/dist/goerli.addresses.json";
+import AddressesJsonFileMainnet from "@elementfi/tokenlist/dist/mainnet.addresses.json";
 
 // Default to the testnet in this repo so `npm start` Just Works without having
 // to specify it on the command line.
