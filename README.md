@@ -50,7 +50,7 @@ Address       0x70997970c51812dc3a010c7d01b50e0d17dc79c8
 Private Key:  0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d # <- Import this
 ```
 
-The purpose of doing this is so we can finance a wallet with a basket of ERC20 tokens required to interact with the system. **IMPORTANT**, this address is a default hardhat address and as such should never be sent real mainnet funds as they will be stolen.
+The purpose of doing this is so we can finance a wallet with a basket of ERC20 tokens required to interact with the system. **IMPORTANT! This address is a default hardhat address and as such should never be sent real mainnet funds as they will be stolen**.
 
 ##### Running the mainnet fork node
 
@@ -62,7 +62,7 @@ npm run start-mainnet:dev
 
 ##### Developing against the Mainnet fork environment
 
-In a separate terminal, `cd` into the this frontend's directory and run:
+In a separate terminal, `cd` into this repo's directory and run:
 
 ```bash
 npm run start:dev-mainnet-fork-app
