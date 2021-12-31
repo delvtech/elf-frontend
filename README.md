@@ -60,7 +60,7 @@ In the elf-frontend-testnet directory, run:
 npm run start-mainnet:dev
 ```
 
-##### Running the frontend against the mainnet fork node
+##### Developing against the Mainnet fork environment
 
 In a separate terminal, `cd` into the this frontend's directory and run:
 
