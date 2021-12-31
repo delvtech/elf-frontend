@@ -8,6 +8,10 @@ function getCanPerformJsonId() {
     return "mock";
   }
 
+  if (process.env.NEXT_PUBLIC_CHAIN_NAME === "mainnet_fork") {
+    return "mainnet";
+  }
+
   return process.env.NEXT_PUBLIC_CHAIN_NAME || "testnet";
 }
 

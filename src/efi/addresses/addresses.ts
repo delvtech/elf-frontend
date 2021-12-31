@@ -12,12 +12,19 @@ function getAddressesJsonId() {
     return "mock";
   }
 
+  if (process.env.NEXT_PUBLIC_CHAIN_NAME === "mainnet_fork") {
+    return "mainnet";
+  }
+
   return process.env.NEXT_PUBLIC_CHAIN_NAME || "testnet";
 }
 
 function getAddressesJson(): AddressesJsonFile {
   if (addressesJsonId === "testnet") {
-    return AddressesJsonFileTestnet;
+    return {
+      ...AddressesJsonFileMainnet,
+      chainId: AddressesJsonFileTestnet.chainId,
+    }; //AddressesJsonFileTestnet;
   }
 
   if (addressesJsonId === "mock") {
@@ -25,7 +32,13 @@ function getAddressesJson(): AddressesJsonFile {
   }
 
   if (addressesJsonId === "mainnet") {
-    return AddressesJsonFileMainnet;
+    return {
+      ...AddressesJsonFileMainnet,
+      chainId:
+        process.env.NEXT_PUBLIC_CHAIN_NAME === "mainnet_fork"
+          ? AddressesJsonFileTestnet.chainId
+          : AddressesJsonFileMainnet.chainId,
+    };
   }
 
   if (addressesJsonId === "goerli") {
