@@ -28,9 +28,12 @@ export function isGoerli(chainId: number): boolean {
   return chainId === ChainId.GOERLI;
 }
 export function isMainnet(chainId: number): boolean {
-  return chainId === ChainId.MAINNET;
+  return (
+    chainId === ChainId.MAINNET ||
+    (chainId === ChainId.LOCAL &&
+      process.env.NEXT_PUBLIC_CHAIN_NAME === "mainnet_fork")
+  );
 }
-
 export const NUM_ETH_DECIMALS = 18;
 export const ONE_ETHER = parseUnits("1", NUM_ETH_DECIMALS);
 
