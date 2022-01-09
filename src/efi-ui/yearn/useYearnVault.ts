@@ -19,9 +19,13 @@ export function useYearnVault(
 
       // if we don't get a match on the exact address we're probably on goerli
       // so we should compare by symbol instead
-      const symbolResult = result.find((result) => {
+      const possibleMatches = result.filter((result) => {
         return result.symbol === vaultSymbol && result.endorsed;
-      }) as YearnVaultResult;
+      }); // there will be many versions of vaults for some assets like USDC
+
+      const symbolResult = possibleMatches[
+        possibleMatches.length - 1 // the last element is the latest version
+      ] as YearnVaultResult;
 
       return addressResult || symbolResult;
     },
