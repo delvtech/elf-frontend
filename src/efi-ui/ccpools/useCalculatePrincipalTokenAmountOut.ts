@@ -1,5 +1,4 @@
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalPoolTokenInfo } from "tokenlists/types";
 
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { SwapKind } from "efi-balancer/SwapKind";
@@ -13,6 +12,7 @@ import {
   PrincipalPoolCalcSwapResult,
   SwapAsset,
 } from "efi/pools/calcSwapPrincipalPool";
+import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 
 export function useCalculatePrincipalTokenAmountOut(
   poolInfo: PrincipalPoolTokenInfo,

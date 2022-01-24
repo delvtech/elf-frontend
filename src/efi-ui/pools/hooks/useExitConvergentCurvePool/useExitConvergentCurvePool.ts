@@ -4,7 +4,6 @@ import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types";
 import { Vault } from "elf-contracts-typechain/dist/types/Vault";
 import { BigNumber, Signer } from "ethers";
 import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
-import { PrincipalPoolTokenInfo } from "tokenlists/types";
 
 import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
@@ -17,6 +16,7 @@ import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForL
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { balancerVaultContract } from "efi-balancer/vault";
+import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 
 export function useExitConvergentCurvePool(
   signer: Signer | undefined,

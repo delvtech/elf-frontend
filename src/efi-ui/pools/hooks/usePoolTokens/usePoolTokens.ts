@@ -7,9 +7,11 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
-import { PrincipalPoolTokenInfo } from "tokenlists/types";
 import { balancerVaultContract } from "efi-balancer/vault";
-import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
+import {
+  PrincipalPoolTokenInfo,
+  YieldPoolTokenInfo,
+} from "@elementfi/tokenlist";
 
 export function usePoolTokens(
   pool: PoolContract | undefined

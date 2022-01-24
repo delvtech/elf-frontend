@@ -1,4 +1,4 @@
-import { PrincipalPoolTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { principalPoolContractsByAddress } from "efi/pools/ccpool";
@@ -6,6 +6,7 @@ import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoFor
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { ONE_YEAR_IN_SECONDS } from "efi/base/time";
+import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 
 /**
  * Returns the Fixed APR for a principal token

@@ -6,7 +6,11 @@
  * codesharing.
  */
 
-import { TokenInfo, YieldPoolTokenInfo } from "@elementfi/tokenlist";
+import {
+  PrincipalPoolTokenInfo,
+  TokenInfo,
+  YieldPoolTokenInfo,
+} from "@elementfi/tokenlist";
 
 export interface PrincipalTokenInfo extends TokenInfo {
   extensions: {
@@ -52,42 +56,6 @@ export interface YieldTokenInfo extends TokenInfo {
      * Number of seconds after epoch when the yield token can be redeemed
      */
     unlockTimestamp: number;
-  };
-}
-
-export interface PrincipalPoolTokenInfo extends TokenInfo {
-  extensions: {
-    /**
-     * The principal token address
-     */
-    bond: string;
-
-    /**
-     * The underlying base asset for the principal token.  NOTE: This will be a
-     * weth address when dealing with eth tranches.
-     */
-    underlying: string;
-
-    /**
-     * balancer poolId
-     */
-    poolId: string;
-
-    /**
-     * Number of seconds after epoch when the pool was created
-     */
-    createdAtTimestamp: number;
-
-    /**
-     * Number of seconds after epoch when the pool assets will converge in
-     * price.
-     */
-    expiration: number;
-
-    /**
-     * The number of seconds in the pools timescale.
-     */
-    unitSeconds: number;
   };
 }
 

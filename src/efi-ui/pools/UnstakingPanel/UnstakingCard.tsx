@@ -6,11 +6,7 @@ import { TokenInfo } from "@uniswap/token-lists";
 import { BigNumber, Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
-import {
-  PrincipalPoolTokenInfo,
-  PrincipalTokenInfo,
-  YieldTokenInfo,
-} from "tokenlists/types";
+import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
@@ -34,7 +30,10 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
 import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
-import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
+import {
+  PrincipalPoolTokenInfo,
+  YieldPoolTokenInfo,
+} from "@elementfi/tokenlist";
 
 interface UnstakeCardProps {
   signer: Signer | undefined;

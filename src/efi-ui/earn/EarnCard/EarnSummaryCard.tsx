@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Button, Card, Intent } from "@blueprintjs/core";
-import { PrincipalPoolTokenInfo } from "tokenlists/types";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
@@ -17,7 +16,10 @@ import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
+import {
+  PrincipalPoolTokenInfo,
+  YieldPoolTokenInfo,
+} from "@elementfi/tokenlist";
 
 interface EarnSummaryCardProps {
   onToggleExpand: () => void;
