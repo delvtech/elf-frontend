@@ -1,11 +1,21 @@
-import { TokenInfo, TokenList } from "@uniswap/token-lists";
 import {
-  mainnetTokenList as TokenListJsonFileMainnet,
   goerliTokenList as TokenListJsonFileGoerli,
+  mainnetTokenList as TokenListJsonFileMainnet,
+  PrincipalPoolTokenInfo,
+  PrincipalTokenInfo,
+  YieldPoolTokenInfo,
+  YieldTokenInfo,
 } from "@elementfi/tokenlist";
+import { TokenInfo, TokenList } from "@uniswap/token-lists";
 import keyBy from "lodash.keyby";
 import TokenListJsonFileTestnet from "tokenlists/testnet.tokenlist.json";
-import { AnyTokenListInfo } from "tokenlists/types";
+
+type AnyTokenListInfo =
+  | TokenInfo
+  | PrincipalTokenInfo
+  | YieldTokenInfo
+  | PrincipalPoolTokenInfo
+  | YieldPoolTokenInfo;
 
 // export const tokenListJson: TokenList = require(tokenListJsonFilePath);
 // Default to the testnet in this repo so `npm start` Just Works without having
