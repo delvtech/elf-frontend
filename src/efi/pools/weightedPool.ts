@@ -2,10 +2,11 @@ import { TokenInfo } from "@uniswap/token-lists";
 import { WeightedPool__factory } from "elf-contracts-typechain/dist/types/factories/WeightedPool__factory";
 import { WeightedPool } from "elf-contracts-typechain/dist/types/WeightedPool";
 import keyBy from "lodash.keyby";
-import { TokenListTag, YieldPoolTokenInfo } from "tokenlists/types";
 
 import { defaultProvider } from "efi/providers/providers";
 import { tokenListJson } from "efi/tokenlists/tokenlists";
+import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
+import { TokenTag } from "@elementfi/tokenlist/dist/tags";
 
 // hard limit set by Balancer.  Cannot trade in/out more than 30% of the pool
 export const MAX_WEIGHTED_POOL_PRICE_IMPACT = 0.3;
@@ -50,5 +51,5 @@ export function getPoolInfoForYieldToken(
 export function isYieldPool(
   tokenInfo: TokenInfo
 ): tokenInfo is YieldPoolTokenInfo {
-  return !!tokenInfo.tags?.includes(TokenListTag.WPOOL);
+  return !!tokenInfo.tags?.includes(TokenTag.WPOOL);
 }

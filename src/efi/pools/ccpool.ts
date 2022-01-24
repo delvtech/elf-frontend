@@ -2,10 +2,11 @@ import { TokenInfo } from "@uniswap/token-lists";
 import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types/ConvergentCurvePool";
 import { ConvergentCurvePool__factory } from "elf-contracts-typechain/dist/types/factories/ConvergentCurvePool__factory";
 import keyBy from "lodash.keyby";
-import { PrincipalPoolTokenInfo, TokenListTag } from "tokenlists/types";
 
 import { defaultProvider } from "efi/providers/providers";
 import { tokenListJson } from "efi/tokenlists/tokenlists";
+import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
+import { TokenTag } from "@elementfi/tokenlist/dist/tags";
 
 /**
  * The list of all principal token pools. This includes pools with mature
@@ -29,7 +30,7 @@ export const principalPoolContractsByAddress = keyBy(
 export function isPrincipalPool(
   tokenInfo: TokenInfo
 ): tokenInfo is PrincipalPoolTokenInfo {
-  return !!tokenInfo.tags?.includes(TokenListTag.CCPOOL);
+  return !!tokenInfo.tags?.includes(TokenTag.CCPOOL);
 }
 export function getPoolInfoForPrincipalToken(
   principalTokenAddress: string

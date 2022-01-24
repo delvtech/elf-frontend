@@ -1,13 +1,11 @@
+import { AssetProxyTokenInfo, PrincipalTokenInfo } from "@elementfi/tokenlist";
+import { TokenTag } from "@elementfi/tokenlist/dist/tags";
 import { TokenInfo } from "@uniswap/token-lists";
-import { defaultProvider } from "efi/providers/providers";
-import { tokenListJson } from "efi/tokenlists/tokenlists";
 import { YVaultAssetProxy__factory } from "elf-contracts-typechain/dist/types/factories/YVaultAssetProxy__factory";
 import keyBy from "lodash.keyby";
-import {
-  PrincipalTokenInfo,
-  AssetProxyTokenInfo,
-  TokenListTag,
-} from "tokenlists/types";
+
+import { defaultProvider } from "efi/providers/providers";
+import { tokenListJson } from "efi/tokenlists/tokenlists";
 
 export const assetProxyTokenInfos: AssetProxyTokenInfo[] =
   tokenListJson.tokens.filter((tokenInfo): tokenInfo is AssetProxyTokenInfo =>
@@ -24,5 +22,5 @@ export const assetProxyContractsByAddress = keyBy(
 );
 
 function isAssetProxy(tokenInfo: TokenInfo): tokenInfo is PrincipalTokenInfo {
-  return !!tokenInfo.tags?.includes(TokenListTag.ASSET_PROXY);
+  return !!tokenInfo.tags?.includes(TokenTag.ASSET_PROXY);
 }

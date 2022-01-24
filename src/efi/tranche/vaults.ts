@@ -1,14 +1,15 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import { TestYVault__factory } from "elf-contracts-typechain/dist/types/factories/TestYVault__factory";
 import keyBy from "lodash.keyby";
-import { TokenListTag, VaultTokenInfo } from "tokenlists/types";
 
 import { tokenListJson } from "efi/tokenlists/tokenlists";
 import { assetProxyTokenInfos } from "efi/tranche/positions";
 import { defaultProvider } from "efi/providers/providers";
+import { TokenTag } from "@elementfi/tokenlist/dist/tags";
+import { VaultTokenInfo } from "@elementfi/tokenlist";
 
 export const vaultTokenInfos: VaultTokenInfo[] = tokenListJson.tokens.filter(
-  (tokenInfo): tokenInfo is VaultTokenInfo => isVaultToken(tokenInfo)
+  (tokenInfo) => isVaultToken(tokenInfo)
 );
 const vaultContracts = assetProxyTokenInfos.map(({ extensions: { vault } }) =>
   TestYVault__factory.connect(vault, defaultProvider)
@@ -22,5 +23,5 @@ export const vaultContractsByAddress = keyBy(
 export function isVaultToken(
   tokenInfo: TokenInfo
 ): tokenInfo is VaultTokenInfo {
-  return !!tokenInfo?.tags?.includes(TokenListTag.VAULT);
+  return !!tokenInfo?.tags?.includes(TokenTag.VAULT);
 }
