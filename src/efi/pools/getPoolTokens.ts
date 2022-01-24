@@ -1,13 +1,14 @@
 import { TokenInfo } from "@uniswap/token-lists";
 import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
 import { ERC20__factory } from "elf-contracts-typechain/dist/types/factories/ERC20__factory";
-import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
+import { PrincipalPoolTokenInfo } from "tokenlists/types";
 
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import { sortAddresses } from "efi/base/sortAddresses/sortAddresses";
+import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
 
 interface PoolTokens {
   baseAssetInfo: TokenInfo;

@@ -2,7 +2,7 @@ import React from "react";
 
 import { Button, Classes } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
+import { PrincipalPoolTokenInfo } from "tokenlists/types";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
@@ -15,6 +15,7 @@ import { IconProps } from "efi-ui/token/TokenIcon";
 import { formatPercent } from "efi/base/formatPercent/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
 import classNames from "classnames";
+import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
 
 interface EarnSummaryCardListItemProps {
   onToggleExpand: () => void;

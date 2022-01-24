@@ -9,7 +9,6 @@ import zipObject from "lodash.zipobject";
 import {
   PrincipalPoolTokenInfo,
   PrincipalTokenInfo,
-  YieldPoolTokenInfo,
   YieldTokenInfo,
 } from "tokenlists/types";
 import { t } from "ttag";
@@ -35,6 +34,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
 import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
+import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
 
 interface UnstakeCardProps {
   signer: Signer | undefined;

@@ -1,6 +1,6 @@
 import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "tokenlists/types";
 import { Money } from "ts-money";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
@@ -16,6 +16,7 @@ import { getPoolForYieldToken } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { useMemo } from "react";
+import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
 
 export function useTotalValueLockedForTranche(
   trancheInfo: PrincipalTokenInfo,

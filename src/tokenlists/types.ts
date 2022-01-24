@@ -6,7 +6,7 @@
  * codesharing.
  */
 
-import { TokenInfo } from "@elementfi/tokenlist";
+import { TokenInfo, YieldPoolTokenInfo } from "@elementfi/tokenlist";
 
 export interface PrincipalTokenInfo extends TokenInfo {
   extensions: {
@@ -88,36 +88,6 @@ export interface PrincipalPoolTokenInfo extends TokenInfo {
      * The number of seconds in the pools timescale.
      */
     unitSeconds: number;
-  };
-}
-
-export interface YieldPoolTokenInfo extends TokenInfo {
-  extensions: {
-    /**
-     * The yield token address
-     */
-    interestToken: string;
-
-    /**
-     * The underlying base asset for the yield token.  NOTE: This will be a
-     * weth address when dealing with eth yield tokens.
-     */
-    underlying: string;
-
-    /**
-     * The underlying base asset for the yield token
-     */
-    poolId: string;
-
-    /**
-     * Number of seconds after epoch when the pool was created
-     */
-    createdAtTimestamp: number;
-
-    /**
-     * Number of seconds after epoch when the yield tokens in the pool will mature
-     */
-    expiration: number;
   };
 }
 

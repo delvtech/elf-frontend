@@ -1,6 +1,6 @@
 import React from "react";
 
-import { PrincipalPoolTokenInfo, YieldPoolTokenInfo } from "tokenlists/types";
+import { PrincipalPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -12,6 +12,7 @@ import { formatMoney } from "efi/money/formatMoney";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import classNames from "classnames";
 import { Classes } from "@blueprintjs/core";
+import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
 
 interface EarnExpandedSummaryProps {
   yieldPoolInfo: YieldPoolTokenInfo;

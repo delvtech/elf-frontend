@@ -4,7 +4,6 @@ import { UseMutationResult } from "react-query";
 import { Vault } from "elf-contracts-typechain/dist/types/Vault";
 import { BigNumber, ContractReceipt, Signer } from "ethers";
 import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
-import { YieldPoolTokenInfo } from "tokenlists/types";
 
 import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
@@ -17,6 +16,7 @@ import { getPoolContract } from "efi/pools/getPoolContract";
 import { WeightedPoolExitKind } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { balancerVaultContract } from "efi-balancer/vault";
+import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
 
 export function useExitWeightedPool(
   signer: Signer | undefined,
