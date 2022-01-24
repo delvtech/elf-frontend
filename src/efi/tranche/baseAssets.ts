@@ -1,11 +1,11 @@
 import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
 import groupBy from "lodash.groupby";
-import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { trancheContracts } from "efi/tranche/tranches";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 /**
  * A lookup object for the tranche contracts of a given base asset's `CryptoAsset.id`, ie:

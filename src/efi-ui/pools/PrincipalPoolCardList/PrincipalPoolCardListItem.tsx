@@ -9,7 +9,6 @@ import {
 } from "@blueprintjs/core";
 import { useRouter } from "next/router";
 import classNames from "classnames";
-import { PrincipalPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -36,6 +35,7 @@ import { TermTag } from "efi-ui/tranche/TermTag";
 import { format } from "date-fns";
 import { calculateProgress } from "efi/base/calculateProgress/calculateProgress";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
+import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 
 interface PrincipalPoolCardListItemProps {
   principalPoolTokenInfo: PrincipalPoolTokenInfo;

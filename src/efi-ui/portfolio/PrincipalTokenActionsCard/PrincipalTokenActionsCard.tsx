@@ -2,7 +2,6 @@ import { ReactElement } from "react";
 
 import { Card } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { PrincipalTokenInfo } from "tokenlists/types";
 
 import tw from "efi-tailwindcss-classnames";
 import { BuyPrincipalTokensForm } from "efi-ui/portfolio/PrincipalTokenActionsCard/BuyPrincipalTokensForm";
@@ -11,6 +10,7 @@ import { PrincipalTokenActionTabs } from "efi-ui/portfolio/PrincipalTokenActionT
 import { PrincipalTokenInformation } from "efi-ui/portfolio/PrincipalTokenInformation/PrincipalTokenInformation";
 import { SellPrincipalTokensForm } from "efi-ui/portfolio/PrincipalTokenActionsCard/SellPrincipalTokensForm";
 import { RedeemPrincipalTokensForm } from "efi-ui/portfolio/PrincipalTokenActionsCard/RedeemPrincipalTokensForm";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 interface PrincipalTokenActionsCardProps {
   library: Web3Provider | undefined;

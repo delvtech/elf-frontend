@@ -7,7 +7,7 @@ import { formatUnits } from "ethers/lib/utils";
 import {
   PrincipalTokenInfo as TrancheInfo,
   YieldTokenInfo,
-} from "tokenlists/types";
+} from "@elementfi/tokenlist";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

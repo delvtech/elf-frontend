@@ -16,7 +16,7 @@ import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types/Converge
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

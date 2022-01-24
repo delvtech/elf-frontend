@@ -3,7 +3,6 @@ import { ReactElement, useCallback, useState } from "react";
 import { Button, Callout, Card, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -24,6 +23,7 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 interface MintFormProps {
   library: Web3Provider | undefined;

@@ -8,6 +8,9 @@
 # testing
 /coverage
 
+# Running the tsc task in VSCode
+tsconfig.tsbuildinfo
+
 # production
 /build
 

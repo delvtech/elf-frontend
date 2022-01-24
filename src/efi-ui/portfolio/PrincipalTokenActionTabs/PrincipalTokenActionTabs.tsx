@@ -5,11 +5,11 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { PrincipalTokenActionTabId } from "efi-ui/portfolio/PrincipalTokenActionTabs/tabs";
-import { PrincipalTokenInfo } from "tokenlists/types";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 import classNames from "classnames";
 import styles from "./tabs.module.css";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 interface PortfolioActionTabsProps {
   activeTabId: PrincipalTokenActionTabId;

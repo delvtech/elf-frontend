@@ -4,7 +4,6 @@ import { Button, Callout, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -23,6 +22,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
 import { isPrincipalToken } from "efi/tranche/tranches";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 
 const { userProxyContractAddress } = ContractAddresses;
 

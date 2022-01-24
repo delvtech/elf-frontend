@@ -5,7 +5,6 @@ import classNames from "classnames";
 import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { Money } from "ts-money";
 import { t } from "ttag";
 
@@ -28,6 +27,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { formatTermAssetShortSymbol } from "efi/tranche/format";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 
 interface TokenSummaryProps {
   poolInfo: PoolInfo;

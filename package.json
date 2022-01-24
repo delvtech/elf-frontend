@@ -17,7 +17,7 @@
     "@blueprintjs/icons": "^3.31.0",
     "@blueprintjs/popover2": "^0.12.8",
     "@blueprintjs/select": "^3.18.11",
-    "@elementfi/tokenlist": "^1.1.0",
+    "@elementfi/tokenlist": "^2.0.0",
     "@ethersproject/abi": "^5.5.0",
     "@ethersproject/abstract-signer": "^5.4.1",
     "@ethersproject/bytes": "^5.4.0",
@@ -180,7 +180,6 @@
     "test": "jest",
     "test:coverage": "npm run test -- --coverage --watchAll=false",
     "update-elf-contracts-typechain": "npm install git+https://github.com/element-fi/elf-contracts-typechain.git",
-    "update-elf-tokenlist": "npm install git+https://github.com/element-fi/elf-tokenlist.git",
     "update:language": "bash ./scripts/update-language.sh",
     "vercel-build-check": "bash ./scripts/vercel-build-check.sh"
   },

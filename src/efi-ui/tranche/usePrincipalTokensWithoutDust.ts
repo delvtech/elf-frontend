@@ -1,12 +1,12 @@
 import { BigNumber } from "ethers";
 import zip from "lodash.zip";
-import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { isDust } from "efi/coins/isDust";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { trancheContracts } from "efi/tranche/tranches";
 import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 /**
  * Returns the list of principal token infos that have a non-dust balance for

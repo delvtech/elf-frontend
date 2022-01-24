@@ -1,10 +1,7 @@
 import { TestYVault, Tranche } from "elf-contracts-typechain/dist/types";
 import { YVaultAssetProxy } from "elf-contracts-typechain/dist/types/YVaultAssetProxy";
 import { formatUnits } from "ethers/lib/utils";
-import {
-  AssetProxyTokenInfo,
-  PrincipalTokenInfo as TrancheInfo,
-} from "tokenlists/types";
+import { PrincipalTokenInfo as TrancheInfo } from "@elementfi/tokenlist";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
@@ -13,6 +10,7 @@ import {
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
 import { assetProxyContractsByAddress } from "efi/tranche/positions";
+import { AssetProxyTokenInfo } from "@elementfi/tokenlist";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.

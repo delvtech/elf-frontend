@@ -2,7 +2,6 @@ import { ReactElement } from "react";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { TokenInfo } from "@uniswap/token-lists";
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import { UnstakeConfirmationForm } from "efi-ui/pools/UnstakeTokensConfirmationDrawer/UnstakeConfirmationForm";
@@ -12,6 +11,7 @@ import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatTermAssetShortSymbol } from "efi/tranche/format";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 
 interface UnstakeConfirmationDrawerProps {
   account: string | null | undefined;

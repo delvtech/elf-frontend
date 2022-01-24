@@ -5,7 +5,7 @@ import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 
 interface TermButton2Props {

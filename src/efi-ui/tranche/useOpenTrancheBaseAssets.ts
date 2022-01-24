@@ -1,11 +1,11 @@
 import { Tranche } from "elf-contracts-typechain/dist/types";
 import uniqBy from "lodash.uniqby";
-import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { useOpenTrancheContracts } from "efi-ui/tranche/useOpenTrancheContracts";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 export function useOpenTrancheBaseAssets(): CryptoAsset[] {
   const openTrancheContracts = useOpenTrancheContracts();

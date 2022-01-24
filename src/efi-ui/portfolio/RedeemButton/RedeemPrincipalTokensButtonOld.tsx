@@ -4,7 +4,6 @@ import { AnchorButton, Button, Intent } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -16,6 +15,7 @@ import ContractAddresses from "efi/addresses/addresses";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 const { userProxyContractAddress } = ContractAddresses;
 

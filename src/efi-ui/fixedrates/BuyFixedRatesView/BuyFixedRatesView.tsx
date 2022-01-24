@@ -5,7 +5,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { commify } from "ethers/lib/utils";
-import { PrincipalTokenInfo, PrincipalPoolTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -35,6 +35,7 @@ import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalan
 import { IconNames } from "@blueprintjs/icons";
 import { useNavigation } from "efi-ui/app/navigation/hooks/useNavigation";
 import { Navigation } from "efi-ui/app/navigation/navigation";
+import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 
 export interface BuyFixedRatesViewProps {
   availablePrincipalTokens: PrincipalTokenInfo[];

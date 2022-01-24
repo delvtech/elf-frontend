@@ -14,7 +14,7 @@ import { parseUnits } from "ethers/lib/utils";
 import {
   PrincipalTokenInfo as TrancheInfo,
   YieldTokenInfo,
-} from "tokenlists/types";
+} from "@elementfi/tokenlist";
 
 import { useTokenApprovedForAmount } from "efi-ui/token/hooks/useTokenApprovedForAmount";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";

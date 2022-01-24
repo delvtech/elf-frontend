@@ -4,8 +4,6 @@ import {
   GetStaticPathsResult,
 } from "next";
 
-import { PrincipalTokenInfo } from "tokenlists/types";
-
 import { getOpenPrincipalTokensWithSameBaseAsset } from "efi/tranche/tranches";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
@@ -15,6 +13,7 @@ import {
   BuyFixedRatesView,
   BuyFixedRatesViewProps,
 } from "efi-ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 export async function getStaticProps({
   params,

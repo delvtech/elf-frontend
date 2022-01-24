@@ -3,7 +3,6 @@ import { Fragment, ReactElement, useCallback } from "react";
 import { Card, Classes, Elevation } from "@blueprintjs/core";
 import { useRouter } from "next/router";
 import classNames from "classnames";
-import { PrincipalPoolTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -30,6 +29,7 @@ import { principalPoolContractsByAddress } from "efi/pools/ccpool";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
+import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 
 interface PrincipalPoolTableRowProps {
   className?: string;

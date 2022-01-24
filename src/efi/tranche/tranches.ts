@@ -2,24 +2,24 @@ import { TokenInfo } from "@uniswap/token-lists";
 import { Tranche__factory } from "elf-contracts-typechain/dist/types/factories/Tranche__factory";
 import { TestYVault } from "elf-contracts-typechain/dist/types/TestYVault";
 import keyBy from "lodash.keyby";
-import {
-  AssetProxyTokenInfo,
-  PrincipalTokenInfo,
-  TokenListTag,
-  VaultTokenInfo,
-  YieldTokenInfo,
-} from "tokenlists/types";
 
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { getTokenInfo, tokenListJson } from "efi/tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { vaultContractsByAddress } from "efi/tranche/vaults";
 import { defaultProvider } from "efi/providers/providers";
+import {
+  PrincipalTokenInfo,
+  AssetProxyTokenInfo,
+  VaultTokenInfo,
+  YieldTokenInfo,
+} from "@elementfi/tokenlist";
+import { TokenTag } from "@elementfi/tokenlist/dist/tags";
 
 export function isPrincipalToken(
   tokenInfo: TokenInfo
 ): tokenInfo is PrincipalTokenInfo {
-  return !!tokenInfo?.tags?.includes(TokenListTag.PRINCIPAL);
+  return !!tokenInfo?.tags?.includes(TokenTag.PRINCIPAL);
 }
 
 export const principalTokenInfos: PrincipalTokenInfo[] =
@@ -64,7 +64,7 @@ export function getVaultTokenInfoForTranche(
     extensions: { vault },
   } = getTokenInfo<AssetProxyTokenInfo>(position);
 
-  const vaultTokenInfo = getTokenInfo<VaultTokenInfo>(vault);
+  const vaultTokenInfo = getTokenInfo<TokenInfo>(vault);
 
   return vaultTokenInfo;
 }

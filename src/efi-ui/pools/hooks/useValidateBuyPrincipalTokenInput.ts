@@ -1,5 +1,4 @@
 import { Web3Provider } from "@ethersproject/providers";
-import { PrincipalPoolTokenInfo } from "tokenlists/types";
 
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
@@ -12,6 +11,7 @@ import {
   validateTradeValues,
 } from "efi/trade/validateTradeValues";
 import { useCalculatePrincipalTokenAmountOut } from "efi-ui/ccpools/useCalculatePrincipalTokenAmountOut";
+import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 
 export function useValidateBuyPrincipalTokenInput(
   library: Web3Provider | undefined,

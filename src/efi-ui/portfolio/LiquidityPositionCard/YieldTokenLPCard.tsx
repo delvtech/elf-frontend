@@ -16,7 +16,7 @@ import { WeightedPool } from "elf-contracts-typechain/dist/types/WeightedPool";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
-import { YieldPoolTokenInfo, YieldTokenInfo } from "tokenlists/types";
+import { YieldTokenInfo } from "@elementfi/tokenlist";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -37,6 +37,7 @@ import { getPoolInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
+import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
 
 interface YieldTokenLPCardProps {
   account: string | null | undefined;

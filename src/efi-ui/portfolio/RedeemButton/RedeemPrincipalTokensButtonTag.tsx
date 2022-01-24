@@ -4,7 +4,6 @@ import { Classes, Icon, Intent, Tag } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -18,6 +17,7 @@ import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";
 import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 const { userProxyContractAddress } = ContractAddresses;
 
