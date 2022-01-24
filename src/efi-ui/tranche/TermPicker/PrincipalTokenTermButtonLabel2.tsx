@@ -2,7 +2,6 @@ import { ReactElement } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
 import classNames from "classnames";
-import { PrincipalTokenInfo } from "tokenlists/types";
 import { Currencies, Money } from "ts-money";
 import { t } from "ttag";
 
@@ -15,6 +14,7 @@ import { formatAbbreviatedDate } from "efi/base/dates/dates";
 import { formatPercent } from "efi/base/formatPercent/formatPercent";
 import { ONE_DAY_IN_MILLISECONDS } from "efi/base/time";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 interface PrincipalTokenTermButtonLabel2Props {
   className?: string;

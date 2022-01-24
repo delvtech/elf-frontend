@@ -17,7 +17,7 @@ import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 
 import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 import { useWithdrawPrincipal } from "efi-ui/tranche/RedeemTokensDrawer/useWithdrawPrincipal";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 

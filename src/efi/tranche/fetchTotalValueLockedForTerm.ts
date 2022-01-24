@@ -1,5 +1,4 @@
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "tokenlists/types";
 import { Money } from "ts-money";
 
 import { fetchAccumulatedInterestForTranche } from "efi/tranche/fetchAccumulatedInterestForTranche";
@@ -8,7 +7,7 @@ import { fetchBaseAssetReservesInPool } from "efi/pools/fetchBaseAssetReservesIn
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
+import { PrincipalTokenInfo, YieldPoolTokenInfo } from "@elementfi/tokenlist";
 
 export async function fetchTotalValueLockedForTerm(
   trancheInfo: PrincipalTokenInfo,

@@ -4,7 +4,6 @@ import { Button, Card, Elevation, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { useRouter } from "next/router";
 import classNames from "classnames";
-import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -22,7 +21,7 @@ import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { usePrincipalTokenYield } from "efi-ui/pools/hooks/usePrincipalTokenYield";
-import { AssetProxyTokenInfo } from "@elementfi/tokenlist";
+import { AssetProxyTokenInfo, PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 interface FixedRateCardProps {
   principalToken: PrincipalTokenInfo;

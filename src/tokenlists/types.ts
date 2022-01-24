@@ -8,37 +8,10 @@
 
 import {
   PrincipalPoolTokenInfo,
+  PrincipalTokenInfo,
   TokenInfo,
   YieldPoolTokenInfo,
 } from "@elementfi/tokenlist";
-
-export interface PrincipalTokenInfo extends TokenInfo {
-  extensions: {
-    /**
-     * The underlying base asset for the principal token
-     */
-    underlying: string;
-
-    /**
-     * The interest token for the principal token
-     */
-    interestToken: string;
-
-    /**
-     * Number of seconds after epoch when the principal token was created
-     */
-    createdAtTimestamp: number;
-    /**
-     * Number of seconds after epoch when the principal token can be redeemed
-     */
-    unlockTimestamp: number;
-
-    /**
-     * The wrapped position, eg: an Element yearn vault asset proxy
-     */
-    position: string;
-  };
-}
 
 export interface YieldTokenInfo extends TokenInfo {
   extensions: {

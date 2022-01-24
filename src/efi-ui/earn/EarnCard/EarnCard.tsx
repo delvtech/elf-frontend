@@ -8,7 +8,7 @@ import { ERC20 } from "elf-contracts-typechain/dist/types";
 import { USDC } from "elf-contracts-typechain/dist/types/USDC";
 import { WETH } from "elf-contracts-typechain/dist/types/WETH";
 import { Signer } from "ethers";
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 
 import tw from "efi-tailwindcss-classnames";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";

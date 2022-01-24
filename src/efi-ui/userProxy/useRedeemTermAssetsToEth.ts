@@ -3,7 +3,6 @@ import { useCallback, useMemo } from "react";
 import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
 import { UserProxy } from "elf-contracts-typechain/dist/types/UserProxy";
 import { BigNumber, Signer } from "ethers";
-import { PrincipalTokenInfo } from "tokenlists/types";
 
 import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
@@ -13,6 +12,7 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { userProxyContract } from "efi/userProxy/contract";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 // list of shitty principal and yield token contracts whose names are messed up.  they change their
 // name after the constructor uses them to create their PERMIT_HASH's, which breaks permit calls.

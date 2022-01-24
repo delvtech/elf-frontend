@@ -1,4 +1,5 @@
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
+import { YieldTokenInfo } from "tokenlists/types";
 import warning from "warning";
 
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";

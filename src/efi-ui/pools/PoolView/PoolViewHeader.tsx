@@ -3,7 +3,6 @@ import { ReactElement } from "react";
 import Link from "next/link";
 import classNames from "classnames";
 import { format } from "date-fns";
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -21,6 +20,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
 import { formatLengthOfTime } from "efi/time/formatLengthOfTime/formatLengthOfTime";
 import { formatTermAssetShortSymbol } from "efi/tranche/format";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 
 interface PoolViewHeaderProps {
   poolInfo: PoolInfo;

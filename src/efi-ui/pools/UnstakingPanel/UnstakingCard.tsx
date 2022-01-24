@@ -6,7 +6,7 @@ import { TokenInfo } from "@uniswap/token-lists";
 import { BigNumber, Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { t } from "ttag";
 
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";

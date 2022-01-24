@@ -6,7 +6,7 @@ import {
 } from "efi/crypto/CryptoAsset";
 import { TokenMetadata } from "efi/tokenlists/tokenlists";
 import { formatTermAssetShortSymbol } from "efi/tranche/format";
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 
 export function getCryptoSymbol(asset: CryptoAsset): string {
   const assetType = asset.type;

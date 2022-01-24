@@ -1,6 +1,5 @@
 import { ReactElement } from "react";
 
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import { Title } from "efi-ui/base/Title";
@@ -9,6 +8,7 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { formatTermAssetShortSymbol } from "efi/tranche/format";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 
 interface PoolViewTitleProps {
   poolInfo: PoolInfo;

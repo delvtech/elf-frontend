@@ -7,7 +7,7 @@ import tw from "efi-tailwindcss-classnames";
 
 import styles from "./TermPicker.module.css";
 import { IPopoverProps } from "@blueprintjs/core";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { TermButton2 } from "efi-ui/tranche/TermPicker/TermButton2";
 import { useRouter } from "next/router";
 import { Navigation } from "efi-ui/app/navigation/navigation";

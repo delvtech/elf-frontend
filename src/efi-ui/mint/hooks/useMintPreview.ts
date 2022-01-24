@@ -1,7 +1,7 @@
 import { TestYVault, Tranche } from "elf-contracts-typechain/dist/types";
 import { YVaultAssetProxy } from "elf-contracts-typechain/dist/types/YVaultAssetProxy";
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo as TrancheInfo } from "tokenlists/types";
+import { PrincipalTokenInfo as TrancheInfo } from "@elementfi/tokenlist";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";

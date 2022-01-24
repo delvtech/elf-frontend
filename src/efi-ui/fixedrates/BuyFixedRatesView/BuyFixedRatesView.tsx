@@ -5,7 +5,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
 import { commify } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

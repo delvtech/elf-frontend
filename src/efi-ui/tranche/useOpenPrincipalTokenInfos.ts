@@ -1,5 +1,4 @@
-import { PrincipalTokenInfo } from "tokenlists/types";
-
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { principalTokenInfos } from "efi/tranche/tranches";
 

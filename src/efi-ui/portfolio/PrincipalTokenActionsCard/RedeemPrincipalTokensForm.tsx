@@ -3,7 +3,6 @@ import { Fragment, ReactElement, useCallback, useState } from "react";
 import { Button, Callout, Intent, Tag } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
@@ -27,7 +26,10 @@ import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { RedeemPrincipalTokensConfirmationDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensConfirmationDrawer/RedeemPrincipalTokensConfirmationDrawer";
 import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
-import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
+import {
+  PrincipalPoolTokenInfo,
+  PrincipalTokenInfo,
+} from "@elementfi/tokenlist";
 
 interface RedeemPrincipalTokensFormProps {
   library: Web3Provider | undefined;

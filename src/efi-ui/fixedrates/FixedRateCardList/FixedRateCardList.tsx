@@ -1,11 +1,10 @@
 import { ReactElement } from "react";
 
-import { PrincipalTokenInfo } from "tokenlists/types";
-
 import tw from "efi-tailwindcss-classnames";
 import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 import { FixedRateCard } from "efi-ui/fixedrates/FixedRateCard/FixedRateCard";
 import { FixedRateCardListHeader } from "./FixedRateCardListHeader";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 interface FixedRateCardListProps {
   principalTokens: PrincipalTokenInfo[];

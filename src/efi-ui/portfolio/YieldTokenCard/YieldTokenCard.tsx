@@ -16,7 +16,7 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
 import { InterestToken } from "elf-contracts-typechain/dist/types/InterestToken";
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { jt, t } from "ttag";
 
 import { getCoinGeckoId } from "efi-coingecko";

@@ -9,7 +9,7 @@ import {
 } from "@blueprintjs/core";
 import { useRouter } from "next/router";
 import classNames from "classnames";
-import { PrincipalTokenInfo, YieldTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

@@ -2,7 +2,6 @@ import { Fragment, ReactElement, useCallback, useState } from "react";
 
 import { Button, Callout, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
@@ -27,6 +26,7 @@ import {
   getPoolInfoForPrincipalToken,
   getPrincipalPoolContractForTranche,
 } from "efi/pools/ccpool";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 interface BuyPrincipalTokensFormProps {
   library: Web3Provider | undefined;

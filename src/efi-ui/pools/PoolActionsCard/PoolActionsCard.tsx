@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { TokenInfo } from "@uniswap/token-lists";
 import { Signer } from "ethers";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

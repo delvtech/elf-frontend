@@ -5,7 +5,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Tranche } from "elf-contracts-typechain/dist/types";
 import { BigNumber, Signer } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
