@@ -3,7 +3,7 @@ import { ReactElement, useCallback } from "react";
 import { Card, Classes, Elevation } from "@blueprintjs/core";
 import { useRouter } from "next/router";
 import classNames from "classnames";
-import { YieldTokenInfo } from "tokenlists/types";
+import { YieldTokenInfo } from "@elementfi/tokenlist";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

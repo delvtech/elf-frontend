@@ -16,7 +16,7 @@ import { WeightedPool } from "elf-contracts-typechain/dist/types/WeightedPool";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";
-import { YieldTokenInfo } from "tokenlists/types";
+import { YieldTokenInfo } from "@elementfi/tokenlist";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";

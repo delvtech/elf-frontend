@@ -11,26 +11,8 @@ import {
   PrincipalTokenInfo,
   TokenInfo,
   YieldPoolTokenInfo,
+  YieldTokenInfo,
 } from "@elementfi/tokenlist";
-
-export interface YieldTokenInfo extends TokenInfo {
-  extensions: {
-    /**
-     * The underlying base asset for the yield token
-     */
-    underlying: string;
-
-    /**
-     * The Principal Token's address
-     */
-    tranche: string;
-
-    /**
-     * Number of seconds after epoch when the yield token can be redeemed
-     */
-    unlockTimestamp: number;
-  };
-}
 
 export type AnyTokenListInfo =
   | TokenInfo
