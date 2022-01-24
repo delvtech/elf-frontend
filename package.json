@@ -180,7 +180,6 @@
     "test": "jest",
     "test:coverage": "npm run test -- --coverage --watchAll=false",
     "update-elf-contracts-typechain": "npm install git+https://github.com/element-fi/elf-contracts-typechain.git",
-    "update-elf-tokenlist": "npm install git+https://github.com/element-fi/elf-tokenlist.git",
     "update:language": "bash ./scripts/update-language.sh",
     "vercel-build-check": "bash ./scripts/vercel-build-check.sh"
   },
