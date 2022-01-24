@@ -2,7 +2,7 @@ import { Fragment, ReactElement } from "react";
 
 import { Intent, Tag } from "@blueprintjs/core";
 import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
-import { AssetProxyTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "tokenlists/types";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
@@ -21,6 +21,7 @@ import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityF
 import { Currencies, Money } from "ts-money";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
+import { AssetProxyTokenInfo } from "@elementfi/tokenlist";
 
 interface PrincipalTokenTermButtonLabelProps {
   tranche: Tranche;

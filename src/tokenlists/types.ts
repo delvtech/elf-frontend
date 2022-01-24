@@ -36,15 +36,6 @@ export interface PrincipalTokenInfo extends TokenInfo {
   };
 }
 
-export interface AssetProxyTokenInfo extends TokenInfo {
-  extensions: {
-    /**
-     * The vault address
-     */
-    vault: string;
-  };
-}
-
 export interface YieldTokenInfo extends TokenInfo {
   extensions: {
     /**

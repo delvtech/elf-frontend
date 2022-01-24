@@ -4,7 +4,7 @@ import { Callout, Icon, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { Web3Provider } from "@ethersproject/providers";
 import { CalendarEvent, google } from "calendar-link";
-import { AssetProxyTokenInfo, PrincipalTokenInfo } from "tokenlists/types";
+import { PrincipalTokenInfo } from "tokenlists/types";
 import { jt, t } from "ttag";
 
 import { makeEtherscanTokenUrl } from "efi-etherscan/links";
@@ -15,6 +15,7 @@ import { isGoerli, isMainnet } from "efi/ethereum/ethereum";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
+import { AssetProxyTokenInfo } from "@elementfi/tokenlist";
 
 interface PrincipalTokenInformationProps {
   library: Web3Provider | undefined;
