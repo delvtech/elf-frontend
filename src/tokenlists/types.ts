@@ -5,7 +5,8 @@
  * `tokenlist/types.ts` and copied over to this directory as a means of
  * codesharing.
  */
-import { TokenInfo } from "@uniswap/token-lists";
+
+import { TokenInfo } from "@elementfi/tokenlist";
 
 export interface PrincipalTokenInfo extends TokenInfo {
   extensions: {
