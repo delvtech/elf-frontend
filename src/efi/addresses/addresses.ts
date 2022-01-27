@@ -21,10 +21,11 @@ function getAddressesJsonId() {
 
 function getAddressesJson(): AddressesJsonFile {
   if (addressesJsonId === "testnet") {
-    return {
-      ...AddressesJsonFileMainnet,
-      chainId: AddressesJsonFileTestnet.chainId,
-    }; //AddressesJsonFileTestnet;
+    return AddressesJsonFileTestnet;
+    // return {
+    //   ...AddressesJsonFileMainnet,
+    //   chainId: AddressesJsonFileTestnet.chainId,
+    // }; //AddressesJsonFileTestnet;
   }
 
   if (addressesJsonId === "mock") {
