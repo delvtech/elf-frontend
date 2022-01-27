@@ -6,7 +6,9 @@ import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
-export function useTotalFiatLiquidity(poolInfo: PoolInfo): Money | undefined {
+export function useTotalFiatLiquidity(
+  poolInfo: PoolInfo | undefined
+): Money | undefined {
   const { currency } = useCurrencyPref();
   const { baseAssetContract } = getPoolTokens(poolInfo);
   const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);

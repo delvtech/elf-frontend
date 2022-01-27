@@ -87,9 +87,10 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
   );
 
   const oppositePoolInfo = getOppositePoolInfo(poolInfo);
-  const oppositePoolType = isYieldPool(oppositePoolInfo)
-    ? t`Yield`
-    : t`Principal`;
+  let oppositePoolType: string | undefined;
+  if (oppositePoolInfo) {
+    oppositePoolType = isYieldPool(oppositePoolInfo) ? t`Yield` : t`Principal`;
+  }
 
   return (
     <div className={tw("flex", "flex-col", "h-500")}>
@@ -118,11 +119,13 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             )}
             <Tab id={PoolAction.REMOVE_LIQUIDITY} title={t`Remove LP`} />
           </Tabs>
-          <Link href={`/pools/${oppositePoolInfo.address}`}>
-            <a className={tw("text-center")}>
-              {t`Go to ${oppositePoolType} Pool`}
-            </a>
-          </Link>
+          {oppositePoolInfo && (
+            <Link href={`/pools/${oppositePoolInfo.address}`}>
+              <a className={tw("text-center")}>
+                {t`Go to ${oppositePoolType} Pool`}
+              </a>
+            </Link>
+          )}
         </div>
         {activeTab === PoolAction.BUY && (
           <TradePanel

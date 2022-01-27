@@ -10,17 +10,19 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import Link from "next/link";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
+import { WeightedPool } from "elf-contracts-typechain";
 import { InterestToken } from "elf-contracts-typechain/dist/types/InterestToken";
 import { formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
+import Link from "next/link";
 import { jt, t } from "ttag";
 
 import { getCoinGeckoId } from "efi-coingecko";
 import tw from "efi-tailwindcss-classnames";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
@@ -33,13 +35,16 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { calculateProgress } from "efi/base/calculateProgress/calculateProgress";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates/dates";
 import { formatPercent } from "efi/base/formatPercent/formatPercent";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
@@ -47,9 +52,6 @@ import {
   getVaultContractForTranche,
   getVaultTokenInfoForTranche,
 } from "efi/tranche/tranches";
-import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
-import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
-import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -77,7 +79,6 @@ export function YieldTokenCard({
 }: YieldTokenCardProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const nowMs = useNowMs();
-  const { currency } = useCurrencyPref();
 
   const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(yieldToken.address);
 
@@ -105,15 +106,9 @@ export function YieldTokenCard({
 
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
-    getCoinGeckoId(baseAssetSymbol),
-    currency
-  );
-  const baseAssetDecimals = getCryptoDecimals(baseAsset);
 
   const pool = getPoolForYieldToken(yieldToken.address);
 
-  const spotPrice = usePoolSpotPrice(pool, yieldToken.address);
   const BaseAssetIcon = findAssetIcon(baseAsset);
 
   const { symbol: vaultSymbol, address: vaultAddress } =
@@ -124,10 +119,6 @@ export function YieldTokenCard({
   const vaultApy = yearnVault?.apy ? getYearnVaultAPY(yearnVault?.apy) : 0;
   const postedAPY = formatPercent(vaultApy);
 
-  const exitValue =
-    +formatUnits(yieldTokenBalanceOf || 0, baseAssetDecimals) *
-    (spotPrice || 0);
-  const exitValueFiat = formatMoney(baseAssetFiatPrice?.multiply(exitValue));
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
     : t`Loading unlock date...`;
@@ -227,18 +218,15 @@ export function YieldTokenCard({
             label={""}
           />
         </Callout>
-        <Callout icon={null} className={calloutClassName}>
-          <span className={classNames(tw("mb-0"))}>{t`Current value`}</span>
-          <LabeledText
-            bold
-            muted={false}
-            className={tw("flex", "justify-center", "items-center")}
-            textClassName={tw("text-lg")}
-            containerClassName={tw("justify-center")}
-            text={<span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>}
-            label={exitValueFiat}
+        {pool && (
+          <ExitValueCallout
+            className={calloutClassName}
+            account={account}
+            pool={pool}
+            yieldToken={yieldToken}
+            baseAsset={baseAsset}
           />
-        </Callout>
+        )}
       </div>
       {/* Quick Actions */}
       <ButtonGroup fill>
@@ -248,18 +236,22 @@ export function YieldTokenCard({
           library={library}
           baseAsset={baseAsset}
         />
-        <GoToPoolButtonOld
-          fill
-          poolAddress={pool.address}
-          poolAction={PoolAction.ADD_LIQUIDITY}
-          label={t`Add Liquidity`}
-        />
-        <GoToPoolButtonOld
-          fill
-          poolAddress={pool.address}
-          poolAction={PoolAction.SELL}
-          label={t`Sell`}
-        />
+        {pool && (
+          <GoToPoolButtonOld
+            fill
+            poolAddress={pool.address}
+            poolAction={PoolAction.ADD_LIQUIDITY}
+            label={t`Add Liquidity`}
+          />
+        )}
+        {pool && (
+          <GoToPoolButtonOld
+            fill
+            poolAddress={pool.address}
+            poolAction={PoolAction.SELL}
+            label={t`Sell`}
+          />
+        )}
       </ButtonGroup>
       <div className={tw("flex", "justify-center")}>
         <span>
@@ -267,6 +259,50 @@ export function YieldTokenCard({
         </span>
       </div>
     </Card>
+  );
+}
+
+interface ExitValueCalloutProps {
+  account: string | undefined | null;
+  className: string;
+  pool: WeightedPool;
+  yieldToken: InterestToken;
+  baseAsset: CryptoAsset;
+}
+function ExitValueCallout({
+  account,
+  className,
+  pool,
+  yieldToken,
+  baseAsset,
+}: ExitValueCalloutProps) {
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const { currency } = useCurrencyPref();
+  const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
+    getCoinGeckoId(baseAssetSymbol),
+    currency
+  );
+  const { data: yieldTokenBalanceOf } = useTokenBalanceOf(yieldToken, account);
+  const baseAssetDecimals = getCryptoDecimals(baseAsset);
+  const spotPrice = usePoolSpotPrice(pool, yieldToken.address);
+  const exitValue =
+    +formatUnits(yieldTokenBalanceOf || 0, baseAssetDecimals) *
+    (spotPrice || 0);
+  const exitValueFiat = formatMoney(baseAssetFiatPrice?.multiply(exitValue));
+
+  return (
+    <Callout icon={null} className={className}>
+      <span className={classNames(tw("mb-0"))}>{t`Current value`}</span>
+      <LabeledText
+        bold
+        muted={false}
+        className={tw("flex", "justify-center", "items-center")}
+        textClassName={tw("text-lg")}
+        containerClassName={tw("justify-center")}
+        text={<span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>}
+        label={exitValueFiat}
+      />
+    </Callout>
   );
 }
 
