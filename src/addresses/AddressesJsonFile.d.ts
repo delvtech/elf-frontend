@@ -4,7 +4,7 @@ export interface AddressesJsonFile {
     balancerVaultAddress: string;
     trancheFactoryAddress: string;
     crv3cryptoAddress: string;
-    interestTokenFactoryAddress: string;
+    interestTokenFactoryAddress?: string;
     weightedPoolFactoryAddress: string;
     convergentPoolFactoryAddress: string;
     userProxyContractAddress: string;
