@@ -1,14 +1,14 @@
-import { Card, Classes, Collapse, Elevation } from "@blueprintjs/core";
+import { CSSProperties, ReactElement, useCallback, useState } from "react";
+
+import { Card, Collapse, Elevation } from "@blueprintjs/core";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import classNames from "classnames";
 import { differenceInDays } from "date-fns";
 import { Signer } from "ethers";
 
 import tw from "efi-tailwindcss-classnames";
 
 import { EarnSummaryCard } from "./EarnSummaryCard";
-import { CSSProperties, ReactElement, useCallback, useState } from "react";
 import { WETH, USDC, ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
 import {
@@ -112,12 +112,6 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   const termLength =
     dayDifference > 10 ? Math.round(dayDifference / 10) * 10 : dayDifference;
 
-  // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
-  // const dataToLoad = [tvl /*vaultInfo*/];
-  // console.log("dataToLoad", dataToLoad);
-  // const allDataLoaded = dataToLoad.every((data) => data !== undefined);
-  const allDataLoaded = true;
-
   const onToggleExpand = useCallback(() => {
     if (isMature) {
       return;
@@ -128,21 +122,6 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
       onExpandOpen(id);
     }
   }, [id, isExpanded, isMature, onExpandClose, onExpandOpen]);
-
-  if (!allDataLoaded) {
-    return (
-      <Card
-        style={poolCardStyle}
-        interactive={false}
-        elevation={Elevation.ZERO}
-        className={classNames(tw("p-0", "w-full"))}
-      >
-        <div
-          className={classNames(tw("p-0", "w-full", "h-24"), Classes.SKELETON)}
-        />
-      </Card>
-    );
-  }
 
   return (
     <Card

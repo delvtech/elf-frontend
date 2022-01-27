@@ -24,7 +24,7 @@ function getAddressesJson(): AddressesJsonFile {
     return {
       ...AddressesJsonFileMainnet,
       chainId: AddressesJsonFileTestnet.chainId,
-    }; //AddressesJsonFileTestnet;
+    };
   }
 
   if (addressesJsonId === "mock") {
