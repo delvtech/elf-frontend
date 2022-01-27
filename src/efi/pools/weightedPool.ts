@@ -42,7 +42,7 @@ export function getPoolForYieldToken(
 
 export function getPoolInfoForYieldToken(
   yieldTokenAddress: string
-): YieldPoolTokenInfo | undefined {
+): YieldPoolTokenInfo {
   const yieldPoolInfo = yieldPools.find(
     ({ extensions: { interestToken } }) => interestToken === yieldTokenAddress
   ) as YieldPoolTokenInfo;

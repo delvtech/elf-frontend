@@ -26,23 +26,23 @@ export async function fetchTotalValueLockedForTerm(
     fetchAccumulatedInterestForTranche(poolInfo);
   const baseReservesInPrincipalPoolBNPromise =
     fetchBaseAssetReservesInPool(poolInfo);
-  // there might not be a yield pool
-  const baseReservesInYieldPoolBNPromise =
-    yieldPoolInfo && fetchBaseAssetReservesInPool(yieldPoolInfo);
+
+  // there might not be a yield pool associated with a term
+  const baseReservesInYieldPoolBNPromise = yieldPoolInfo
+    ? fetchBaseAssetReservesInPool(yieldPoolInfo)
+    : Promise.resolve(undefined);
 
   const [
     baseAssetLockedBN,
     accumulatedInterestBN,
     baseReservesInPrincipalPoolBN,
     baseReservesInYieldPoolBN,
-  ] = await Promise.all(
-    [
-      baseAssetLockedBNPromise,
-      accumulatedInterestBNPromise,
-      baseReservesInPrincipalPoolBNPromise,
-      baseReservesInYieldPoolBNPromise,
-    ].filter(Boolean)
-  );
+  ] = await Promise.all([
+    baseAssetLockedBNPromise,
+    accumulatedInterestBNPromise,
+    baseReservesInPrincipalPoolBNPromise,
+    baseReservesInYieldPoolBNPromise,
+  ]);
 
   // convert to numbers
   const baseAssetLocked = +formatUnits(baseAssetLockedBN || 0, decimals);
