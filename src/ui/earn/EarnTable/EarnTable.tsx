@@ -49,6 +49,7 @@ export function EarnTable({
       {[...openPrincipalTokenInfos]
         .sort((info) => info.extensions.createdAtTimestamp)
         .reverse()
+        // .slice(1, 2)
         .map((principalTokenInfo) => {
           const cardId = principalTokenInfo.address;
           return (

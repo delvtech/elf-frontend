@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 
 import { Button, Card, Intent } from "@blueprintjs/core";
 import { Money } from "ts-money";
@@ -20,6 +20,8 @@ import {
   PrincipalPoolTokenInfo,
   YieldPoolTokenInfo,
 } from "@elementfi/tokenlist";
+import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
+import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 
 interface EarnSummaryCardProps {
   onToggleExpand: () => void;
@@ -29,10 +31,9 @@ interface EarnSummaryCardProps {
   termLength: number;
   vaultApy: number;
   tvl: Money | undefined;
-  yieldPoolInfo: YieldPoolTokenInfo;
+  yieldPoolInfo: YieldPoolTokenInfo | undefined;
   principalPoolInfo: PrincipalPoolTokenInfo;
   principalPrice: string | undefined;
-  yieldPrice: string | undefined;
   startTime: number;
   maturityTime: number;
   isExpanded: boolean;
@@ -48,7 +49,6 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
     tvl,
     yieldPoolInfo,
     principalPoolInfo,
-    yieldPrice,
     principalPrice,
     startTime,
     maturityTime,
@@ -58,7 +58,6 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
   const { isDarkMode } = useDarkMode();
   const fixedYield = useTokenYield(principalPoolInfo, "principal");
   const ptStakingAPY = useStakingAPY(principalPoolInfo);
-  const ytStakingAPY = useStakingAPY(yieldPoolInfo);
 
   return (
     <Card onClick={onToggleExpand} className={tw("w-full", "flex", "p-5")}>
@@ -88,7 +87,9 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
             text={formatPercent(ptStakingAPY)}
             label={t`Principal`}
           />
-          <LabeledText text={formatPercent(ytStakingAPY)} label={t`Yield`} />
+          {yieldPoolInfo && (
+            <YieldPoolStakingAPY yieldPoolInfo={yieldPoolInfo} />
+          )}
         </div>
         {/* Liquidity */}
         <div className={tw("flex", "flex-col")}>
@@ -100,7 +101,7 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
         {/* Price */}
         <div className={tw("flex", "flex-col", "space-y-3")}>
           <LabeledText text={t`${principalPrice}`} label={t`Principal token`} />
-          <LabeledText text={t`${yieldPrice}`} label={t`Yield token`} />
+          {yieldPoolInfo && <YieldTokenPrice yieldPoolInfo={yieldPoolInfo} />}
         </div>
 
         {/* Fixed APR */}
@@ -131,8 +132,29 @@ export function EarnSummaryCard(props: EarnSummaryCardProps): JSX.Element {
   );
 }
 
+interface TokenPriceProps {
+  yieldPoolInfo: YieldPoolTokenInfo;
+}
+function YieldTokenPrice({ yieldPoolInfo }: TokenPriceProps) {
+  const yieldTokenAddress = yieldPoolInfo.extensions.interestToken;
+  const yieldPoolContract = yieldPoolContractsByAddress[yieldPoolInfo.address];
+  const yieldPrice = usePoolSpotPrice(
+    yieldPoolContract,
+    yieldTokenAddress
+  )?.toFixed(4);
+  return <LabeledText text={t`${yieldPrice}`} label={t`Yield token`} />;
+}
+
+interface YieldPoolStakingAPYProps {
+  yieldPoolInfo: YieldPoolTokenInfo;
+}
+function YieldPoolStakingAPY({ yieldPoolInfo }: YieldPoolStakingAPYProps) {
+  const ytStakingAPY = useStakingAPY(yieldPoolInfo);
+  return <LabeledText text={formatPercent(ytStakingAPY)} label={t`Yield`} />;
+}
+
 interface LiquiditySectionProps {
-  yieldPoolInfo: PoolInfo;
+  yieldPoolInfo: PoolInfo | undefined;
   principalPoolInfo: PoolInfo;
 }
 
@@ -140,22 +162,32 @@ function LiquiditySection({
   yieldPoolInfo,
   principalPoolInfo,
 }: LiquiditySectionProps) {
-  const liquidity = useTotalFiatLiquidity(yieldPoolInfo);
-  const principalLiquidity = useTotalFiatLiquidity(principalPoolInfo);
   return (
     <div className={tw("flex", "flex-col", "space-y-3")}>
-      {principalLiquidity && (
-        <LabeledText
-          text={formatMoney(principalLiquidity, { wholeAmounts: true })}
-          label={`Principal Pool`}
-        />
-      )}
-      {liquidity && (
-        <LabeledText
-          text={formatMoney(liquidity, { wholeAmounts: true })}
-          label={`Yield Pool`}
-        />
+      <PoolLiquidity label={t`Principal Pool`} poolInfo={principalPoolInfo} />
+      {yieldPoolInfo && (
+        <PoolLiquidity label={t`Yield Pool`} poolInfo={yieldPoolInfo} />
       )}
     </div>
+  );
+}
+
+interface PoolLiquidityProps {
+  poolInfo: PoolInfo;
+  label: string;
+}
+function PoolLiquidity({
+  poolInfo,
+  label,
+}: PoolLiquidityProps): ReactElement | null {
+  const poolLiquidity = useTotalFiatLiquidity(poolInfo);
+  if (!poolLiquidity) {
+    return null;
+  }
+  return (
+    <LabeledText
+      text={formatMoney(poolLiquidity, { wholeAmounts: true })}
+      label={label}
+    />
   );
 }
