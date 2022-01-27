@@ -55,6 +55,7 @@ export function useTotalValueLockedForTranche(
     baseReservesInYieldPoolBN || 0,
     decimals
   );
+  console.log("baseReservesInYieldPool", baseReservesInYieldPool);
 
   // get total, convert to fiat
   const totalFiatValueLocked = useMemo(() => {
