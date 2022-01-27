@@ -76,15 +76,16 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
   const volumeMoney = Money.fromDecimal(volume ?? 0, currency, Math.round);
   const volumeDisplayValue = volume ? formatMoney(volumeMoney) : "$0.00";
   const oppositePoolInfo = getOppositePoolInfo(poolInfo);
-  const oppositePoolType = isYieldPool(oppositePoolInfo)
-    ? t`Yield`
-    : t`Principal`;
+  let oppositePoolType: string | undefined;
+  if (oppositePoolInfo) {
+    oppositePoolType = isYieldPool(oppositePoolInfo) ? t`Yield` : t`Principal`;
+  }
   const isSmallScreen = useIsTailwindSmallScreen();
   return (
     <div>
       <div className={tw("mb-2", "flex", "justify-between")}>
         <span>{t`Pool Summary`}</span>
-        {isSmallScreen && (
+        {isSmallScreen && oppositePoolInfo && (
           <Link href={`/pools/${oppositePoolInfo.address}`}>
             <a className={tw("text-center")}>
               {t`Go to ${oppositePoolType} Pool`}

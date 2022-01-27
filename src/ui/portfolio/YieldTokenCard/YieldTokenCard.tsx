@@ -8,8 +8,6 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { InterestToken } from "@elementfi/core-typechain/dist/v1";
-import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -49,6 +47,9 @@ import { formatUnits } from "ethers/lib/utils";
 import Link from "next/link";
 import React, { ReactElement, ReactNode } from "react";
 import { jt, t } from "ttag";
+import { InterestToken, WeightedPool } from "@elementfi/core-typechain/dist/v1";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
+import { CryptoAsset } from "elf/crypto/CryptoAsset";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -76,7 +77,6 @@ export function YieldTokenCard({
 }: YieldTokenCardProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const nowMs = useNowMs();
-  const { currency } = useCurrencyPref();
 
   const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(yieldToken.address);
 
@@ -107,15 +107,9 @@ export function YieldTokenCard({
 
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
-    getCoinGeckoId(baseAssetSymbol),
-    currency
-  );
-  const baseAssetDecimals = getCryptoDecimals(baseAsset);
 
   const pool = getPoolForYieldToken(yieldToken.address);
 
-  const spotPrice = usePoolSpotPrice(pool, yieldToken.address);
   const BaseAssetIcon = findAssetIcon(baseAsset);
 
   const { symbol: vaultSymbol, address: vaultAddress } =
@@ -126,10 +120,6 @@ export function YieldTokenCard({
   const vaultApy = yearnVault?.apy ? getYearnVaultAPY(yearnVault?.apy) : 0;
   const postedAPY = formatPercent(vaultApy);
 
-  const exitValue =
-    +formatUnits(yieldTokenBalanceOf || 0, baseAssetDecimals) *
-    (spotPrice || 0);
-  const exitValueFiat = formatMoney(baseAssetFiatPrice?.multiply(exitValue));
   const formattedDate = unlockDate
     ? formatAbbreviatedDate(unlockDate)
     : t`Loading unlock date...`;
@@ -229,18 +219,15 @@ export function YieldTokenCard({
             label={""}
           />
         </Callout>
-        <Callout icon={null} className={calloutClassName}>
-          <span className={classNames(tw("mb-0"))}>{t`Current value`}</span>
-          <LabeledText
-            bold
-            muted={false}
-            className={tw("flex", "justify-center", "items-center")}
-            textClassName={tw("text-lg")}
-            containerClassName={tw("justify-center")}
-            text={<span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>}
-            label={exitValueFiat}
+        {pool && (
+          <ExitValueCallout
+            className={calloutClassName}
+            account={account}
+            pool={pool}
+            yieldToken={yieldToken}
+            baseAsset={baseAsset}
           />
-        </Callout>
+        )}
       </div>
       {/* Quick Actions */}
       <ButtonGroup fill>
@@ -250,18 +237,22 @@ export function YieldTokenCard({
           library={library}
           baseAsset={baseAsset}
         />
-        <GoToPoolButtonOld
-          fill
-          poolAddress={pool.address}
-          poolAction={PoolAction.ADD_LIQUIDITY}
-          label={t`Add Liquidity`}
-        />
-        <GoToPoolButtonOld
-          fill
-          poolAddress={pool.address}
-          poolAction={PoolAction.SELL}
-          label={t`Sell`}
-        />
+        {pool && (
+          <GoToPoolButtonOld
+            fill
+            poolAddress={pool.address}
+            poolAction={PoolAction.ADD_LIQUIDITY}
+            label={t`Add Liquidity`}
+          />
+        )}
+        {pool && (
+          <GoToPoolButtonOld
+            fill
+            poolAddress={pool.address}
+            poolAction={PoolAction.SELL}
+            label={t`Sell`}
+          />
+        )}
       </ButtonGroup>
       <div className={tw("flex", "justify-center")}>
         <span>
@@ -269,6 +260,50 @@ export function YieldTokenCard({
         </span>
       </div>
     </Card>
+  );
+}
+
+interface ExitValueCalloutProps {
+  account: string | undefined | null;
+  className: string;
+  pool: WeightedPool;
+  yieldToken: InterestToken;
+  baseAsset: CryptoAsset;
+}
+function ExitValueCallout({
+  account,
+  className,
+  pool,
+  yieldToken,
+  baseAsset,
+}: ExitValueCalloutProps) {
+  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const { currency } = useCurrencyPref();
+  const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
+    getCoinGeckoId(baseAssetSymbol),
+    currency
+  );
+  const { data: yieldTokenBalanceOf } = useTokenBalanceOf(yieldToken, account);
+  const baseAssetDecimals = getCryptoDecimals(baseAsset);
+  const spotPrice = usePoolSpotPrice(pool, yieldToken.address);
+  const exitValue =
+    +formatUnits(yieldTokenBalanceOf || 0, baseAssetDecimals) *
+    (spotPrice || 0);
+  const exitValueFiat = formatMoney(baseAssetFiatPrice?.multiply(exitValue));
+
+  return (
+    <Callout icon={null} className={className}>
+      <span className={classNames(tw("mb-0"))}>{t`Current value`}</span>
+      <LabeledText
+        bold
+        muted={false}
+        className={tw("flex", "justify-center", "items-center")}
+        textClassName={tw("text-lg")}
+        containerClassName={tw("justify-center")}
+        text={<span>{t`${exitValue.toFixed(6)} ${baseAssetSymbol}`}</span>}
+        label={exitValueFiat}
+      />
+    </Callout>
   );
 }
 
