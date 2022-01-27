@@ -73,8 +73,7 @@ export function useTotalValueLockedForTranche(
   if (
     !baseAssetLockedBN ||
     !accumulatedInterestBN ||
-    !baseReservesInPrincipalPoolBN ||
-    !baseReservesInYieldPoolBN
+    !baseReservesInPrincipalPoolBN
   ) {
     return undefined;
   }
