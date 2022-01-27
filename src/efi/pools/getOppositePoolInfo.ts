@@ -7,7 +7,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { getPoolInfoForYieldToken } from "efi/pools/weightedPool";
 import { getYieldTokenForPrincipalToken } from "efi/tranche/tranches";
 
-export function getOppositePoolInfo(poolInfo: PoolInfo): PoolInfo {
+export function getOppositePoolInfo(poolInfo: PoolInfo): PoolInfo | undefined {
   const principalTokenInfo = getPrincipalTokenInfoForPool(poolInfo);
   if (isPrincipalPool(poolInfo)) {
     const yieldToken = getYieldTokenForPrincipalToken(

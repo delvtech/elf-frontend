@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { PrincipalTokenInfo, YieldPoolTokenInfo } from "@elementfi/tokenlist";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
 import { formatUnits } from "ethers/lib/utils";
 import { Money } from "ts-money";
@@ -14,9 +14,9 @@ import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { getPoolForYieldToken } from "efi/pools/weightedPool";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getPoolInfoForYieldToken } from "efi/pools/weightedPool";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { BigNumber } from "ethers";
 
 export function useTotalValueLockedForTranche(
   trancheInfo: PrincipalTokenInfo,
@@ -25,10 +25,9 @@ export function useTotalValueLockedForTranche(
   const { address, decimals } = trancheInfo;
   const tranche = trancheContractsByAddress[address];
   const poolInfo = getPoolInfoForPrincipalToken(address);
-  const { address: yieldPoolAddress } = getPoolForYieldToken(
+  const yieldPoolInfo = getPoolInfoForYieldToken(
     trancheInfo.extensions.interestToken
   );
-  const yieldPoolInfo = getTokenInfo<YieldPoolTokenInfo>(yieldPoolAddress);
 
   // get all components of TVL: base asset in tranche, base asset in pool, accumulated interest for tranche
   const { data: baseAssetLockedBN } = useSmartContractReadCall(
@@ -84,9 +83,16 @@ export function useTotalValueLockedForTranche(
 
   return totalFiatValueLocked;
 }
-function useBaseAssetReservesInPool(poolInfo: PoolInfo) {
-  const pool = getPoolContract(poolInfo.address);
+function useBaseAssetReservesInPool(
+  poolInfo: PoolInfo | undefined
+): BigNumber | undefined {
+  const pool = getPoolContract(poolInfo?.address);
   const { data: [, balances] = [undefined, undefined] } = usePoolTokens(pool);
+
+  if (!poolInfo) {
+    return;
+  }
+
   const { baseAssetIndex } = getPoolTokens(poolInfo);
   return balances?.[baseAssetIndex];
 }
