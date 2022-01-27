@@ -49,9 +49,10 @@ export function PoolViewHeader({
   const termLength = formatLengthOfTime(startTime, maturityTime);
 
   const oppositePoolInfo = getOppositePoolInfo(poolInfo);
-  const oppositePoolType = isYieldPool(oppositePoolInfo)
-    ? t`Yield`
-    : t`Principal`;
+  let oppositePoolType: string | undefined;
+  if (oppositePoolInfo) {
+    oppositePoolType = isYieldPool(oppositePoolInfo) ? t`Yield` : t`Principal`;
+  }
 
   return (
     <div
@@ -80,7 +81,7 @@ export function PoolViewHeader({
           <span>
             {t`${termLength} - ${format(maturityTime || 0, "MMM d, y") || 0}`}
           </span>
-          {isLargeScreen && (
+          {isLargeScreen && oppositePoolInfo && (
             <Link href={`/pools/${oppositePoolInfo.address}`}>
               <a className={tw("text-center")}>
                 {t`Go to ${oppositePoolType} Pool`}
