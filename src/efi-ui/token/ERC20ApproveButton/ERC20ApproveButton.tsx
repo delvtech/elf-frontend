@@ -1,14 +1,12 @@
-import React, { FC } from "react";
-
 import { Button, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { BigNumber, Signer } from "ethers";
-import { t } from "ttag";
-
+import { ERC20 } from "@elementfi/core-typechain";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useERC20Approve } from "efi-ui/token/hooks/useERC20Approve";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
+import { BigNumber, Signer } from "ethers";
+import React, { FC } from "react";
+import { t } from "ttag";
 
 interface ERC20ApproveButtonProps {
   owner: string | null | undefined;

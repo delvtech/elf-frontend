@@ -1,5 +1,3 @@
-import { ReactElement } from "react";
-
 import {
   ButtonGroup,
   Callout,
@@ -10,15 +8,9 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import Link from "next/link";
+import { WeightedPool } from "@elementfi/core-typechain";
+import { YieldPoolTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import classNames from "classnames";
-import { WeightedPool } from "elf-contracts-typechain/dist/types/WeightedPool";
-import { BigNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
-import zipObject from "lodash.zipobject";
-import { YieldTokenInfo } from "@elementfi/tokenlist";
-import { t } from "ttag";
-
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
@@ -37,7 +29,12 @@ import { getPoolInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
-import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
+import { BigNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
+import zipObject from "lodash.zipobject";
+import Link from "next/link";
+import { ReactElement } from "react";
+import { t } from "ttag";
 
 interface YieldTokenLPCardProps {
   account: string | null | undefined;

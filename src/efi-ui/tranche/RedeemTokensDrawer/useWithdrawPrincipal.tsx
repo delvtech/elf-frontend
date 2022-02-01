@@ -1,10 +1,8 @@
-import { useCallback } from "react";
-
-import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
-import { BigNumber, Signer } from "ethers";
-
+import { Tranche } from "@elementfi/core-typechain";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { ContractMethodArgs } from "efi/contracts/types";
+import { BigNumber, Signer } from "ethers";
+import { useCallback } from "react";
 
 export function useWithdrawPrincipal(
   signer: Signer | undefined,

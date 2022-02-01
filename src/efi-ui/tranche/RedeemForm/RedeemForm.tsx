@@ -1,5 +1,3 @@
-import React, { ChangeEvent, ReactElement, useCallback } from "react";
-
 import {
   Button,
   Callout,
@@ -7,17 +5,16 @@ import {
   InputGroup,
   Intent,
 } from "@blueprintjs/core";
+import { Tranche } from "@elementfi/core-typechain";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import classNames from "classnames";
-import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
-import { t } from "ttag";
-
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { IconProps } from "efi-ui/token/TokenIcon";
-
-import styles from "./styles.module.css";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
-import { PrincipalTokenInfo } from "@elementfi/tokenlist";
+import React, { ChangeEvent, ReactElement, useCallback } from "react";
+import { t } from "ttag";
+import styles from "./styles.module.css";
 
 interface RedeemFormProps {
   tranche: Tranche;

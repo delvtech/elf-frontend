@@ -1,15 +1,12 @@
-import React, { ReactElement, useCallback } from "react";
-
+import { IPopoverProps } from "@blueprintjs/core";
 import { ItemRenderer, Select } from "@blueprintjs/select";
+import { Tranche } from "@elementfi/core-typechain";
 import classNames from "classnames";
-import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
-
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
-
+import React, { ReactElement, useCallback } from "react";
 import { TermButton } from "./TermButton";
 import styles from "./TermPicker.module.css";
-import { IPopoverProps } from "@blueprintjs/core";
 
 interface TermPickerProps {
   account: string | null | undefined;

@@ -1,10 +1,8 @@
-import { QueryObserverResult } from "react-query";
-
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { BigNumber } from "ethers";
-
+import { ERC20 } from "@elementfi/core-typechain";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
+import { BigNumber } from "ethers";
+import { QueryObserverResult } from "react-query";
 
 export function useTokenBalanceOf(
   contract: ERC20 | undefined,

@@ -1,11 +1,9 @@
-import { QueryObserverResult } from "react-query";
-
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { BigNumber } from "ethers";
-
+import { ERC20 } from "@elementfi/core-typechain";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { renderHookWithClient } from "efi-ui/testing/renderHookWithClient";
 import { createQueryClient } from "efi/queryClient";
+import { BigNumber } from "ethers";
+import { QueryObserverResult } from "react-query";
 
 test("returns undefined results when contracts don't exist", async () => {
   const queryClient = createQueryClient();

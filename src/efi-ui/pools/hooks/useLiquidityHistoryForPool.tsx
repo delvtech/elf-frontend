@@ -1,8 +1,5 @@
-import { useQuery } from "react-query";
-
-import { BigNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
-
+import { balancerVaultContract } from "efi-balancer/vault";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
@@ -10,14 +7,15 @@ import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityF
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { TimeData } from "efi/charts/TimeData";
 import { AVG_MINE_RATE_SECONDS } from "efi/ethereum/miningRate";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
-import { TimeData } from "efi/charts/TimeData";
-import { balancerVaultContract } from "efi-balancer/vault";
-import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
+import { BigNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
+import { useQuery } from "react-query";
 
 type PoolBalanceChangedArguments = [
   poolId: string,

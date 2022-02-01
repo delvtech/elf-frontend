@@ -1,26 +1,24 @@
-import { Fragment, ReactElement } from "react";
-
 import { Intent, Tag } from "@blueprintjs/core";
-import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
-import { t } from "ttag";
-
+import { Tranche } from "@elementfi/core-typechain";
+import { AssetProxyTokenInfo, PrincipalTokenInfo } from "@elementfi/tokenlist";
+import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
+import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
+import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates/dates";
 import { formatPercent } from "efi/base/formatPercent/formatPercent";
+import { ONE_DAY_IN_MILLISECONDS } from "efi/base/time";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
-import classNames from "classnames";
-import { ONE_DAY_IN_MILLISECONDS } from "efi/base/time";
-import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
+import { Fragment, ReactElement } from "react";
 import { Currencies, Money } from "ts-money";
-import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
-import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
-import { AssetProxyTokenInfo, PrincipalTokenInfo } from "@elementfi/tokenlist";
+import { t } from "ttag";
 
 interface PrincipalTokenTermButtonLabelProps {
   tranche: Tranche;

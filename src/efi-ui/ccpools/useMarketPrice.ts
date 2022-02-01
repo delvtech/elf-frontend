@@ -1,9 +1,8 @@
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-
+import { ERC20 } from "@elementfi/core-typechain";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { usePoolTokenPrices } from "efi-ui/pools/hooks/usePoolTokenPrices/usePoolTokenPrices";
 import { getPrincipalPoolContractForTranche } from "efi/pools/ccpool";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 export function useMarketPrice(principalTokenInfo: PrincipalTokenInfo): string {
   const {

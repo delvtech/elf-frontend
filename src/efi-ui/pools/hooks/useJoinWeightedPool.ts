@@ -1,13 +1,6 @@
-import { useCallback } from "react";
-import { UseMutationResult } from "react-query";
-
-import { Vault } from "elf-contracts-typechain/dist/types/Vault";
-import { WeightedPool } from "elf-contracts-typechain/dist/types/WeightedPool";
-import { BigNumber, CallOverrides, ContractReceipt, Signer } from "ethers";
-import { defaultAbiCoder } from "ethers/lib/utils";
-import zipObject from "lodash.zipobject";
-
+import { Vault, WeightedPool } from "@elementfi/core-typechain";
 import { JoinRequest } from "efi-balancer/JoinRequest";
+import { balancerVaultContract } from "efi-balancer/vault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
@@ -15,7 +8,11 @@ import ContractAddresses from "efi/addresses/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { isWeightedPool } from "efi/pools/PoolContract";
-import { balancerVaultContract } from "efi-balancer/vault";
+import { BigNumber, CallOverrides, ContractReceipt, Signer } from "ethers";
+import { defaultAbiCoder } from "ethers/lib/utils";
+import zipObject from "lodash.zipobject";
+import { useCallback } from "react";
+import { UseMutationResult } from "react-query";
 
 enum JoinKind {
   INIT,

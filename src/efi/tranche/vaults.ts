@@ -1,11 +1,10 @@
-import { TestYVault__factory } from "elf-contracts-typechain/dist/types/factories/TestYVault__factory";
-import keyBy from "lodash.keyby";
-
+import { TestYVault__factory } from "@elementfi/core-typechain";
+import { TokenInfo, VaultTokenInfo } from "@elementfi/tokenlist";
+import { TokenTag } from "@elementfi/tokenlist/dist/tags";
+import { defaultProvider } from "efi/providers/providers";
 import { tokenListJson } from "efi/tokenlists/tokenlists";
 import { assetProxyTokenInfos } from "efi/tranche/positions";
-import { defaultProvider } from "efi/providers/providers";
-import { TokenTag } from "@elementfi/tokenlist/dist/tags";
-import { TokenInfo, VaultTokenInfo } from "@elementfi/tokenlist";
+import keyBy from "lodash.keyby";
 
 export const vaultTokenInfos: VaultTokenInfo[] = tokenListJson.tokens.filter(
   (tokenInfo) => isVaultToken(tokenInfo)

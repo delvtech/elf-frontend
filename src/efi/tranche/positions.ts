@@ -1,11 +1,13 @@
-import { AssetProxyTokenInfo, PrincipalTokenInfo } from "@elementfi/tokenlist";
-import { TokenTag } from "@elementfi/tokenlist/dist/tags";
-import { TokenInfo } from "@uniswap/token-lists";
-import { YVaultAssetProxy__factory } from "elf-contracts-typechain/dist/types/factories/YVaultAssetProxy__factory";
-import keyBy from "lodash.keyby";
-
+import { YVaultAssetProxy__factory } from "@elementfi/core-typechain";
+import {
+  AssetProxyTokenInfo,
+  PrincipalTokenInfo,
+  TokenInfo,
+  TokenTag,
+} from "@elementfi/tokenlist";
 import { defaultProvider } from "efi/providers/providers";
 import { tokenListJson } from "efi/tokenlists/tokenlists";
+import keyBy from "lodash.keyby";
 
 export const assetProxyTokenInfos: AssetProxyTokenInfo[] =
   tokenListJson.tokens.filter((tokenInfo): tokenInfo is AssetProxyTokenInfo =>

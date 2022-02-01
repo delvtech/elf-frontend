@@ -1,12 +1,15 @@
-import { TokenInfo } from "@uniswap/token-lists";
-import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types/ConvergentCurvePool";
-import { ConvergentCurvePool__factory } from "elf-contracts-typechain/dist/types/factories/ConvergentCurvePool__factory";
-import keyBy from "lodash.keyby";
-
+import {
+  ConvergentCurvePool,
+  ConvergentCurvePool__factory,
+} from "@elementfi/core-typechain";
+import {
+  PrincipalPoolTokenInfo,
+  TokenInfo,
+  TokenTag,
+} from "@elementfi/tokenlist";
 import { defaultProvider } from "efi/providers/providers";
 import { tokenListJson } from "efi/tokenlists/tokenlists";
-import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
-import { TokenTag } from "@elementfi/tokenlist/dist/tags";
+import keyBy from "lodash.keyby";
 
 /**
  * The list of all principal token pools. This includes pools with mature

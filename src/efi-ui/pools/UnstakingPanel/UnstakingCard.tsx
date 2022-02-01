@@ -1,17 +1,17 @@
-import { ReactElement, useCallback, useState } from "react";
-
 import { Button, Callout, Intent } from "@blueprintjs/core";
+import { ERC20 } from "@elementfi/core-typechain";
+import {
+  PrincipalPoolTokenInfo,
+  PrincipalTokenInfo,
+  TokenInfo,
+  YieldPoolTokenInfo,
+  YieldTokenInfo,
+} from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import { TokenInfo } from "@uniswap/token-lists";
-import { BigNumber, Signer } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
-import zipObject from "lodash.zipobject";
-import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
-import { t } from "ttag";
-
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
+import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useExitConvergentCurvePool } from "efi-ui/pools/hooks/useExitConvergentCurvePool/useExitConvergentCurvePool";
 import { useExitWeightedPool } from "efi-ui/pools/hooks/useExitWeightedPool/useExitWeightedPool";
@@ -29,11 +29,11 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
-import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
-import {
-  PrincipalPoolTokenInfo,
-  YieldPoolTokenInfo,
-} from "@elementfi/tokenlist";
+import { BigNumber, Signer } from "ethers";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
+import zipObject from "lodash.zipobject";
+import { ReactElement, useCallback, useState } from "react";
+import { t } from "ttag";
 
 interface UnstakeCardProps {
   signer: Signer | undefined;
@@ -100,7 +100,10 @@ export function UnstakeCard({
   // display info
   const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
   const poolSymbol = `ELF:${baseAssetInfo.symbol}-${termAssetInfo.symbol}`;
-  const { data: lpBalanceOf } = useTokenBalanceOf(pool, account);
+  const { data: lpBalanceOf } = useTokenBalanceOf(
+    pool as unknown as ERC20,
+    account
+  );
   const lpDisplayBalance = formatBalance(
     lpBalanceOf,
     BALANCER_POOL_LP_TOKEN_DECIMALS

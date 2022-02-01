@@ -1,39 +1,37 @@
-import { useCallback, useMemo } from "react";
-import { UseMutationResult } from "react-query";
-
-import { ContractReceipt } from "@ethersproject/contracts";
 import {
   ERC20,
   ERC20Permit,
   InterestToken,
   Tranche,
-} from "elf-contracts-typechain/dist/types";
-import { UserProxy } from "elf-contracts-typechain/dist/types/UserProxy";
-import { Signer } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
+  UserProxy,
+} from "@elementfi/core-typechain";
 import {
   PrincipalTokenInfo as TrancheInfo,
   YieldTokenInfo,
 } from "@elementfi/tokenlist";
-
+import { ContractReceipt } from "@ethersproject/contracts";
+import { TransactionError } from "efi-ui/contracts/TransactionError";
 import { useTokenApprovedForAmount } from "efi-ui/token/hooks/useTokenApprovedForAmount";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses/addresses";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
-import { getPermitVersion } from "efi/permit/getPermitVersion";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { makeMintCallArgs } from "efi/mint/makeMintCallArgs";
+import { getPermitVersion } from "efi/permit/getPermitVersion";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import {
   isUnderlyingAddressERC20Permit,
   underlyingContractsByAddress,
 } from "efi/underlying/underlying";
 import { getTokenAddressForUserProxy } from "efi/userProxy/address";
-import { TransactionError } from "efi-ui/contracts/TransactionError";
 import { userProxyContract } from "efi/userProxy/contract";
+import { Signer } from "ethers";
+import { parseUnits } from "ethers/lib/utils";
+import { useCallback, useMemo } from "react";
+import { UseMutationResult } from "react-query";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -280,7 +278,7 @@ async function getPermitCallData(
       }
       const nonceBN = await principalTokenContract.nonces(account);
       spenders.push(balancerVaultAddress);
-      tokenContracts.push(principalTokenContract);
+      tokenContracts.push(principalTokenContract as unknown as ERC20Permit);
       tokenNames.push(tokenName);
       nonces.push(nonceBN.toNumber());
     }
@@ -292,7 +290,7 @@ async function getPermitCallData(
       }
       const nonceBN = await yieldTokenContract.nonces(account);
       spenders.push(balancerVaultAddress);
-      tokenContracts.push(yieldTokenContract);
+      tokenContracts.push(yieldTokenContract as unknown as ERC20Permit);
       tokenNames.push(tokenName);
       nonces.push(nonceBN.toNumber());
     }

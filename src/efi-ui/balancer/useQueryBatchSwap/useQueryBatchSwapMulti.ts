@@ -1,9 +1,4 @@
-import { QueryObserverResult } from "react-query";
-
-import { Vault } from "elf-contracts-typechain/dist/types/Vault";
-import { BigNumber } from "ethers";
-import zip from "lodash.zip";
-
+import { Vault } from "@elementfi/core-typechain";
 import { SwapKind } from "efi-balancer/SwapKind";
 import { balancerVaultContract } from "efi-balancer/vault";
 import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";
@@ -11,6 +6,9 @@ import { getQueriesData } from "efi-ui/base/queryResults";
 import { UseSmartContractReadCallOptions } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { PoolContract } from "efi/pools/PoolContract";
+import { BigNumber } from "ethers";
+import zip from "lodash.zip";
+import { QueryObserverResult } from "react-query";
 
 export function useQueryBatchSwapMulti(
   kind: SwapKind,

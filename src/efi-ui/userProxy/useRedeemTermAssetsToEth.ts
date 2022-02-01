@@ -1,18 +1,20 @@
-import { useCallback, useMemo } from "react";
-
-import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
-import { UserProxy } from "elf-contracts-typechain/dist/types/UserProxy";
-import { BigNumber, Signer } from "ethers";
-
-import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
+import {
+  ERC20,
+  ERC20Permit,
+  Tranche,
+  UserProxy,
+} from "@elementfi/core-typechain";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
+import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
 import { flushPromises } from "efi/base/flush/flush";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { userProxyContract } from "efi/userProxy/contract";
-import { PrincipalTokenInfo } from "@elementfi/tokenlist";
+import { BigNumber, Signer } from "ethers";
+import { useCallback, useMemo } from "react";
 
 // list of shitty principal and yield token contracts whose names are messed up.  they change their
 // name after the constructor uses them to create their PERMIT_HASH's, which breaks permit calls.
@@ -68,13 +70,13 @@ export function useRedeemTermAssetsToEth(
   });
 
   const { data: ptApproval } = useTokenAllowance(
-    tranche,
+    tranche as unknown as ERC20,
     account,
     userProxy?.address
   );
 
   const { data: ytApproval } = useTokenAllowance(
-    interestTokenContract,
+    interestTokenContract as unknown as ERC20,
     account,
     userProxy?.address
   );
@@ -109,7 +111,7 @@ export function useRedeemTermAssetsToEth(
       const nonce = await interestTokenContract.nonces(account);
       const ptPermitData = await fetchPermitData(
         signer,
-        tranche,
+        tranche as unknown as ERC20Permit,
         ptName,
         account,
         userProxy.address,
@@ -134,7 +136,7 @@ export function useRedeemTermAssetsToEth(
       const nonce = await interestTokenContract.nonces(account);
       const ytPermitData = await fetchPermitData(
         signer,
-        interestTokenContract,
+        interestTokenContract as unknown as ERC20Permit,
         ytName,
         account,
         userProxy.address,

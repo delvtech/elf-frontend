@@ -1,10 +1,9 @@
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { Currency, Money } from "ts-money";
-
+import { ERC20 } from "@elementfi/core-typechain";
 import { getCoinGeckoId } from "efi-coingecko";
 import { useCoinGeckoHistoricalPrice } from "efi-ui/coingecko/useCoinGeckoHistoricalPrice";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { QueryObserverResult } from "react-query";
+import { Currency, Money } from "ts-money";
 
 export function useTokenHistoricalPrice<TContract extends ERC20>(
   contract: TContract | undefined,

@@ -1,13 +1,7 @@
-import { ReactElement } from "react";
-
 import { Card, Classes } from "@blueprintjs/core";
+import { ERC20 } from "@elementfi/core-typechain";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import classNames from "classnames";
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { BigNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
-import { Money } from "ts-money";
-import { t } from "ttag";
-
 import tw from "efi-tailwindcss-classnames";
 import { useAccumulatedFiatInterestForTranche } from "efi-ui/pools/hooks/useAccumulatedFiatInterestForTranche";
 import { useAccumulatedInterestForTranche } from "efi-ui/pools/hooks/useAccumulatedInterestForTranche";
@@ -27,7 +21,11 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { formatTermAssetShortSymbol } from "efi/tranche/format";
-import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
+import { BigNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
+import { ReactElement } from "react";
+import { Money } from "ts-money";
+import { t } from "ttag";
 
 interface TokenSummaryProps {
   poolInfo: PoolInfo;

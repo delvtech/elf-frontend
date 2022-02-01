@@ -1,14 +1,16 @@
-import { QueryObserverResult } from "react-query";
-
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { BigNumber } from "ethers";
-import zip from "lodash.zip";
-
+import {
+  ERC20,
+  ERC20Permit,
+  InterestToken,
+  Tranche,
+} from "@elementfi/core-typechain";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { ERC20Permit } from "elf-contracts-typechain/dist/types/ERC20Permit";
+import { BigNumber } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
+import zip from "lodash.zip";
+import { QueryObserverResult } from "react-query";
 
 export function useTokenAllowance(
   contract: ERC20 | ERC20Permit | undefined,
@@ -41,7 +43,7 @@ export function useTokenAllowanceMulti(
 export function useTokenApprovedForAmount(
   ownerAddress: string | null | undefined,
   spenderAddress: string,
-  tokenContract: ERC20 | ERC20Permit | undefined,
+  tokenContract: ERC20 | ERC20Permit | Tranche | InterestToken | undefined,
   tokenDecimals: number,
   amount: string
 ): boolean {

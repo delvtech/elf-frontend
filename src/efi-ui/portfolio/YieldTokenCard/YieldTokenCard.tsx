@@ -1,5 +1,3 @@
-import React, { ReactElement, ReactNode } from "react";
-
 import {
   ButtonGroup,
   Callout,
@@ -10,17 +8,14 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import { ERC20, InterestToken } from "@elementfi/core-typechain";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import Link from "next/link";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import classNames from "classnames";
-import { InterestToken } from "elf-contracts-typechain/dist/types/InterestToken";
-import { formatUnits } from "ethers/lib/utils";
-import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
-import { jt, t } from "ttag";
-
 import { getCoinGeckoId } from "efi-coingecko";
 import tw from "efi-tailwindcss-classnames";
+import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
@@ -33,6 +28,7 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
+import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { calculateProgress } from "efi/base/calculateProgress/calculateProgress";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "efi/base/dates/dates";
@@ -40,6 +36,7 @@ import { formatPercent } from "efi/base/formatPercent/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
@@ -47,9 +44,10 @@ import {
   getVaultContractForTranche,
   getVaultTokenInfoForTranche,
 } from "efi/tranche/tranches";
-import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
-import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
-import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
+import { formatUnits } from "ethers/lib/utils";
+import Link from "next/link";
+import React, { ReactElement, ReactNode } from "react";
+import { jt, t } from "ttag";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -81,7 +79,10 @@ export function YieldTokenCard({
 
   const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(yieldToken.address);
 
-  const { data: yieldTokenBalanceOf } = useTokenBalanceOf(yieldToken, account);
+  const { data: yieldTokenBalanceOf } = useTokenBalanceOf(
+    yieldToken as unknown as ERC20,
+    account
+  );
   const yieldTokenBalance = +formatUnits(
     yieldTokenBalanceOf ?? 0,
     yieldTokenInfo?.decimals

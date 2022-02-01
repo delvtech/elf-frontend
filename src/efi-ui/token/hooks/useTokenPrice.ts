@@ -1,8 +1,4 @@
-import { QueryObserverResult } from "react-query";
-
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { Currency, Money } from "ts-money";
-
+import { ERC20 } from "@elementfi/core-typechain";
 import { getCoinGeckoId } from "efi-coingecko";
 import {
   curveVirtualPriceContractsByAddress,
@@ -18,6 +14,8 @@ import { useCurveStablecoinPoolVirtualPrice } from "efi-ui/curve/stablePools";
 import { AddressesJson } from "efi/addresses/addresses";
 import { isMainnet } from "efi/ethereum/ethereum";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { QueryObserverResult } from "react-query";
+import { Currency, Money } from "ts-money";
 
 const {
   chainId,

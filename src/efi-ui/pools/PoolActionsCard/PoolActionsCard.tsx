@@ -1,27 +1,23 @@
-import { ReactElement, useCallback, useEffect } from "react";
-
 import { Card, Intent, Tab, Tabs } from "@blueprintjs/core";
+import { PrincipalTokenInfo, TokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { TokenInfo } from "@uniswap/token-lists";
-import { Signer } from "ethers";
-import { PrincipalTokenInfo } from "@elementfi/tokenlist";
-import { t } from "ttag";
-
 import tw from "efi-tailwindcss-classnames";
-import { useParams } from "efi-ui/router/useParams";
 import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 import { StakingPanel } from "efi-ui/pools/StakingPanel/StakingPanel";
 import { UnstakeCard } from "efi-ui/pools/UnstakingPanel/UnstakingCard";
 import { RedeemPanel } from "efi-ui/redeem/RedeemPanel/RedeemPanel";
+import { useParams } from "efi-ui/router/useParams";
 import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
-
+import { Signer } from "ethers";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { ReactElement, useCallback, useEffect } from "react";
+import { t } from "ttag";
 import styles from "./PoolActionsCard.module.css";
 
 interface PoolActionsCardProps {

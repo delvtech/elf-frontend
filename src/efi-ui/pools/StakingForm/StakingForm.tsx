@@ -1,27 +1,13 @@
-import React, {
-  Fragment,
-  ReactElement,
-  ReactEventHandler,
-  ReactNode,
-  useCallback,
-  useState,
-} from "react";
-
 import { Intent } from "@blueprintjs/core";
+import { ERC20, WeightedPool } from "@elementfi/core-typechain";
 import { Web3Provider } from "@ethersproject/providers";
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { WeightedPool } from "elf-contracts-typechain/dist/types/WeightedPool";
-import { BigNumber, Signer } from "ethers";
-import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
-import { t } from "ttag";
-
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
-import { StakingConfirmationDrawer } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensConfirmationDrawer";
 import { useJoinConvergentPool } from "efi-ui/pools/hooks/useJoinConvergentPool/useJoinConvergentPool";
 import { useJoinWeightedPool } from "efi-ui/pools/hooks/useJoinWeightedPool";
 import { useTokenPoolBalance } from "efi-ui/pools/hooks/useTokenPoolBalance/useTokenPoolBalance";
+import { StakingConfirmationDrawer } from "efi-ui/pools/StakeTokensConfirmationDrawer/StakeTokensConfirmationDrawer";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { IconProps } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
@@ -39,6 +25,17 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { trancheContracts } from "efi/tranche/tranches";
+import { BigNumber, Signer } from "ethers";
+import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
+import React, {
+  Fragment,
+  ReactElement,
+  ReactEventHandler,
+  ReactNode,
+  useCallback,
+  useState,
+} from "react";
+import { t } from "ttag";
 
 interface StakingAssetInputProps {
   cryptoSymbol: CryptoSymbol;
