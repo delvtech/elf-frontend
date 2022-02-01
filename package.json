@@ -182,7 +182,8 @@
     "update-elf-contracts-typechain": "npm install git+https://github.com/element-fi/elf-contracts-typechain.git",
     "update:language": "bash ./scripts/update-language.sh",
     "vercel-build-check": "bash ./scripts/vercel-build-check.sh",
-    "typecheck": "node_modules/typescript/bin/tsc --noEmit"
+    "typecheck": "node_modules/typescript/bin/tsc --noEmit",
+    "typecheck:watch": "node_modules/typescript/bin/tsc --noEmit --watch"
   },
   "version": "0.1.0"
 }
