@@ -1,18 +1,8 @@
-import { useCallback } from "react";
-import { UseMutationResult } from "react-query";
-
-import { Vault } from "elf-contracts-typechain/dist/types/Vault";
-import {
-  BigNumber,
-  BytesLike,
-  ContractReceipt,
-  PayableOverrides,
-  Signer,
-} from "ethers";
-
+import { Vault } from "@elementfi/core-typechain";
 import { FundManagement } from "efi-balancer/FundManagement";
 import { SingleSwap } from "efi-balancer/SingleSwap";
 import { SwapKind } from "efi-balancer/SwapKind";
+import { balancerVaultContract } from "efi-balancer/vault";
 import {
   AppToaster,
   makeErrorToast,
@@ -27,7 +17,15 @@ import { sortAddresses } from "efi/base/sortAddresses/sortAddresses";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { serializeError } from "eth-rpc-errors";
-import { balancerVaultContract } from "efi-balancer/vault";
+import {
+  BigNumber,
+  BytesLike,
+  ContractReceipt,
+  PayableOverrides,
+  Signer,
+} from "ethers";
+import { useCallback } from "react";
+import { UseMutationResult } from "react-query";
 
 /**
  * Hook for Balancer Vault's swap method.

@@ -1,5 +1,4 @@
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-
+import { ERC20 } from "@elementfi/core-typechain";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { PoolContract } from "efi/pools/PoolContract";
 

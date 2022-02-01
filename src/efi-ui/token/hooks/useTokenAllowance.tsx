@@ -1,13 +1,10 @@
-import { QueryObserverResult } from "react-query";
-
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { BigNumber } from "ethers";
-import zip from "lodash.zip";
-
+import { ERC20, ERC20Permit } from "@elementfi/core-typechain";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { ERC20Permit } from "elf-contracts-typechain/dist/types/ERC20Permit";
+import { BigNumber } from "ethers";
+import zip from "lodash.zip";
+import { QueryObserverResult } from "react-query";
 
 export function useTokenAllowance(
   contract: ERC20 | ERC20Permit | undefined,

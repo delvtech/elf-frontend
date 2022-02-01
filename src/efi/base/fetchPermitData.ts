@@ -1,9 +1,9 @@
+import { ERC20Permit } from "@elementfi/core-typechain";
 import {
   TypedDataDomain,
   TypedDataField,
   TypedDataSigner,
 } from "@ethersproject/abstract-signer";
-import { ERC20Permit } from "elf-contracts-typechain/dist/types/ERC20Permit";
 import { BigNumberish, BytesLike, ethers, Signer } from "ethers";
 
 export interface PermitCallData {

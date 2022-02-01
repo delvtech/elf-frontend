@@ -1,4 +1,3 @@
-import { ReactElement, useCallback } from "react";
 import {
   Button,
   Classes,
@@ -9,23 +8,25 @@ import {
   NonIdealState,
   Tag,
 } from "@blueprintjs/core";
-import { t } from "ttag";
-import tw from "efi-tailwindcss-classnames";
-import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
-import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldTokenPortfolio";
-import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 import { IconNames } from "@blueprintjs/icons";
 import { Popover2 } from "@blueprintjs/popover2";
-import { usePrincipalTokensWithoutDust } from "efi-ui/tranche/usePrincipalTokensWithoutDust";
-import classNames from "classnames";
-import { useConvergentCurvePoolsWithLPBalance } from "efi-ui/portfolio/hooks/useConvergentCurvePoolsWithLPBalance";
-import { useWeightedPoolsWithLPBalance } from "efi-ui/portfolio/hooks/useWeightedPoolsWithLPBalance";
-import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
-import { interestTokenContracts } from "efi/interestToken/interestToken";
-import { useBoolean } from "efi-ui/base/hooks/useBoolean/useBoolean";
+import { ERC20 } from "@elementfi/core-typechain";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import classNames from "classnames";
+import tw from "efi-tailwindcss-classnames";
+import { useBoolean } from "efi-ui/base/hooks/useBoolean/useBoolean";
+import { useConvergentCurvePoolsWithLPBalance } from "efi-ui/portfolio/hooks/useConvergentCurvePoolsWithLPBalance";
+import { useWeightedPoolsWithLPBalance } from "efi-ui/portfolio/hooks/useWeightedPoolsWithLPBalance";
+import { LiquidityPositionPortfolio } from "efi-ui/portfolio/LiquidityPositionPortfolio/LiquidityPositionPortfolio";
 import { PrincipalTokenPortfolio } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolio";
+import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldTokenPortfolio";
+import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
+import { usePrincipalTokensWithoutDust } from "efi-ui/tranche/usePrincipalTokensWithoutDust";
+import { interestTokenContracts } from "efi/interestToken/interestToken";
+import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
+import { ReactElement, useCallback } from "react";
+import { t } from "ttag";
 export interface PortfolioViewSmallScreenProps {
   account: string | null | undefined;
   chainId: number | undefined;
@@ -44,7 +45,7 @@ export function PortfolioViewSmallScreen({
   const principalTokenInfosWithoutDust = usePrincipalTokensWithoutDust(account);
   const yieldTokensWithBalanceResults = useTokensWithBalance(
     account,
-    interestTokenContracts
+    interestTokenContracts as unknown as ERC20[]
   );
 
   const interestTokenLPs = useWeightedPoolsWithLPBalance(account);

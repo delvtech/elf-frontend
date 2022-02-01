@@ -1,7 +1,4 @@
-import { Vault } from "elf-contracts-typechain/dist/types/Vault";
-import { BigNumber } from "ethers";
-import { parseEther } from "ethers/lib/utils";
-
+import { Vault } from "@elementfi/core-typechain";
 import { FundManagement } from "efi-balancer/FundManagement";
 import { SwapKind } from "efi-balancer/SwapKind";
 import { BatchSwapStep } from "efi-ui/balancer/SwapRequest";
@@ -12,6 +9,8 @@ import {
 } from "efi/balancer/balancer";
 import { sortAddresses } from "efi/base/sortAddresses/sortAddresses";
 import { StaticContractMethodArgs } from "efi/contracts/types";
+import { BigNumber } from "ethers";
+import { parseEther } from "ethers/lib/utils";
 
 /**
  * This is a simple read-only funds argument for queryBatchSwap

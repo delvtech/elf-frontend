@@ -1,7 +1,4 @@
-import { BigNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
-import zip from "lodash.zip";
-
+import { ERC20 } from "@elementfi/core-typechain";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
@@ -11,6 +8,9 @@ import {
   useTokenBalanceOfMulti,
 } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { PoolContract } from "efi/pools/PoolContract";
+import { BigNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
+import zip from "lodash.zip";
 
 /**
  * Calculates the amount of the pool the account owns.
@@ -19,7 +19,10 @@ export function useShareOfPool(
   pool: PoolContract | undefined,
   account: string | null | undefined
 ): number | undefined {
-  const { data: lpBalanceOf } = useTokenBalanceOf(pool, account);
+  const { data: lpBalanceOf } = useTokenBalanceOf(
+    pool as unknown as ERC20,
+    account
+  );
   const { data: totalSupply } = useSmartContractReadCall(pool, "totalSupply");
 
   if (!lpBalanceOf || !totalSupply) {
@@ -36,7 +39,10 @@ export function useShareOfPoolMulti(
   pools: (PoolContract | undefined)[],
   account: string | null | undefined
 ): (number | undefined)[] {
-  const lpBalanceOfResults = useTokenBalanceOfMulti(pools, account);
+  const lpBalanceOfResults = useTokenBalanceOfMulti(
+    pools as unknown as ERC20[],
+    account
+  );
   const totalSupplyResults = useSmartContractReadCalls(pools, "totalSupply");
 
   const shareOfPools = zip(

@@ -1,11 +1,10 @@
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { BigNumber } from "ethers";
-import zip from "lodash.zip";
-
+import { ERC20 } from "@elementfi/core-typechain";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
-import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { useTokenBalanceOfMulti } from "efi-ui/token/hooks/useTokenBalanceOf";
+import { EMPTY_ARRAY } from "efi/base/emptyArray";
+import { BigNumber } from "ethers";
+import zip from "lodash.zip";
 
 interface TokenWithBalance<TContract> {
   token: TContract;

@@ -1,5 +1,3 @@
-import { Fragment, ReactElement, useCallback, useState } from "react";
-
 import {
   Button,
   Card,
@@ -10,24 +8,23 @@ import {
   Intent,
   Tag,
 } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
+import { ERC20, USDC, WETH } from "@elementfi/core-typechain";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 import { differenceInDays } from "date-fns";
-import { ERC20 } from "elf-contracts-typechain/dist/types";
-import { USDC } from "elf-contracts-typechain/dist/types/USDC";
-import { WETH } from "elf-contracts-typechain/dist/types/WETH";
-import { Signer } from "ethers";
-import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
-import { t } from "ttag";
-
 import tw from "efi-tailwindcss-classnames";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { EarnActionsTabId } from "efi-ui/earn/EarnActionsTabs/EarnActionsTabId";
 import { EarnExpandedSummary } from "efi-ui/earn/EarnCardListItem/EarnExpandedSummary";
+import { EarnStakingForms } from "efi-ui/earn/EarnStakingForm/EarnStakingForms";
+import { MintForm } from "efi-ui/mint/MintCard/MintForm";
 import { useFeeVolumeForPool } from "efi-ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/hooks/useTotalValueLockedForTranche";
+import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
@@ -43,12 +40,10 @@ import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-
+import { Signer } from "ethers";
+import { Fragment, ReactElement, useCallback, useState } from "react";
+import { t } from "ttag";
 import { EarnSummaryCardListItem } from "./EarnSummaryCardListItem";
-import { IconNames } from "@blueprintjs/icons";
-import { MintForm } from "efi-ui/mint/MintCard/MintForm";
-import { EarnStakingForms } from "efi-ui/earn/EarnStakingForm/EarnStakingForms";
-import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 
 interface EarnCardListItemProps {
   signer: Signer | undefined;
@@ -122,7 +117,7 @@ export function EarnCardListItem(
   const fees = useFeeVolumeForPool(yieldPoolInfo) ?? 0;
   const tvl = useTotalValueLockedForTranche(
     principalTokenInfo,
-    baseAssetContract
+    baseAssetContract as unknown as ERC20
   );
   const variableYield = useTokenYield(yieldPoolInfo, "yield");
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;

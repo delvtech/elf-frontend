@@ -1,13 +1,7 @@
-import { ReactElement, useCallback, useEffect, useState } from "react";
-
 import { Button, Callout, Intent, Switch } from "@blueprintjs/core";
-import { Web3Provider } from "@ethersproject/providers";
-import { Tranche } from "elf-contracts-typechain/dist/types";
-import { BigNumber, Signer } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { ERC20, Tranche } from "@elementfi/core-typechain";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
-import { t } from "ttag";
-
+import { Web3Provider } from "@ethersproject/providers";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
@@ -25,7 +19,10 @@ import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-
+import { BigNumber, Signer } from "ethers";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { ReactElement, useCallback, useEffect, useState } from "react";
+import { t } from "ttag";
 import { useWithdrawPrincipal } from "./useWithdrawPrincipal";
 
 const { userProxyContractAddress } = ContractAddresses;
@@ -83,7 +80,10 @@ export function RedeemPrincipalTokensDrawer({
       setEnoughAllowance(false);
     }
   }, [userProxyAllowance, principalTokenValue]);
-  const { data: principalTokenBalanceOf } = useTokenBalanceOf(tranche, account);
+  const { data: principalTokenBalanceOf } = useTokenBalanceOf(
+    tranche as unknown as ERC20,
+    account
+  );
   const onSetMaxAmount = useCallback(() => {
     setPrincipalTokenValue(
       formatUnits(principalTokenBalanceOf ?? 0, principalTokenDecimals)

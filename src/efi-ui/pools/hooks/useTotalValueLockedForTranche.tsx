@@ -1,10 +1,5 @@
-import { useMemo } from "react";
-
+import { ERC20 } from "@elementfi/core-typechain";
 import { PrincipalTokenInfo, YieldPoolTokenInfo } from "@elementfi/tokenlist";
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { formatUnits } from "ethers/lib/utils";
-import { Money } from "ts-money";
-
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useAccumulatedInterestForTranche } from "efi-ui/pools/hooks/useAccumulatedInterestForTranche";
 import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
@@ -17,6 +12,9 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { formatUnits } from "ethers/lib/utils";
+import { useMemo } from "react";
+import { Money } from "ts-money";
 
 export function useTotalValueLockedForTranche(
   trancheInfo: PrincipalTokenInfo,

@@ -1,13 +1,11 @@
-import React from "react";
-
 import { Classes, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import { Tranche } from "@elementfi/core-typechain";
 import classNames from "classnames";
-import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
-
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
+import React from "react";
 
 interface TrancheButtonProps {
   account: string | null | undefined;

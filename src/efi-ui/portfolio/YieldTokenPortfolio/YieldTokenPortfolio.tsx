@@ -1,16 +1,14 @@
-import React, { ReactElement } from "react";
-
+import { InterestToken } from "@elementfi/core-typechain";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { InterestToken } from "elf-contracts-typechain/dist/types/InterestToken";
-import { t } from "ttag";
-
 import tw from "efi-tailwindcss-classnames";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { YieldTokenCard } from "efi-ui/portfolio/YieldTokenCard/YieldTokenCard";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { NoYieldTokensInWalletNonIdealState } from "efi-ui/wallets/NoYieldTokensInWalletNonIdealState/NoYieldTokensInWalletNonIdealState";
+import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { interestTokenContracts } from "efi/interestToken/interestToken";
+import React, { ReactElement } from "react";
+import { t } from "ttag";
 
 interface YieldTokenPortfolioProps {
   chainId: number | undefined;

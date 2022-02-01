@@ -1,13 +1,7 @@
-import { ReactElement, useCallback, useEffect, useState } from "react";
-
 import { Button, Callout, Intent, Switch } from "@blueprintjs/core";
-import { Web3Provider } from "@ethersproject/providers";
-import { Tranche } from "elf-contracts-typechain/dist/types";
-import { BigNumber, Signer } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { ERC20, Tranche } from "@elementfi/core-typechain";
 import { YieldTokenInfo } from "@elementfi/tokenlist";
-import { t } from "ttag";
-
+import { Web3Provider } from "@ethersproject/providers";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
@@ -15,17 +9,21 @@ import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { RedeemForm } from "efi-ui/tranche/RedeemForm/RedeemForm";
 import { useWithdrawInterest } from "efi-ui/tranche/RedeemTokensDrawer/useWithdrawInterest";
+import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
 import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import ContractAddresses from "efi/addresses/addresses";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { formatFullDate } from "efi/base/dates/dates";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/WalletApprovalCallout";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { BigNumber, Signer } from "ethers";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { ReactElement, useCallback, useEffect, useState } from "react";
+import { t } from "ttag";
 
 const { userProxyContractAddress } = ContractAddresses;
 
@@ -88,7 +86,7 @@ export function RedeemYieldTokensDrawer({
   }, [userProxyAllowance, yieldTokenValue]);
 
   const { data: yieldTokenBalanceOf } = useTokenBalanceOf(
-    yieldTokenContract,
+    yieldTokenContract as unknown as ERC20,
     account
   );
   const onSetMaxAmount = useCallback(() => {

@@ -1,17 +1,15 @@
-import { QueryObserverResult } from "react-query";
-
-import { Vault } from "elf-contracts-typechain/dist/types/Vault";
-import { BigNumber } from "ethers";
-
-import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { ContractMethodArgs } from "efi/contracts/types";
-import { PoolContract } from "efi/pools/PoolContract";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
-import { balancerVaultContract } from "efi-balancer/vault";
+import { Vault } from "@elementfi/core-typechain";
 import {
   PrincipalPoolTokenInfo,
   YieldPoolTokenInfo,
 } from "@elementfi/tokenlist";
+import { balancerVaultContract } from "efi-balancer/vault";
+import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { ContractMethodArgs } from "efi/contracts/types";
+import { PoolContract } from "efi/pools/PoolContract";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { BigNumber } from "ethers";
+import { QueryObserverResult } from "react-query";
 
 export function usePoolTokens(
   pool: PoolContract | undefined

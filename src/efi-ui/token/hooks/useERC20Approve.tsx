@@ -1,7 +1,6 @@
-import { useCallback } from "react";
-import { UseMutationResult, useQueryClient } from "react-query";
-
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
+import { ERC20 } from "@elementfi/core-typechain";
+import { matchSmartContractReadCallQuery } from "efi-ui/contracts/matchSmartContractReadCallQuery/matchSmartContractReadCallQuery";
+import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import {
   BigNumberish,
   ContractReceipt,
@@ -9,9 +8,8 @@ import {
   Overrides,
   Signer,
 } from "ethers";
-
-import { matchSmartContractReadCallQuery } from "efi-ui/contracts/matchSmartContractReadCallQuery/matchSmartContractReadCallQuery";
-import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
+import { useCallback } from "react";
+import { UseMutationResult, useQueryClient } from "react-query";
 
 interface UseERC20Approve {
   onApproveClick: () => void;

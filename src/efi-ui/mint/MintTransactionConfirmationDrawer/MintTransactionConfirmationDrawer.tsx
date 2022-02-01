@@ -1,22 +1,10 @@
-import {
-  Fragment,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-
 import { Callout, Switch } from "@blueprintjs/core";
-import { Web3Provider } from "@ethersproject/providers";
-import { ERC20Permit } from "elf-contracts-typechain/dist/types";
-import { Signer } from "ethers";
+import { ERC20Permit } from "@elementfi/core-typechain";
 import {
   PrincipalTokenInfo as TrancheInfo,
   YieldTokenInfo,
 } from "@elementfi/tokenlist";
-import { t } from "ttag";
-
+import { Web3Provider } from "@ethersproject/providers";
 import tw from "efi-tailwindcss-classnames";
 import { useMintPreview } from "efi-ui/mint/hooks/useMintPreview";
 import {
@@ -40,6 +28,16 @@ import {
   underlyingContractsByAddress,
 } from "efi/underlying/underlying";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
+import { Signer } from "ethers";
+import {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { t } from "ttag";
 
 interface MintTransactionConfirmationDrawerProps {
   account: string | null | undefined;

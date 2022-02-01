@@ -1,12 +1,7 @@
-import { ReactElement, useCallback, useState } from "react";
-
 import { Button, Callout, Intent } from "@blueprintjs/core";
+import { ERC20 } from "@elementfi/core-typechain";
+import { TokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import { TokenInfo } from "@uniswap/token-lists";
-import { BigNumber, Signer } from "ethers";
-import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
-import { t } from "ttag";
-
 import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
 import { SwapKind } from "efi-balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
@@ -43,6 +38,10 @@ import {
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { BigNumber, Signer } from "ethers";
+import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";
+import { ReactElement, useCallback, useState } from "react";
+import { t } from "ttag";
 
 interface TradePanelProps {
   tradeType: "buy" | "sell";
@@ -518,8 +517,11 @@ function useTokenInfoForTradeInput(
 
   const balanceOf = useCryptoBalanceOf(library, account, asset);
   const displayBalance = formatBalance(balanceOf, decimals);
-  const poolBalance = useTokenPoolBalance(pool, tokenContract);
-  const poolIndex = useTokenPoolIndex(pool, tokenContract);
+  const poolBalance = useTokenPoolBalance(
+    pool,
+    tokenContract as unknown as ERC20
+  );
+  const poolIndex = useTokenPoolIndex(pool, tokenContract as unknown as ERC20);
 
   return {
     asset,

@@ -1,16 +1,15 @@
-import React, { ReactElement } from "react";
-
 import { Tab, Tabs, Tag } from "@blueprintjs/core";
-import { t } from "ttag";
-
-import tw from "efi-tailwindcss-classnames";
-import styles from "./PortfolioTabs.module.css";
+import { ERC20 } from "@elementfi/core-typechain";
 import classNames from "classnames";
-import { usePrincipalTokensWithoutDust } from "efi-ui/tranche/usePrincipalTokensWithoutDust";
-import { useWeightedPoolsWithLPBalance } from "efi-ui/portfolio/hooks/useWeightedPoolsWithLPBalance";
+import tw from "efi-tailwindcss-classnames";
 import { useConvergentCurvePoolsWithLPBalance } from "efi-ui/portfolio/hooks/useConvergentCurvePoolsWithLPBalance";
-import { interestTokenContracts } from "efi/interestToken/interestToken";
+import { useWeightedPoolsWithLPBalance } from "efi-ui/portfolio/hooks/useWeightedPoolsWithLPBalance";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
+import { usePrincipalTokensWithoutDust } from "efi-ui/tranche/usePrincipalTokensWithoutDust";
+import { interestTokenContracts } from "efi/interestToken/interestToken";
+import React, { ReactElement } from "react";
+import { t } from "ttag";
+import styles from "./PortfolioTabs.module.css";
 
 export enum PortfolioTabId {
   PRINCIPAL_TOKENS = "principalTokens",
@@ -34,7 +33,7 @@ export function PortfolioTabs({
   // of both there and here..., should we use a dust calc?
   const yieldTokensWithBalanceResults = useTokensWithBalance(
     account,
-    interestTokenContracts
+    interestTokenContracts as unknown as ERC20[]
   );
 
   const interestTokenLPs = useWeightedPoolsWithLPBalance(account);

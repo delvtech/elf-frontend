@@ -1,5 +1,4 @@
-import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
-
+import { Tranche } from "@elementfi/core-typechain";
 import { useOpenPrincipalTokenInfos } from "efi-ui/tranche/useOpenPrincipalTokenInfos";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 

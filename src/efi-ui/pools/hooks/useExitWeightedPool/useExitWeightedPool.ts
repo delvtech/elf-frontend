@@ -1,12 +1,8 @@
-import { useCallback } from "react";
-import { UseMutationResult } from "react-query";
-
-import { Vault } from "elf-contracts-typechain/dist/types/Vault";
-import { BigNumber, ContractReceipt, Signer } from "ethers";
-import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
-
+import { Vault } from "@elementfi/core-typechain";
+import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
 import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
+import { balancerVaultContract } from "efi-balancer/vault";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
@@ -15,8 +11,10 @@ import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForL
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { WeightedPoolExitKind } from "efi/pools/weightedPool";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
-import { balancerVaultContract } from "efi-balancer/vault";
-import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
+import { BigNumber, ContractReceipt, Signer } from "ethers";
+import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
+import { useCallback } from "react";
+import { UseMutationResult } from "react-query";
 
 export function useExitWeightedPool(
   signer: Signer | undefined,

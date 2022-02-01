@@ -1,15 +1,9 @@
-import { CSSProperties, ReactElement, useCallback, useState } from "react";
-
 import { Card, Classes, Collapse, Elevation } from "@blueprintjs/core";
+import { ERC20, USDC, WETH } from "@elementfi/core-typechain";
+import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 import { differenceInDays } from "date-fns";
-import { ERC20 } from "elf-contracts-typechain/dist/types";
-import { USDC } from "elf-contracts-typechain/dist/types/USDC";
-import { WETH } from "elf-contracts-typechain/dist/types/WETH";
-import { Signer } from "ethers";
-import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
-
 import tw from "efi-tailwindcss-classnames";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { EarnActionsCard } from "efi-ui/earn/EarnActionsCard/EarnActionsCard";
@@ -29,12 +23,13 @@ import {
   getPoolInfoForYieldToken,
   yieldPoolContractsByAddress,
 } from "efi/pools/weightedPool";
-import { getIsMature } from "efi/tranche/getIsMature";
-import { underlyingContractsByAddress } from "efi/underlying/underlying";
-
-import { EarnSummaryCard } from "./EarnSummaryCard";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getIsMature } from "efi/tranche/getIsMature";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { Signer } from "ethers";
+import { CSSProperties, ReactElement, useCallback, useState } from "react";
+import { EarnSummaryCard } from "./EarnSummaryCard";
 
 interface EarnCardProps {
   signer: Signer | undefined;
@@ -114,7 +109,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   const fees = useFeeVolumeForPool(yieldPoolInfo) ?? 0;
   const tvl = useTotalValueLockedForTranche(
     principalTokenInfo,
-    baseAssetContract
+    baseAssetContract as unknown as ERC20
   );
   const variableYield = useTokenYield(yieldPoolInfo, "yield");
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;

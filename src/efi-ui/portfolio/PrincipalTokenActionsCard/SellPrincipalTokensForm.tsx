@@ -1,11 +1,10 @@
-import { Fragment, ReactElement, useCallback, useState } from "react";
-
 import { Button, Callout, Intent, Tag } from "@blueprintjs/core";
+import { ConvergentCurvePool, ERC20 } from "@elementfi/core-typechain";
+import {
+  PrincipalPoolTokenInfo,
+  PrincipalTokenInfo,
+} from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types";
-import { formatUnits } from "ethers/lib/utils";
-import { t } from "ttag";
-
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { SwapKind } from "efi-balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
@@ -30,10 +29,9 @@ import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
-import {
-  PrincipalPoolTokenInfo,
-  PrincipalTokenInfo,
-} from "@elementfi/tokenlist";
+import { formatUnits } from "ethers/lib/utils";
+import { Fragment, ReactElement, useCallback, useState } from "react";
+import { t } from "ttag";
 
 interface SellPrincipalTokensFormProps {
   library: Web3Provider | undefined;
@@ -73,7 +71,10 @@ export function SellPrincipalTokensForm(
 
   // principal token
   const trancheContract = trancheContractsByAddress[ptAddress];
-  const { data: ptBalanceOf } = useTokenBalanceOf(trancheContract, account);
+  const { data: ptBalanceOf } = useTokenBalanceOf(
+    trancheContract as unknown as ERC20,
+    account
+  );
   const ptBalanceLabel = formatBalance(ptBalanceOf, ptDecimals, ptDecimals);
   const principalTokenCryptoAsset = getCryptoAssetForToken(ptAddress);
   const ptIcon = findAssetIcon(principalTokenCryptoAsset);
@@ -181,7 +182,10 @@ function useValidateInput(
   } = poolInfo;
 
   const trancheContract = trancheContractsByAddress[bond];
-  const { data: ptBalanceOf } = useTokenBalanceOf(trancheContract, account);
+  const { data: ptBalanceOf } = useTokenBalanceOf(
+    trancheContract as unknown as ERC20,
+    account
+  );
   const { decimals: ptDecimals } = getTokenInfo<PrincipalTokenInfo>(bond);
 
   const { baseAssetIndex, termAssetIndex: principalTokenIndex } =

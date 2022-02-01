@@ -1,15 +1,11 @@
-import React, { Fragment, ReactElement, useCallback, useState } from "react";
-
 import { AnchorButton, Button, Intent } from "@blueprintjs/core";
 import { Tooltip2 } from "@blueprintjs/popover2";
-import { Web3Provider } from "@ethersproject/providers";
-import { formatUnits } from "ethers/lib/utils";
+import { ERC20 } from "@elementfi/core-typechain";
 import {
   PrincipalTokenInfo as TrancheInfo,
   YieldTokenInfo,
 } from "@elementfi/tokenlist";
-import { t } from "ttag";
-
+import { Web3Provider } from "@ethersproject/providers";
 import tw from "efi-tailwindcss-classnames";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
@@ -20,6 +16,9 @@ import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/co
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { formatUnits } from "ethers/lib/utils";
+import React, { Fragment, ReactElement, useCallback, useState } from "react";
+import { t } from "ttag";
 
 interface RedeemYieldTokensButtonOldProps {
   account: string | null | undefined;
@@ -57,7 +56,7 @@ export function RedeemYieldTokensButtonOld({
   const yieldTokenContract =
     interestTokenContractsByAddress[yieldTokenInfo.address];
   const { data: userProxyAllowanceBN } = useTokenAllowance(
-    yieldTokenContract,
+    yieldTokenContract as unknown as ERC20,
     account,
     userProxyContractAddress
   );

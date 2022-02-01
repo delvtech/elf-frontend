@@ -1,12 +1,8 @@
-import { useCallback } from "react";
-
-import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types";
-import { Vault } from "elf-contracts-typechain/dist/types/Vault";
-import { BigNumber, Signer } from "ethers";
-import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
-
+import { ConvergentCurvePool, Vault } from "@elementfi/core-typechain";
+import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
+import { balancerVaultContract } from "efi-balancer/vault";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
@@ -15,8 +11,9 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
-import { balancerVaultContract } from "efi-balancer/vault";
-import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
+import { BigNumber, Signer } from "ethers";
+import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
+import { useCallback } from "react";
 
 export function useExitConvergentCurvePool(
   signer: Signer | undefined,

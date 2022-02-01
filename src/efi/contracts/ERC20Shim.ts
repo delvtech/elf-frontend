@@ -1,4 +1,4 @@
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
+import { ERC20 } from "@elementfi/core-typechain";
 
 /**
  * Tranche contracts are not quite ERC20s in that they do not have a

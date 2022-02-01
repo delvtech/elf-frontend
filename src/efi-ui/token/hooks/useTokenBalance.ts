@@ -1,8 +1,7 @@
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
-import { formatUnits } from "ethers/lib/utils";
-
+import { ERC20 } from "@elementfi/core-typechain";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { formatUnits } from "ethers/lib/utils";
 
 /**
  * Gets the token balance formatted to its proper decimals.

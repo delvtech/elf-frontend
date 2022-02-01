@@ -1,12 +1,11 @@
-import { UserProxy } from "elf-contracts-typechain/dist/types/UserProxy";
-import { BigNumber, CallOverrides } from "ethers";
-
+import { UserProxy } from "@elementfi/core-typechain";
 import { PermitCallData } from "efi/base/fetchPermitData";
 import {
   ContractMethodArgs,
   StaticContractMethodArgs,
 } from "efi/contracts/types";
 import { USER_PROXY_ETH_SENTINEL } from "efi/userProxy/address";
+import { BigNumber, CallOverrides } from "ethers";
 
 export function makeMintCallArgs(
   amount: BigNumber,

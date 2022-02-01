@@ -1,13 +1,11 @@
-import { useQuery } from "react-query";
-
-import { Money } from "ts-money";
-
+import { ERC20 } from "@elementfi/core-typechain";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { fetchTokenPrice } from "efi/token/fetchTokenPrice";
 import { fetchTotalValueLockedForTerm } from "efi/tranche/fetchTotalValueLockedForTerm";
-import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { ERC20 } from "elf-contracts-typechain/dist/types/ERC20";
 import { principalTokenInfos } from "efi/tranche/tranches";
+import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { useQuery } from "react-query";
+import { Money } from "ts-money";
 
 export function useTotalValueLockedForPlatform(): Money {
   const { currency } = useCurrencyPref();

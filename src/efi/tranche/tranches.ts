@@ -1,20 +1,18 @@
-import { TokenInfo } from "@uniswap/token-lists";
-import { Tranche__factory } from "elf-contracts-typechain/dist/types/factories/Tranche__factory";
-import { TestYVault } from "elf-contracts-typechain/dist/types/TestYVault";
-import keyBy from "lodash.keyby";
-
+import { TestYVault, Tranche__factory } from "@elementfi/core-typechain";
+import {
+  AssetProxyTokenInfo,
+  PrincipalTokenInfo,
+  TokenInfo,
+  VaultTokenInfo,
+  YieldTokenInfo,
+  TokenTag,
+} from "@elementfi/tokenlist";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
+import { defaultProvider } from "efi/providers/providers";
 import { getTokenInfo, tokenListJson } from "efi/tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { vaultContractsByAddress } from "efi/tranche/vaults";
-import { defaultProvider } from "efi/providers/providers";
-import {
-  PrincipalTokenInfo,
-  AssetProxyTokenInfo,
-  VaultTokenInfo,
-  YieldTokenInfo,
-} from "@elementfi/tokenlist";
-import { TokenTag } from "@elementfi/tokenlist/dist/tags";
+import keyBy from "lodash.keyby";
 
 export function isPrincipalToken(
   tokenInfo: TokenInfo

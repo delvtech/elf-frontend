@@ -1,5 +1,3 @@
-import { ReactElement } from "react";
-
 import {
   ButtonGroup,
   Callout,
@@ -10,15 +8,9 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import Link from "next/link";
-import classNames from "classnames";
-import { ConvergentCurvePool } from "elf-contracts-typechain/dist/types/ConvergentCurvePool";
-import { BigNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
-import zipObject from "lodash.zipobject";
+import { ConvergentCurvePool } from "@elementfi/core-typechain";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
-import { t } from "ttag";
-
+import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
@@ -37,6 +29,12 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
 import { getIsMature } from "efi/tranche/getIsMature";
+import { BigNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils";
+import zipObject from "lodash.zipobject";
+import Link from "next/link";
+import { ReactElement } from "react";
+import { t } from "ttag";
 
 interface PrincipalTokenLPCardProps {
   account: string | null | undefined;

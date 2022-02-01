@@ -5,8 +5,9 @@ import {
   PrincipalTokenInfo,
   YieldPoolTokenInfo,
   YieldTokenInfo,
+  TokenInfo,
+  TokenList,
 } from "@elementfi/tokenlist";
-import { TokenInfo, TokenList } from "@uniswap/token-lists";
 import keyBy from "lodash.keyby";
 import TokenListJsonFileTestnet from "tokenlists/testnet.tokenlist.json";
 

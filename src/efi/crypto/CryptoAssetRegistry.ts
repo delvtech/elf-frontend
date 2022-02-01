@@ -1,3 +1,4 @@
+import { ERC20, ERC20Permit } from "@elementfi/core-typechain";
 import { AddressesJson } from "efi/addresses/addresses";
 import {
   CryptoAsset,
@@ -15,7 +16,6 @@ import {
   trancheContractsByAddress,
 } from "efi/tranche/tranches";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
-import { ERC20, ERC20Permit } from "elf-contracts-typechain/dist/types";
 import keyBy from "lodash.keyby";
 
 const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
@@ -117,7 +117,7 @@ const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] =
     id: address,
     // All of our principal tokens follow the erc20Permit token standard.
     type: CryptoAssetType.ERC20PERMIT,
-    tokenContract: trancheContractsByAddress[address],
+    tokenContract: trancheContractsByAddress[address] as unknown as ERC20Permit,
   }));
 
 const yieldTokenCryptoAssets: Erc20PermitCryptoAsset[] = yieldTokenInfos.map(
@@ -125,7 +125,9 @@ const yieldTokenCryptoAssets: Erc20PermitCryptoAsset[] = yieldTokenInfos.map(
     id: address,
     // All of our yield tokens follow the erc20Permit token standard.
     type: CryptoAssetType.ERC20PERMIT,
-    tokenContract: interestTokenContractsByAddress[address],
+    tokenContract: interestTokenContractsByAddress[
+      address
+    ] as unknown as ERC20Permit,
   })
 );
 

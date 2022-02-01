@@ -1,11 +1,10 @@
-import React, { Fragment, ReactElement, useCallback, useState } from "react";
-
 import { Classes, Icon, Intent, Tag } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import { Tooltip2 } from "@blueprintjs/popover2";
+import { ERC20 } from "@elementfi/core-typechain";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import { formatUnits } from "ethers/lib/utils";
-import { t } from "ttag";
-
+import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
@@ -15,9 +14,9 @@ import ContractAddresses from "efi/addresses/addresses";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";
-import { IconNames } from "@blueprintjs/icons";
-import classNames from "classnames";
-import { PrincipalTokenInfo } from "@elementfi/tokenlist";
+import { formatUnits } from "ethers/lib/utils";
+import React, { Fragment, ReactElement, useCallback, useState } from "react";
+import { t } from "ttag";
 
 const { userProxyContractAddress } = ContractAddresses;
 
@@ -54,7 +53,7 @@ export function RedeemPrincipalTokensButtonTag({
   const principalTokenContract =
     principalTokenContractsByAddress[principalTokenInfo.address];
   const { data: userProxyAllowanceBN } = useTokenAllowance(
-    principalTokenContract,
+    principalTokenContract as unknown as ERC20,
     account,
     userProxyContractAddress
   );

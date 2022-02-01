@@ -1,12 +1,11 @@
-import { BigNumber } from "ethers";
-import zip from "lodash.zip";
-
+import { ERC20 } from "@elementfi/core-typechain";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { useTokensWithBalance } from "efi-ui/token/hooks/useTokensWithBalance";
 import { isDust } from "efi/coins/isDust";
 import { getTokenInfo } from "efi/tokenlists/tokenlists";
 import { trancheContracts } from "efi/tranche/tranches";
-import { Tranche } from "elf-contracts-typechain/dist/types/Tranche";
-import { PrincipalTokenInfo } from "@elementfi/tokenlist";
+import { BigNumber } from "ethers";
+import zip from "lodash.zip";
 
 /**
  * Returns the list of principal token infos that have a non-dust balance for
@@ -18,7 +17,7 @@ export function usePrincipalTokensWithoutDust(
   const principalTokensWithBalanceResults = useTokensWithBalance(
     account,
     // Note: we're checking all tranche contracts in the system for a balance
-    trancheContracts
+    trancheContracts as unknown as ERC20[]
   );
 
   const principalTokenInfosWithBalance = principalTokensWithBalanceResults.map(
@@ -35,7 +34,7 @@ export function usePrincipalTokensWithoutDust(
       (
         zipped
       ): zipped is [
-        { token: Tranche; balanceOf: BigNumber },
+        { token: ERC20; balanceOf: BigNumber },
         PrincipalTokenInfo
       ] => zipped.every((v) => !!v)
     )
@@ -43,7 +42,7 @@ export function usePrincipalTokensWithoutDust(
       ([{ balanceOf }, principalTokenInfo]) =>
         !isDust(balanceOf, principalTokenInfo.decimals)
     )
-    .map(([unusedTokenWithBalance, principalTokenInfo]) => principalTokenInfo);
+    .map(([, principalTokenInfo]) => principalTokenInfo);
 
   return principalTokensWithoutDust;
 }
