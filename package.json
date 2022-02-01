@@ -17,6 +17,7 @@
     "@blueprintjs/icons": "^3.31.0",
     "@blueprintjs/popover2": "^0.12.8",
     "@blueprintjs/select": "^3.18.11",
+    "@elementfi/core-typechain": "^1.0.1",
     "@elementfi/tokenlist": "^2.1.0",
     "@ethersproject/abi": "^5.5.0",
     "@ethersproject/abstract-signer": "^5.4.1",
@@ -108,7 +109,6 @@
     "warning": "^4.0.3"
   },
   "devDependencies": {
-    "@elementfi/core-typechain": "^1.0.1",
     "@jest/types": "^27.4.2",
     "@svgr/webpack": "^5.5.0",
     "@testing-library/dom": "^8.11.1",
