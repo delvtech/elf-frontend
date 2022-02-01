@@ -78,7 +78,6 @@
     "d3-time": "^3.0.0",
     "d3-time-format": "^4.0.0",
     "date-fns": "^2.25.0",
-    "elf-contracts-typechain": "git+https://github.com/element-fi/elf-contracts-typechain.git",
     "eth-rpc-errors": "^4.0.3",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.4.7",
@@ -110,6 +109,7 @@
     "warning": "^4.0.3"
   },
   "devDependencies": {
+    "@elementfi/core-typechain": "^1.0.1",
     "@jest/types": "^27.4.2",
     "@svgr/webpack": "^5.5.0",
     "@testing-library/dom": "^8.11.1",
