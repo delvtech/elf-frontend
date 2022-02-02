@@ -1,14 +1,17 @@
-import { Fragment, ReactElement, useCallback, useState } from "react";
-
 import { Button, Card, Classes, Colors, Icon, Intent } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
+import {
+  PrincipalPoolTokenInfo,
+  PrincipalTokenInfo,
+} from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import classNames from "classnames";
-import { commify } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "@elementfi/tokenlist";
-import { t } from "ttag";
-
+import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
+import { SwapKind } from "efi-balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
+import { useNavigation } from "efi-ui/app/navigation/hooks/useNavigation";
+import { Navigation } from "efi-ui/app/navigation/navigation";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
@@ -19,23 +22,21 @@ import { findAssetIcon } from "efi-ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "efi-ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useValidateBuyPrincipalTokenInput } from "efi-ui/pools/hooks/useValidateBuyPrincipalTokenInput";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
+import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { TokenAmountInput2 } from "efi-ui/token/TokenAmountInput/TokenAmountInput2";
 import { getMarketRateLabel } from "efi-ui/tranche/getMarketRateLabel";
 import { PrincipalTokenTermButtonLabel2 } from "efi-ui/tranche/TermPicker/PrincipalTokenTermButtonLabel2";
 import { TermPicker2 } from "efi-ui/tranche/TermPicker/TermPicker2";
+import { ZapCurveInTransactionConfirmationDrawer } from "efi-ui/zaps/ZapCurveTransactionConfirmationDrawer/ZapCurveInTransactionConfirmationDrawer";
 import { formatBalance } from "efi/base/formatBalance/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { commify } from "ethers/lib/utils";
+import { Fragment, ReactElement, useCallback, useState } from "react";
+import { t } from "ttag";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
-import { SwapKind } from "efi-balancer/SwapKind";
-import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
-import { getTokenAddressForBalancer } from "efi-balancer/getTokenAddressForBalancer";
-import { IconNames } from "@blueprintjs/icons";
-import { useNavigation } from "efi-ui/app/navigation/hooks/useNavigation";
-import { Navigation } from "efi-ui/app/navigation/navigation";
-import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 
 export interface BuyFixedRatesViewProps {
   availablePrincipalTokens: PrincipalTokenInfo[];
@@ -64,6 +65,9 @@ export function BuyFixedRatesView({
     setDrawerOpen(false);
   }, []);
 
+  // Flag to toggle between normal purchase or zap purchase
+  const [normalSwap, setNormalSwap] = useState(false);
+
   // Tailwind mindset is mobile-first, but sometimes we need to know at runtime
   // if a large screen is being used.
   const isLargeScreen = useIsTailwindLargeScreen();
@@ -76,15 +80,15 @@ export function BuyFixedRatesView({
   const baseAssetName = getCryptoName(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const AssetIcon = findAssetIcon(baseAsset);
-  const height = isLargeScreen ? 40 : 30;
-  const width = height;
-
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
   const baseAssetDisplayBalance = formatBalance(
     baseAssetBalanceOf,
     baseAssetDecimals
   );
+
+  const height = isLargeScreen ? 40 : 30;
+  const width = height;
 
   // Market price stuff
   const principalPrice = useMarketPrice(principalTokenInfo);
@@ -316,27 +320,51 @@ export function BuyFixedRatesView({
           </Card>
         </div>
       </div>
-      <SwapTokensTransactionConfirmationDrawer
-        buttonLabel={t`Buy`}
-        tokenInAddress={baseAssetUnderlyingAddress}
-        tokenInSymbol={baseAssetSymbol}
-        tokenInDecimals={baseAssetDecimals}
-        tokenInAsset={baseAsset}
-        tokenInIcon={AssetIcon}
-        tokenOutAddress={principalTokenAddress as string}
-        tokenOutSymbol={principalTokenInfo.symbol}
-        tokenOutDecimals={baseAssetDecimals}
-        tokenOutIcon={undefined}
-        account={account}
-        library={library}
-        poolInfo={principalTokenPoolInfo}
-        amountIn={baseAssetInputValue}
-        amountOut={principalTokensOut}
-        swapKind={SwapKind.GIVEN_IN}
-        spotPrice={+principalPrice}
-        isOpen={isDrawerOpen}
-        onClose={closeDrawer}
-      />
+      {normalSwap ? (
+        <SwapTokensTransactionConfirmationDrawer
+          buttonLabel={t`Buy`}
+          tokenInAddress={baseAssetUnderlyingAddress}
+          tokenInSymbol={baseAssetSymbol}
+          tokenInDecimals={baseAssetDecimals}
+          tokenInAsset={baseAsset}
+          tokenInIcon={AssetIcon}
+          tokenOutAddress={principalTokenAddress as string}
+          tokenOutSymbol={principalTokenInfo.symbol}
+          tokenOutDecimals={baseAssetDecimals}
+          tokenOutIcon={undefined}
+          account={account}
+          library={library}
+          poolInfo={principalTokenPoolInfo}
+          amountIn={baseAssetInputValue}
+          amountOut={principalTokensOut}
+          swapKind={SwapKind.GIVEN_IN}
+          spotPrice={+principalPrice}
+          isOpen={isDrawerOpen}
+          onClose={closeDrawer}
+        />
+      ) : (
+        <ZapCurveInTransactionConfirmationDrawer
+          buttonLabel={t`Buy`}
+          tokenInAddress={baseAssetUnderlyingAddress}
+          tokenInSymbol={baseAssetSymbol}
+          tokenInDecimals={baseAssetDecimals}
+          tokenInAsset={baseAsset}
+          tokenInIcon={AssetIcon}
+          tokenOutAddress={principalTokenAddress as string}
+          tokenOutSymbol={principalTokenInfo.symbol}
+          tokenOutDecimals={baseAssetDecimals}
+          tokenOutIcon={undefined}
+          account={account}
+          library={library}
+          poolInfo={principalTokenPoolInfo}
+          amountIn={baseAssetInputValue}
+          amountOut={principalTokensOut}
+          swapKind={SwapKind.GIVEN_IN}
+          spotPrice={+principalPrice}
+          isOpen={isDrawerOpen}
+          onClose={closeDrawer}
+        />
+      )}
     </Fragment>
   );
 }
