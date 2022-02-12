@@ -11,6 +11,5 @@ export function getCryptoAssetForToken(
   tokenAddress: string
 ): CryptoAsset {
   // element tranches and interest tokens are known permits
-
   return CryptoAssets[tokenAddress];
 }

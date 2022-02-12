@@ -1,8 +1,11 @@
 import { Button, Card, Classes, Colors, Icon, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import {
+  CurveLpTokenInfo,
   PrincipalPoolTokenInfo,
   PrincipalTokenInfo,
+  TokenInfo,
+  TokenTag,
 } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
@@ -37,6 +40,9 @@ import { commify } from "ethers/lib/utils";
 import { Fragment, ReactElement, useCallback, useState } from "react";
 import { t } from "ttag";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
+import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { TokenIcon } from "efi-ui/token/TokenIcon";
+import { getTokenInfo } from "efi/tokenlists/tokenlists";
 
 export interface BuyFixedRatesViewProps {
   availablePrincipalTokens: PrincipalTokenInfo[];
@@ -46,6 +52,77 @@ export interface BuyFixedRatesViewProps {
   // `parsedUrlQuery | undefined` so it must be optional.
   principalTokenAddress?: string;
 }
+
+interface InputAsset {
+  asset: CryptoAsset;
+  assetAddress: string;
+  assetName: string;
+  assetSymbol: string;
+  assetIcon: TokenIcon;
+  assetDecimals: number;
+}
+type InputAssets = InputAsset[];
+const getInputAssets = (
+  principalTokenInfo: PrincipalTokenInfo
+): InputAssets => {
+  const { underlying } = principalTokenInfo.extensions;
+  const baseAsset = getCryptoAssetForToken(underlying);
+  const baseAssetIcon = findAssetIcon(baseAsset);
+  const baseAssetTokenInfo = getTokenInfo(underlying);
+
+  const {
+    decimals: baseAssetDecimals,
+    name: baseAssetName,
+    symbol: baseAssetSymbol,
+    address: baseAssetAddress,
+  } = baseAssetTokenInfo;
+
+  let inputAssets: InputAssets = [
+    {
+      asset: baseAsset,
+      assetAddress: baseAssetAddress,
+      assetName: baseAssetName,
+      assetSymbol: baseAssetSymbol,
+      assetIcon: baseAssetIcon,
+      assetDecimals: baseAssetDecimals,
+    },
+  ];
+
+  const isCurveLpTokenInfo = (
+    tknInfo: TokenInfo
+  ): tknInfo is CurveLpTokenInfo =>
+    !!tknInfo.tags?.some((tag) => tag === TokenTag.CURVE);
+
+  if (isCurveLpTokenInfo(baseAssetTokenInfo)) {
+    const { poolAssets } = baseAssetTokenInfo.extensions;
+
+    const poolInputAssets = poolAssets.map((poolAssetAddress) => {
+      const asset = getCryptoAssetForToken(poolAssetAddress);
+      console.log("jbjbj", asset);
+      const assetIcon = findAssetIcon(asset);
+      const assetTokenInfo = getTokenInfo(poolAssetAddress);
+      const {
+        decimals: assetDecimals,
+        name: assetName,
+        symbol: assetSymbol,
+        address: assetAddress,
+      } = assetTokenInfo;
+
+      return {
+        asset,
+        assetAddress,
+        assetName,
+        assetSymbol,
+        assetIcon,
+        assetDecimals,
+      };
+    });
+
+    inputAssets = [...inputAssets, ...poolInputAssets];
+  }
+
+  return inputAssets;
+};
 
 export function BuyFixedRatesView({
   availablePrincipalTokens,
@@ -72,15 +149,22 @@ export function BuyFixedRatesView({
   // if a large screen is being used.
   const isLargeScreen = useIsTailwindLargeScreen();
 
-  const {
-    extensions: { underlying },
-  } = principalTokenInfo;
-  const baseAsset = getCryptoAssetForToken(underlying);
-  const baseAssetUnderlyingAddress = getTokenAddressForBalancer(baseAsset);
-  const baseAssetName = getCryptoName(baseAsset);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
-  const AssetIcon = findAssetIcon(baseAsset);
-  const baseAssetDecimals = getCryptoDecimals(baseAsset);
+  const isEligibleForZap = !!principalTokenInfo.tags?.some(
+    (tag) => TokenTag.CURVE === tag
+  );
+
+  const [
+    {
+      asset: baseAsset,
+      assetAddress: baseAssetUnderlyingAddress,
+      assetName: baseAssetName,
+      assetSymbol: baseAssetSymbol,
+      assetIcon: AssetIcon,
+      assetDecimals: baseAssetDecimals,
+    },
+    ...rest
+  ] = getInputAssets(principalTokenInfo);
+
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
   const baseAssetDisplayBalance = formatBalance(
     baseAssetBalanceOf,
