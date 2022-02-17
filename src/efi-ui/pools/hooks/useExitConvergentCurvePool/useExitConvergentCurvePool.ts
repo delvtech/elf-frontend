@@ -6,7 +6,10 @@ import { balancerVaultContract } from "efi-balancer/vault";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
-import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
+import {
+  clipFixNumberToStringDecimals,
+  getSafeFixedNumber,
+} from "efi/base/math/fixedPoint";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 import { getPoolContract } from "efi/pools/getPoolContract";
@@ -174,46 +177,24 @@ function getPoolTokenMinAmountsOut(
     return undefined;
   }
 
-  // because ConvergentCurvePool doesn't let you specify exact BPT in, rather you have to specify
-  // min pool tokens out.  because of rounding errors in the contract itself, we can't calculate
-  // the exact tokens out.  therefore we chop off the last two decimals and leave very fine dust.
-  // like really fine. like more fine than playa dust.
-  const adjustedDecimals = poolTokenDecimals.map((decimals) => {
-    // this indicates we are loading, set to 18 and risk failing the exit
-    if (!decimals) {
-      return 18;
-    }
-
-    // for USDC and BTC only clip the last 2 decimals
-    if (decimals < 10) {
-      return decimals - 2;
-    }
-
-    // for ten to eighteen decimals, we'll shave off between 4 and 8
-    return Math.floor(decimals / 2) + 1;
-  });
-
-  // xNeeded and yNeeded are exact calculations.  We request slightly less than needed since there
-  // are slight rounding errors involved in the ConvergentCurvePool smart contract.
-  const xSlightlyLessThanNeeded = `${+xNeeded * 0.99999999}`;
-  const ySlightlyLessThanNeeded = `${+yNeeded * 0.99999999}`;
-
-  const poolTokenMinAmountsOut = [
-    parseUnits(
-      clipStringValueToDecimals(
-        xSlightlyLessThanNeeded,
-        adjustedDecimals[0] ?? 0
-      ) || "0",
+  // Pad this by 0.3% to account for changing pool reserves. We are guaranteeing
+  // you'll receive at least 99.7% of what you try to withdraw.
+  const xNeededPadded = parseUnits(
+    clipFixNumberToStringDecimals(
+      getSafeFixedNumber(xNeeded).mulUnsafe(getSafeFixedNumber("0.997")),
       poolTokenDecimals[0]
     ),
-    parseUnits(
-      clipStringValueToDecimals(
-        ySlightlyLessThanNeeded,
-        adjustedDecimals[1] ?? 0
-      ) || "0",
+    poolTokenDecimals[0]
+  );
+  const yNeededPadded = parseUnits(
+    clipFixNumberToStringDecimals(
+      getSafeFixedNumber(yNeeded).mulUnsafe(getSafeFixedNumber("0.997")),
       poolTokenDecimals[1]
     ),
-  ];
+    poolTokenDecimals[1]
+  );
+
+  const poolTokenMinAmountsOut = [xNeededPadded, yNeededPadded];
 
   return poolTokenMinAmountsOut;
 }
