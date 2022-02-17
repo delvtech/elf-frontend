@@ -6,6 +6,10 @@ import { balancerVaultContract } from "efi-balancer/vault";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "efi/addresses/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
+import {
+  clipFixNumberToStringDecimals,
+  getSafeFixedNumber,
+} from "efi/base/math/fixedPoint";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 import { getPoolContract } from "efi/pools/getPoolContract";
@@ -173,9 +177,20 @@ function getPoolTokenMinAmountsOut(
     return undefined;
   }
 
+  // Pad this by 0.3% to account for changing pool reserves. We are guaranteeing
+  // you'll receive at least 99.7% of what you try to withdraw.
+  const xNeededPadded = clipFixNumberToStringDecimals(
+    getSafeFixedNumber(xNeeded).mulUnsafe(getSafeFixedNumber("0.997")),
+    poolTokenDecimals[0]
+  );
+  const yNeededPadded = clipFixNumberToStringDecimals(
+    getSafeFixedNumber(yNeeded).mulUnsafe(getSafeFixedNumber("0.997")),
+    poolTokenDecimals[1]
+  );
+
   const poolTokenMinAmountsOut = [
-    parseUnits(xNeeded, poolTokenDecimals[0]),
-    parseUnits(yNeeded, poolTokenDecimals[1]),
+    parseUnits(xNeededPadded, poolTokenDecimals[0]),
+    parseUnits(yNeededPadded, poolTokenDecimals[1]),
   ];
   return poolTokenMinAmountsOut;
 }

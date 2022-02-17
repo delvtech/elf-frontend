@@ -26,6 +26,7 @@ module.exports = {
         pathNot: [
           "(^|/)\\.[^/]+\\.(js|cjs|mjs|ts|json)$", // dot files
           "\\.d\\.ts$", // TypeScript declaration files
+          "src/pages", // We don't use these exports in our code, but NextJS does
           "(^|/)tsconfig\\.json$", // TypeScript config
           "(^|/)(babel|webpack)\\.config\\.(js|cjs|mjs|ts|json)$", // other configs
         ],
@@ -202,7 +203,9 @@ module.exports = {
       comment: "Importing react from outside the ui/ directory is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${["index.tsx", "setupTests.ts", "efi-ui", "pages"].join("|")})`,
+        pathNot: `(${["index.tsx", "setupTests.ts", "efi-ui", "pages"].join(
+          "|"
+        )})`,
       },
       to: {
         path: "node_modules/react/index.js",
@@ -213,11 +216,9 @@ module.exports = {
       comment: "Importing efiLocalStorage outside of prefs/ is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${[
-          "efi/prefs",
-          "setupTests.ts",
-          "efi-ui/prefs",
-        ].join("|")})`,
+        pathNot: `(${["efi/prefs", "setupTests.ts", "efi-ui/prefs"].join(
+          "|"
+        )})`,
       },
       to: {
         path: "efi/base/localStorage.ts",
