@@ -25,7 +25,7 @@ import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { getToleranceAmount } from "efi/trade/getToleranceAmount";
 import { TermAssetType } from "efi/tranche/TermAssetType";
-import { AddressesJson } from "efi/addresses/addresses";
+import { AddressesJson } from "addresses/addresses";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
 
 interface SwapTokensTransactionConfirmationDrawerProps {

@@ -10,7 +10,7 @@ import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { RedeemPrincipalTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensDrawer";
 import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
-import ContractAddresses from "efi/addresses/addresses";
+import ContractAddresses from "addresses/addresses";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";

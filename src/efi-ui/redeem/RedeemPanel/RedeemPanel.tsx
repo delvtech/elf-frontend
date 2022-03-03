@@ -13,7 +13,7 @@ import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { RedeemPrincipalTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensDrawer";
 import { RedeemYieldTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemYieldTokensDrawer";
-import ContractAddresses from "efi/addresses/addresses";
+import ContractAddresses from "addresses/addresses";
 import { isDust } from "efi/coins/isDust";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";

@@ -1,4 +1,4 @@
-import { AddressesJson } from "efi/addresses/addresses";
+import { AddressesJson } from "addresses/addresses";
 import { ONE_DAY_IN_SECONDS } from "efi/base/time";
 import { ChainId } from "efi/ethereum/ethereum";
 

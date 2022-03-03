@@ -1,6 +1,6 @@
 import { Vault } from "@elementfi/core-typechain";
 import { PendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
-import ContractAddresses from "efi/addresses/addresses";
+import ContractAddresses from "addresses/addresses";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { getTokenInfo } from "tokenlists/tokenlists";
 

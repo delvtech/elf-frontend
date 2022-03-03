@@ -1,7 +1,7 @@
 import { CRVLUSD } from "@elementfi/core-typechain/dist/CRVLUSD";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { AddressesJson } from "efi/addresses/addresses";
+import { AddressesJson } from "addresses/addresses";
 import { formatBalance } from "efi/base/formatBalance/formatBalance";
 import { ONE_MINUTE_IN_MILLISECONDS } from "efi/base/time";
 import { isGoerli } from "efi/ethereum/ethereum";

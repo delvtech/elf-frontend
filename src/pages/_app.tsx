@@ -30,7 +30,7 @@ import "styles/index.css";
 // end our CSS
 
 import "efi/debug/consoleEther";
-import "efi/addresses/addresses";
+import "addresses/addresses";
 
 import { Web3ReactProvider } from "@web3-react/core";
 import type { AppProps } from "next/app";
@@ -42,7 +42,7 @@ import { useClearLocalStorageOnNewVersion } from "efi-ui/base/useClearLocalStora
 import { getEthereumProviderLibrary } from "efi/wallets/providers";
 
 import { efiQueryClient } from "efi/queryClient";
-import { AddressesJson, lookupAddressKey } from "efi/addresses/addresses";
+import { AddressesJson, lookupAddressKey } from "addresses/addresses";
 import { logAppVersion } from "logAppVersion";
 
 logAppVersion();

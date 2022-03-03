@@ -18,7 +18,7 @@ import { useTransactionToasts } from "efi-ui/transactions/useTransactionToasts";
 import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectWalletButton";
 import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
-import { AddressesJson } from "efi/addresses/addresses";
+import { AddressesJson } from "addresses/addresses";
 import { ChainId, ChainNames } from "efi/ethereum/ethereum";
 import { getConnectorName } from "efi/wallets/connectors";
 

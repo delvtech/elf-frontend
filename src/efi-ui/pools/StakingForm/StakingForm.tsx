@@ -12,7 +12,7 @@ import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { IconProps } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
-import ContractAddresses from "efi/addresses/addresses";
+import ContractAddresses from "addresses/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
 import { formatBalance } from "efi/base/formatBalance/formatBalance";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";

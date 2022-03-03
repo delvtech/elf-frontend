@@ -16,26 +16,6 @@ tsconfig.tsbuildinfo
 
 # these are copied in from the top-level scripts and will be different on every
 # machine
-# This is a stub used for unit tests, it does not change on every machine
-!src/tokenlists/mock.tokenlist.json
-# This can't be required conditionally for local builds, so we have to use import statement, so we
-# have to check the file in so CI doesn't break
-!src/tokenlists/testnet.tokenlist.json
-
-# these are copied in from the top-level scripts and will be different on every
-# machine
-src/addresses/*
-# This definition file is an exception as it does not change on every machine
-# and CI will fail without it.
-!src/addresses/AddressesJsonFile.d.ts
-# This is a stub used for unit tests, it does not change on every machine
-!src/addresses/mock.addresses.json
-# This can't be required conditionally for local builds, so we have to use import statement, so we
-# have to check the file in so CI doesn't break
-!src/addresses/testnet.addresses.json
-
-# these are copied in from the top-level scripts and will be different on every
-# machine
 src/canperform/*
 # This definition file is an exception as it does not change on every machine
 # and CI will fail without it.

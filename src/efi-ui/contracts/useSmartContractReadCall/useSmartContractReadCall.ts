@@ -2,7 +2,7 @@ import { QueryObserverResult, useQuery, UseQueryOptions } from "react-query";
 
 import { Contract } from "ethers";
 
-import { lookupAddressKey } from "efi/addresses/addresses";
+import { lookupAddressKey } from "addresses/addresses";
 import { Unpacked } from "efi/base/Unpacked";
 import {
   ContractMethodArgs,

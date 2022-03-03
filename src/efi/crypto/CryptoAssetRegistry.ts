@@ -1,5 +1,5 @@
 import { ERC20, ERC20Permit } from "@elementfi/core-typechain";
-import { AddressesJson } from "efi/addresses/addresses";
+import { AddressesJson } from "addresses/addresses";
 import {
   CryptoAsset,
   CryptoAssetType,
