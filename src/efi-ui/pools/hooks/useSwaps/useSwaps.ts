@@ -8,7 +8,7 @@ import { EMPTY_ARRAY } from "base/emptyArray";
 import { ONE_WEEK_IN_SECONDS } from "base/time";
 import { AVG_MINE_RATE_SECONDS } from "efi/ethereum/miningRate";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { balancerVaultContract } from "integrations/efi-balancer/vault";
+import { balancerVaultContract } from "efi/balancer/vault";
 
 export function useSwaps(
   poolInfo: PoolInfo,

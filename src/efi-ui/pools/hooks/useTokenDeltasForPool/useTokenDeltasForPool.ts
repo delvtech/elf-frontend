@@ -5,7 +5,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { ONE_DAY_IN_SECONDS } from "base/time";
 import { PoolContract } from "efi/pools/PoolContract";
-import { balancerVaultContract } from "integrations/efi-balancer/vault";
+import { balancerVaultContract } from "efi/balancer/vault";
 
 type PoolBalanceChangedArguments = [
   poolId: string,

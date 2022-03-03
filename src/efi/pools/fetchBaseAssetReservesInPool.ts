@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { balancerVaultContract } from "integrations/efi-balancer/vault";
+import { balancerVaultContract } from "efi/balancer/vault";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 

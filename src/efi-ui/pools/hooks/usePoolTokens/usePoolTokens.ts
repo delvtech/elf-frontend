@@ -3,7 +3,7 @@ import {
   PrincipalPoolTokenInfo,
   YieldPoolTokenInfo,
 } from "@elementfi/tokenlist";
-import { balancerVaultContract } from "integrations/efi-balancer/vault";
+import { balancerVaultContract } from "efi/balancer/vault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
