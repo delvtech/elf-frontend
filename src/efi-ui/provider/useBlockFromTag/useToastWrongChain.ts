@@ -7,7 +7,7 @@ import {
   makeErrorToast,
   makeSuccessToast,
 } from "efi-ui/toaster/AppToaster/AppToaster";
-import { AddressesJson } from "efi/addresses/addresses";
+import { AddressesJson } from "addresses/addresses";
 import { ChainId, ChainNames } from "efi/ethereum/ethereum";
 import { usePrevious } from "react-use";
 

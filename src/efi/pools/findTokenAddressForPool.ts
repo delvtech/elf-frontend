@@ -4,7 +4,7 @@ import {
   isERC20Asset,
   isERC20PermitAsset,
 } from "efi/crypto/CryptoAsset";
-import ContractAddresses from "efi/addresses/addresses";
+import ContractAddresses from "addresses/addresses";
 import { assertNever } from "efi/base/assertNever";
 
 /**

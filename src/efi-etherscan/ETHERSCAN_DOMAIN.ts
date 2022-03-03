@@ -1,4 +1,4 @@
-import { AddressesJson } from "efi/addresses/addresses";
+import { AddressesJson } from "addresses/addresses";
 import { ChainId } from "efi/ethereum/ethereum";
 
 export const ETHERSCAN_DOMAIN =

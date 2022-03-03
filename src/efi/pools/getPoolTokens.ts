@@ -8,7 +8,7 @@ import { sortAddresses } from "efi/base/sortAddresses/sortAddresses";
 // TODO Replace
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 
 interface PoolTokens {

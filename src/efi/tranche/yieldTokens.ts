@@ -1,5 +1,5 @@
 import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 
 export function getPrincipalTokenForYieldToken(
   interestTokenAddress: string

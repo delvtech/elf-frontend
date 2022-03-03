@@ -8,7 +8,7 @@ import {
   PrincipalTokenInfo as TrancheInfo,
 } from "@elementfi/tokenlist";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { assetProxyContractsByAddress } from "efi/tranche/positions";
 import {
   getVaultContractForTranche,

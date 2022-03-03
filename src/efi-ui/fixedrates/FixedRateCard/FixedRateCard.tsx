@@ -18,7 +18,7 @@ import { formatPercent } from "efi/base/formatPercent/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { usePrincipalTokenYield } from "efi-ui/pools/hooks/usePrincipalTokenYield";
 import { AssetProxyTokenInfo, PrincipalTokenInfo } from "@elementfi/tokenlist";

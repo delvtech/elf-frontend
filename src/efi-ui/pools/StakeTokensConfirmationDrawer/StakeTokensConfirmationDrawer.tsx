@@ -26,7 +26,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { isConvergentCurvePool } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
-import { AddressesJson } from "efi/addresses/addresses";
+import { AddressesJson } from "addresses/addresses";
 
 interface StakingConfirmationDrawerProps {
   account: string | null | undefined;

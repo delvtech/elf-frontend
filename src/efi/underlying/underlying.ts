@@ -4,7 +4,7 @@ import {
   ERC20__factory,
   WETH__factory,
 } from "@elementfi/core-typechain";
-import { AddressesJson } from "efi/addresses/addresses";
+import { AddressesJson } from "addresses/addresses";
 import { defaultProvider } from "efi/providers/providers";
 
 const {

@@ -1,6 +1,6 @@
 import { ERC20 } from "@elementfi/core-typechain";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { formatUnits } from "ethers/lib/utils";
 
 /**

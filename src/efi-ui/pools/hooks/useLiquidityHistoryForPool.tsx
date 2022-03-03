@@ -12,7 +12,7 @@ import { AVG_MINE_RATE_SECONDS } from "efi/ethereum/miningRate";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { useQuery } from "react-query";

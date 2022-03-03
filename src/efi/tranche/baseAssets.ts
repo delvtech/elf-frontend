@@ -2,7 +2,7 @@ import { Tranche } from "@elementfi/core-typechain";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { trancheContracts } from "efi/tranche/tranches";
 import groupBy from "lodash.groupby";
 

@@ -11,9 +11,9 @@ import {
   useTriCryptoPrice,
 } from "efi-ui/curve/pools";
 import { useCurveStablecoinPoolVirtualPrice } from "efi-ui/curve/stablePools";
-import { AddressesJson } from "efi/addresses/addresses";
+import { AddressesJson } from "addresses/addresses";
 import { isMainnet } from "efi/ethereum/ethereum";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { QueryObserverResult } from "react-query";
 import { Currency, Money } from "ts-money";
 

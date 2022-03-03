@@ -32,7 +32,7 @@ import { TermTag } from "efi-ui/tranche/TermTag";
 import { format } from "date-fns";
 import { calculateProgress } from "efi/base/calculateProgress/calculateProgress";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
 import { YieldPoolTokenInfo } from "@elementfi/tokenlist";

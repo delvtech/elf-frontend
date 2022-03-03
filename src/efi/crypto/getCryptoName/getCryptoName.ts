@@ -5,7 +5,7 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { TokenMetadata } from "efi/tokenlists/tokenlists";
+import { TokenMetadata } from "tokenlists/tokenlists";
 
 export function getCryptoName(asset: CryptoAsset): string {
   const assetType = asset.type;

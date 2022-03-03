@@ -13,7 +13,7 @@ import { ContractReceipt } from "@ethersproject/contracts";
 import { TransactionError } from "efi-ui/contracts/TransactionError";
 import { useTokenApprovedForAmount } from "efi-ui/token/hooks/useTokenApprovedForAmount";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import ContractAddresses from "efi/addresses/addresses";
+import ContractAddresses from "addresses/addresses";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";

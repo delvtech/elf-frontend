@@ -1,4 +1,4 @@
-import { AddressesJson, lookupAddressKey } from "efi/addresses/addresses";
+import { AddressesJson, lookupAddressKey } from "addresses/addresses";
 
 describe("AddressesJson", () => {
   test("should be the correct mock address file", () => {

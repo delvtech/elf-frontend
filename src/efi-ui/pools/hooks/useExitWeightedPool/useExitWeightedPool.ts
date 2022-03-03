@@ -4,7 +4,7 @@ import { ExitRequest } from "efi-balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
 import { balancerVaultContract } from "efi-balancer/vault";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import ContractAddresses from "efi/addresses/addresses";
+import ContractAddresses from "addresses/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
 import {
   clipFixNumberToStringDecimals,
@@ -14,7 +14,7 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { WeightedPoolExitKind } from "efi/pools/weightedPool";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { BigNumber, ContractReceipt, Signer } from "ethers";
 import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
 import { useCallback } from "react";

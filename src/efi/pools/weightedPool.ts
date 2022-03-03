@@ -1,7 +1,7 @@
 import { WeightedPool, WeightedPool__factory } from "@elementfi/core-typechain";
 import { TokenInfo, TokenTag, YieldPoolTokenInfo } from "@elementfi/tokenlist";
 import { defaultProvider } from "efi/providers/providers";
-import { tokenListJson } from "efi/tokenlists/tokenlists";
+import { tokenListJson } from "tokenlists/tokenlists";
 import keyBy from "lodash.keyby";
 
 // hard limit set by Balancer.  Cannot trade in/out more than 30% of the pool

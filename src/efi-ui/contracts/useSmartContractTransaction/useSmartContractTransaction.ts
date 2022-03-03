@@ -6,7 +6,7 @@ import {
   isTransactionReplacedError,
   TransactionError,
 } from "efi-ui/contracts/TransactionError";
-import { lookupAddressKey } from "efi/addresses/addresses";
+import { lookupAddressKey } from "addresses/addresses";
 import { TransactionStatus } from "efi/contracts/transaction";
 import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
 

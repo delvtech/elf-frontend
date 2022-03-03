@@ -39,7 +39,7 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 import { formatMoney } from "efi/money/formatMoney";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import {
   getVaultContractForTranche,
   getVaultTokenInfoForTranche,

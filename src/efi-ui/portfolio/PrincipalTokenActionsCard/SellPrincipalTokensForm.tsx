@@ -25,7 +25,7 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { validateTradeValues } from "efi/trade/validateTradeValues";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
