@@ -26,6 +26,14 @@ const WBTC_CRYPTO_ASSET: Erc20CryptoAsset = {
   ] as ERC20,
 };
 
+const DAI_CRYPTO_ASSET: Erc20CryptoAsset = {
+  id: AddressesJson.addresses.daiAddress,
+  type: CryptoAssetType.ERC20,
+  tokenContract: underlyingContractsByAddress[
+    AddressesJson.addresses.daiAddress
+  ] as ERC20,
+};
+
 const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
   id: AddressesJson.addresses.usdcAddress,
   type: CryptoAssetType.ERC20PERMIT,
@@ -34,11 +42,19 @@ const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
   ] as ERC20Permit,
 };
 
-const DAI_CRYPTO_ASSET: Erc20CryptoAsset = {
-  id: AddressesJson.addresses.daiAddress,
+const LUSD_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
+  id: AddressesJson.addresses.lusdAddress,
+  type: CryptoAssetType.ERC20PERMIT,
+  tokenContract: underlyingContractsByAddress[
+    AddressesJson.addresses.lusdAddress
+  ] as ERC20Permit,
+};
+
+const USDT_CRYPTO_ASSET: Erc20CryptoAsset = {
+  id: AddressesJson.addresses.usdtAddress,
   type: CryptoAssetType.ERC20,
   tokenContract: underlyingContractsByAddress[
-    AddressesJson.addresses.daiAddress
+    AddressesJson.addresses.usdtAddress
   ] as ERC20,
 };
 
@@ -102,6 +118,8 @@ const baseAssetCryptoAssets: Record<string, CryptoAsset> = {
   [AddressesJson.addresses.wbtcAddress]: WBTC_CRYPTO_ASSET,
   [AddressesJson.addresses.usdcAddress]: USDC_CRYPTO_ASSET,
   [AddressesJson.addresses.daiAddress]: DAI_CRYPTO_ASSET,
+  [AddressesJson.addresses.lusdAddress]: LUSD_CRYPTO_ASSET,
+  [AddressesJson.addresses.usdtAddress]: USDT_CRYPTO_ASSET,
   [AddressesJson.addresses.wethAddress]: ETHEREUM_CRYPTO_ASSET,
   [AddressesJson.addresses["lusd3crv-fAddress"]]: CRVLUSD_CRYPTO_ASSET,
   [AddressesJson.addresses["alusd3crv-fAddress"]]: CRVALUSD_CRYPTO_ASSET,

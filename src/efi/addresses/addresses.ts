@@ -1,4 +1,4 @@
-import { AddressesJsonFile } from "addresses/AddressesJsonFile";
+import { AddressesJsonFile } from "@elementfi/tokenlist";
 import AddressesJsonFileMock from "addresses/mock.addresses.json";
 import AddressesJsonFileTestnet from "addresses/testnet.addresses.json";
 import AddressesJsonFileGoerli from "@elementfi/tokenlist/dist/goerli.addresses.json";
