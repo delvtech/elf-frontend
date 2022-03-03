@@ -175,6 +175,28 @@ module.exports = {
       },
     },
     {
+      name: "no-app-code-in-integrations",
+      comment: "Importing app code into integrations/ is prohibited",
+      severity: "error",
+      from: {
+        path: `(${["integrations"].join("|")})`,
+      },
+      to: {
+        // integrations cannot import from any of these folders
+        path: `(${[
+          "efi",
+          "efi-ui",
+          "addresses",
+          "tokenlists",
+          "pages",
+          "canperform",
+          "styles",
+        ].join("|")})`,
+        // integrations can import from itself or base/
+        pathNot: `(${["integrations", "base"].join("|")})`,
+      },
+    },
+    {
       name: "efi-not-to-ui",
       comment: "Importing from ui/ is prohibited outside of the ui/ directory",
       severity: "error",
