@@ -10,7 +10,7 @@ import { makeEtherscanTokenUrl } from "integrations/efi-etherscan/links";
 import tw from "efi-tailwindcss-classnames";
 import { AddressesJson } from "addresses/addresses";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { isGoerli, isMainnet } from "efi/ethereum/ethereum";
+import { isGoerli, isMainnet } from "base/ethereum/ethereum";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
@@ -132,7 +132,7 @@ function getPrincipalTokenLink(
       key="vault-link"
       target="_blank"
       rel="noreferrer"
-      href={makeEtherscanTokenUrl(principalTokenAddress)}
+      href={makeEtherscanTokenUrl(AddressesJson.chainId, principalTokenAddress)}
     >
       {t`View this principal token on etherscan`}{" "}
       <sup>
@@ -151,7 +151,7 @@ function getVaultLink(
       key="vault-link"
       target="_blank"
       rel="noreferrer"
-      href={makeEtherscanTokenUrl(vaultAddress)}
+      href={makeEtherscanTokenUrl(AddressesJson.chainId, vaultAddress)}
     >
       {vaultName}{" "}
       <sup>

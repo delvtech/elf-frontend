@@ -9,7 +9,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ConnectWalletButtons } from "efi-ui/wallets/ConnectWalletButtons/ConnectWalletButtons";
-import { isMainnet } from "efi/ethereum/ethereum";
+import { isMainnet } from "base/ethereum/ethereum";
 
 import { WalletConnectionSummary } from "./WalletConnectionSummary";
 

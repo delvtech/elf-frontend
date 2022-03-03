@@ -4,7 +4,7 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { AddressesJson } from "addresses/addresses";
 import { formatBalance } from "base/formatBalance/formatBalance";
 import { ONE_MINUTE_IN_MILLISECONDS } from "base/time";
-import { isGoerli } from "efi/ethereum/ethereum";
+import { isGoerli } from "base/ethereum/ethereum";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { QueryObserverResult } from "react-query";

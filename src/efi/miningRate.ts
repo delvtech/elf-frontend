@@ -1,6 +1,6 @@
 import { AddressesJson } from "addresses/addresses";
 import { ONE_DAY_IN_SECONDS } from "base/time";
-import { ChainId } from "efi/ethereum/ethereum";
+import { ChainId } from "base/ethereum/ethereum";
 
 // TODO: get a better source for this.  I picked this up from https://etherscan.io/chart/blocktime
 // the average for this entire year is about 13.1s / block.  For local development though we just

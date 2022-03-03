@@ -8,6 +8,7 @@ import { makeEtherscanWalletAddressUrl } from "integrations/efi-etherscan/links"
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
+import { AddressesJson } from "addresses/addresses";
 
 export interface PortfolioViewSubtitleProps {
   account: string | null | undefined;
@@ -31,7 +32,7 @@ export function PortfolioViewSubtitle({
     const walletEtherscanLink = (
       <a
         key={account}
-        href={makeEtherscanWalletAddressUrl(account)}
+        href={makeEtherscanWalletAddressUrl(AddressesJson.chainId, account)}
         target="_blank"
         rel="noreferrer"
       >

@@ -8,7 +8,7 @@ import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
 import { ONE_DAY_IN_SECONDS } from "base/time";
 import { TimeData } from "efi/charts/TimeData";
-import { AVG_MINE_RATE_SECONDS } from "efi/ethereum/miningRate";
+import { AVG_MINE_RATE_SECONDS } from "efi/miningRate";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";

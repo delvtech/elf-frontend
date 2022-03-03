@@ -2,7 +2,6 @@ import { useEffect } from "react";
 
 import { t } from "ttag";
 
-import { ETHERSCAN_DOMAIN } from "integrations/efi-etherscan/ETHERSCAN_DOMAIN";
 import {
   AppToaster,
   makeSuccessToast,
@@ -12,6 +11,10 @@ import { usePendingTransactionPref } from "efi-ui/transactions/usePendingTransac
 import { defaultProvider } from "efi/providers/providers";
 import { TransactionStatus } from "efi/contracts/transaction";
 import { Intent } from "@blueprintjs/core";
+import { AddressesJson } from "addresses/addresses";
+import { getEtherscanDomain } from "integrations/efi-etherscan/links";
+
+const etherscanDomain = getEtherscanDomain(AddressesJson.chainId);
 
 export function useTransactionToasts(): void {
   useToastOnPending();
@@ -26,7 +29,7 @@ function useToastOnPending() {
         ...makeToast(t`Transaction pending`, {
           text: (
             <a
-              href={`${ETHERSCAN_DOMAIN}/tx/${transactionHash}`}
+              href={`${etherscanDomain}/tx/${transactionHash}`}
               rel="noreferrer"
               target={"_blank"}
             >{t`View on etherscan`}</a>
@@ -57,11 +60,11 @@ function useToastOnMined() {
     const handleTransactionMined = () => {
       AppToaster?.show(
         makeSuccessToast(t`Transaction complete`, {
-          href: `${ETHERSCAN_DOMAIN}/tx/${transactionHash}`,
+          href: `${etherscanDomain}/tx/${transactionHash}`,
           target: "_blank",
           text: (
             <a
-              href={`${ETHERSCAN_DOMAIN}/tx/${transactionHash}`}
+              href={`${etherscanDomain}/tx/${transactionHash}`}
               rel="noreferrer"
               target={"_blank"}
             >{t`View on etherscan`}</a>

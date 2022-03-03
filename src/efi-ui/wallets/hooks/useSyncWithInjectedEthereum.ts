@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 
-import { ChainId } from "efi/ethereum/ethereum";
+import { ChainId } from "base/ethereum/ethereum";
 import { injectedConnector } from "efi/wallets/connectors";
 
 /**

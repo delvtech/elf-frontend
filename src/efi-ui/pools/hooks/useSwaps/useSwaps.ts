@@ -6,7 +6,7 @@ import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { EMPTY_ARRAY } from "base/emptyArray";
 import { ONE_WEEK_IN_SECONDS } from "base/time";
-import { AVG_MINE_RATE_SECONDS } from "efi/ethereum/miningRate";
+import { AVG_MINE_RATE_SECONDS } from "efi/miningRate";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { balancerVaultContract } from "efi/balancer/vault";
 

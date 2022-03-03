@@ -21,7 +21,7 @@ import {
   isMainnet,
   NUM_ETH_DECIMALS,
   ONE_ETHER,
-} from "efi/ethereum/ethereum";
+} from "base/ethereum/ethereum";
 
 interface HookPriceOptions {
   enabled: boolean;

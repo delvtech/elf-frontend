@@ -20,7 +20,7 @@ import {
 } from "efi/curve/stablePools";
 import { AddressesJson } from "addresses/addresses";
 import { formatBalance } from "base/formatBalance/formatBalance";
-import { isGoerli, NUM_ETH_DECIMALS, ONE_ETHER } from "efi/ethereum/ethereum";
+import { isGoerli, NUM_ETH_DECIMALS, ONE_ETHER } from "base/ethereum/ethereum";
 import { getTokenInfo } from "tokenlists/tokenlists";
 
 const {

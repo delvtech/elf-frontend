@@ -1,5 +1,5 @@
 import ContractAddresses, { AddressesJson } from "addresses/addresses";
-import { ChainId } from "efi/ethereum/ethereum";
+import { ChainId } from "base/ethereum/ethereum";
 
 // USDC is normally uses version '2'.  In development and goerli we are using a simple ERC20 for our USDC
 // contract so we keep it at verion '1'.

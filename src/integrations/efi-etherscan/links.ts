@@ -1,9 +1,26 @@
-import { ETHERSCAN_DOMAIN } from "integrations/efi-etherscan/ETHERSCAN_DOMAIN";
+import { ChainId } from "base/ethereum/ethereum";
 
-export function makeEtherscanWalletAddressUrl(account: string): string {
+const ETHERSCAN_GOERLI_DOMAIN = "https://goerli.etherscan.io";
+const ETHERSCAN_MAINNET_DOMAIN = "https://etherscan.io";
+
+export function getEtherscanDomain(chainId: ChainId): string {
+  return chainId === ChainId.GOERLI
+    ? ETHERSCAN_GOERLI_DOMAIN
+    : ETHERSCAN_MAINNET_DOMAIN;
+}
+
+export function makeEtherscanWalletAddressUrl(
+  chainId: ChainId,
+  account: string
+): string {
+  const ETHERSCAN_DOMAIN = getEtherscanDomain(chainId);
   return `${ETHERSCAN_DOMAIN}/address/${account}`;
 }
 
-export function makeEtherscanTokenUrl(tokenAddress: string): string {
+export function makeEtherscanTokenUrl(
+  chainId: ChainId,
+  tokenAddress: string
+): string {
+  const ETHERSCAN_DOMAIN = getEtherscanDomain(chainId);
   return `${ETHERSCAN_DOMAIN}/token/${tokenAddress}`;
 }

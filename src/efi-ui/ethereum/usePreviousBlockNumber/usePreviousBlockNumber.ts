@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions, UseQueryResult } from "react-query";
 
-import { AVG_MINE_RATE_SECONDS } from "efi/ethereum/miningRate";
+import { AVG_MINE_RATE_SECONDS } from "efi/miningRate";
 import { defaultProvider } from "efi/providers/providers";
 
 export function usePreviousBlockNumber(
