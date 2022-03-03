@@ -11,6 +11,7 @@ import elementIconDark from "efi-static-assets/logos/svg/ELEMENT-dark.svg?url";
 import elementIcon from "efi-static-assets/logos/svg/ELEMENT-light.svg?url";
 import ethIconGrey from "efi-static-assets/logos/svg/ethereum-eth.svg?url";
 import lusdIcon from "efi-static-assets/logos/svg/LUSD.svg?url";
+import usdtIcon from "efi-static-assets/logos/svg/LUSD.svg?url";
 import usdcIcon from "efi-static-assets/logos/svg/USDC.svg?url";
 import wethIcon from "efi-static-assets/logos/svg/WETH.svg?url";
 import wbtcIcon from "efi-static-assets/logos/svg/WBTC.svg?url";
@@ -127,6 +128,25 @@ export function LusdIcon({
     />
   );
 }
+
+export function UsdtIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"usdt"}
+      className={className}
+      style={style}
+      src={usdtIcon}
+      height={height}
+      width={width}
+    />
+  );
+}
+
 export function CrvTricryptoIcon({
   height,
   width,

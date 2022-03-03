@@ -18,20 +18,20 @@ import {
 import { underlyingContractsByAddress } from "efi/underlying/underlying";
 import keyBy from "lodash.keyby";
 
-const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
-  id: AddressesJson.addresses.usdcAddress,
-  type: CryptoAssetType.ERC20PERMIT,
-  tokenContract: underlyingContractsByAddress[
-    AddressesJson.addresses.usdcAddress
-  ] as ERC20Permit,
-};
-
 const WBTC_CRYPTO_ASSET: Erc20CryptoAsset = {
   id: AddressesJson.addresses.wbtcAddress,
   type: CryptoAssetType.ERC20,
   tokenContract: underlyingContractsByAddress[
     AddressesJson.addresses.wbtcAddress
   ] as ERC20,
+};
+
+const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
+  id: AddressesJson.addresses.usdcAddress,
+  type: CryptoAssetType.ERC20PERMIT,
+  tokenContract: underlyingContractsByAddress[
+    AddressesJson.addresses.usdcAddress
+  ] as ERC20Permit,
 };
 
 const DAI_CRYPTO_ASSET: Erc20CryptoAsset = {
@@ -99,10 +99,10 @@ const CRVEURS_CRYPTO_ASSET: Erc20CryptoAsset = {
 const baseAssetCryptoAssets: Record<string, CryptoAsset> = {
   // weth should return eth wherever it's used, because the user should never
   // interact with weth
-  [AddressesJson.addresses.wethAddress]: ETHEREUM_CRYPTO_ASSET,
   [AddressesJson.addresses.wbtcAddress]: WBTC_CRYPTO_ASSET,
   [AddressesJson.addresses.usdcAddress]: USDC_CRYPTO_ASSET,
   [AddressesJson.addresses.daiAddress]: DAI_CRYPTO_ASSET,
+  [AddressesJson.addresses.wethAddress]: ETHEREUM_CRYPTO_ASSET,
   [AddressesJson.addresses["lusd3crv-fAddress"]]: CRVLUSD_CRYPTO_ASSET,
   [AddressesJson.addresses["alusd3crv-fAddress"]]: CRVALUSD_CRYPTO_ASSET,
   [AddressesJson.addresses["mim-3lp3crv-fAddress"]]: CRVMIM_CRYPTO_ASSET,
