@@ -5,10 +5,7 @@ import { CRVLUSD } from "@elementfi/core-typechain/dist/CRVLUSD";
 import { formatUnits } from "ethers/lib/utils";
 import { Currencies, Currency, Money } from "ts-money";
 
-import {
-  fetchCoinGeckoPrice,
-  getCoinGeckoId,
-} from "integrations/efi-coingecko";
+import { fetchCoinGeckoPrice, getCoinGeckoId } from "integrations/coingecko";
 import {
   crv3CryptoPoolContract,
   crvTriCryptoPoolContract,

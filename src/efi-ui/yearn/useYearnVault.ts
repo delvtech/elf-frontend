@@ -3,7 +3,7 @@ import { useQuery, UseQueryResult } from "react-query";
 import {
   fetchYearnVaults,
   YearnVaultResult,
-} from "integrations/efi-yearn/fetchYearnVaults";
+} from "integrations/yearn/fetchYearnVaults";
 
 // TODO: use address when we go live on mainnet
 export function useYearnVault(

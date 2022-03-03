@@ -1,4 +1,4 @@
-import { BALANCER_ETH_SENTINEL } from "integrations/efi-balancer/ethSentinel";
+import { BALANCER_ETH_SENTINEL } from "integrations/balancer/ethSentinel";
 import { typeAassertNever } from "base/typeAssertNever";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 

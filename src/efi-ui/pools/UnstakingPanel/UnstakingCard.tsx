@@ -8,7 +8,7 @@ import {
   YieldTokenInfo,
 } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/efi-balancer/pools";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/balancer/pools";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";

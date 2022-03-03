@@ -15,7 +15,7 @@ import classNames from "classnames";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { jt, t } from "ttag";
 
-import { getCoinGeckoId } from "integrations/efi-coingecko";
+import { getCoinGeckoId } from "integrations/coingecko";
 import tw from "efi-tailwindcss-classnames";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";

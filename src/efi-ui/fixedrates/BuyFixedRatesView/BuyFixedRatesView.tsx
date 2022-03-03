@@ -29,7 +29,7 @@ import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
-import { SwapKind } from "integrations/efi-balancer/SwapKind";
+import { SwapKind } from "integrations/balancer/SwapKind";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { getTokenAddressForBalancer } from "efi/balancer/getTokenAddressForBalancer";
 import { IconNames } from "@blueprintjs/icons";

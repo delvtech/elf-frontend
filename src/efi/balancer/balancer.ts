@@ -1,5 +1,5 @@
 import ContractAddresses from "addresses/addresses";
-import { BALANCER_ETH_SENTINEL } from "integrations/efi-balancer/ethSentinel";
+import { BALANCER_ETH_SENTINEL } from "integrations/balancer/ethSentinel";
 
 export function mapETHSentinalToWETH(address: string): string {
   if (address === BALANCER_ETH_SENTINEL) {

@@ -13,7 +13,7 @@ import { GoToPoolButtonOld } from "efi-ui/pools/GoToPoolButton/GoToPoolButtonOld
 import styles from "efi-ui/pools/YieldPoolTable/grid.module.css";
 import { useFeeVolumeForPool } from "efi-ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
-import { getYearnVaultAPY } from "integrations/efi-yearn/fetchYearnVaults";
+import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";
 import { formatPercent } from "base/formatPercent/formatPercent";
 import { ONE_WEEK_IN_SECONDS } from "base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";

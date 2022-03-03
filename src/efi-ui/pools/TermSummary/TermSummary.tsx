@@ -9,7 +9,7 @@ import tw from "efi-tailwindcss-classnames";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
-import { getYearnVaultAPY } from "integrations/efi-yearn/fetchYearnVaults";
+import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";
 import { formatAbbreviatedDate } from "base/dates/dates";
 import { formatPercent } from "base/formatPercent/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";

@@ -1,5 +1,5 @@
 import { Vault } from "@elementfi/core-typechain";
-import { SwapKind } from "integrations/efi-balancer/SwapKind";
+import { SwapKind } from "integrations/balancer/SwapKind";
 import { balancerVaultContract } from "efi/balancer/vault";
 import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";
 import { getQueriesData } from "efi-ui/base/queryResults";

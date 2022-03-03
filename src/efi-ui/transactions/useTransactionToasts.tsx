@@ -12,7 +12,7 @@ import { defaultProvider } from "efi/providers/providers";
 import { TransactionStatus } from "efi/contracts/transaction";
 import { Intent } from "@blueprintjs/core";
 import { AddressesJson } from "addresses/addresses";
-import { getEtherscanDomain } from "integrations/efi-etherscan/links";
+import { getEtherscanDomain } from "integrations/etherscan/links";
 
 const etherscanDomain = getEtherscanDomain(AddressesJson.chainId);
 

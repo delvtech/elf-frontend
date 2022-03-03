@@ -1,11 +1,11 @@
 import { Vault } from "@elementfi/core-typechain";
-import { JoinRequest } from "integrations/efi-balancer/JoinRequest";
+import { JoinRequest } from "integrations/balancer/JoinRequest";
 import { balancerVaultContract } from "efi/balancer/vault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "addresses/addresses";
-import { BALANCER_ETH_SENTINEL } from "integrations/efi-balancer/ethSentinel";
+import { BALANCER_ETH_SENTINEL } from "integrations/balancer/ethSentinel";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
 import { BigNumber, CallOverrides, ContractReceipt, Signer } from "ethers";

@@ -5,8 +5,8 @@ import {
   PrincipalTokenInfo,
 } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/efi-balancer/pools";
-import { SwapKind } from "integrations/efi-balancer/SwapKind";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/balancer/pools";
+import { SwapKind } from "integrations/balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";

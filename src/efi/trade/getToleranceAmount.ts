@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 
-import { SwapKind } from "integrations/efi-balancer/SwapKind";
+import { SwapKind } from "integrations/balancer/SwapKind";
 import { getSafeFixedNumber } from "base/math/fixedPoint";
 
 /**

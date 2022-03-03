@@ -1,5 +1,5 @@
 import { ERC20 } from "@elementfi/core-typechain";
-import { getCoinGeckoId } from "integrations/efi-coingecko";
+import { getCoinGeckoId } from "integrations/coingecko";
 import { useCoinGeckoHistoricalPrice } from "efi-ui/coingecko/useCoinGeckoHistoricalPrice";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import { QueryObserverResult } from "react-query";

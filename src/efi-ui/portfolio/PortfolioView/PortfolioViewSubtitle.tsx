@@ -4,7 +4,7 @@ import { Classes, Colors } from "@blueprintjs/core";
 import classNames from "classnames";
 import { jt, t } from "ttag";
 
-import { makeEtherscanWalletAddressUrl } from "integrations/efi-etherscan/links";
+import { makeEtherscanWalletAddressUrl } from "integrations/etherscan/links";
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";

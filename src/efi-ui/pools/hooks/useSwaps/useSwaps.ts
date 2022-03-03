@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { SwapEventWithTimeStamp } from "integrations/efi-balancer/SwapEvent";
+import { SwapEventWithTimeStamp } from "integrations/balancer/SwapEvent";
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";

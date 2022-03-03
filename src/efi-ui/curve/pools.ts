@@ -5,7 +5,7 @@ import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { Currencies, Money } from "ts-money";
 
-import { getCoinGeckoId } from "integrations/efi-coingecko";
+import { getCoinGeckoId } from "integrations/coingecko";
 import {
   crv3CryptoPoolContract,
   crvTriCryptoPoolContract,

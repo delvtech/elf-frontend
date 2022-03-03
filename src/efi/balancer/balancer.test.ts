@@ -2,7 +2,7 @@ import {
   mapETHSentinalToWETH,
   mapWETHToETHSentinal,
 } from "efi/balancer/balancer";
-import { BALANCER_ETH_SENTINEL } from "integrations/efi-balancer/ethSentinel";
+import { BALANCER_ETH_SENTINEL } from "integrations/balancer/ethSentinel";
 
 import AddressesJsonFileMock from "addresses/mock.addresses.json";
 

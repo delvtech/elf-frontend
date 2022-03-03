@@ -19,7 +19,7 @@ import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityF
 import styles from "efi-ui/pools/PrincipalPoolTable/grid.module.css";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
-import { getYearnVaultAPY } from "integrations/efi-yearn/fetchYearnVaults";
+import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";
 import { formatPercent } from "base/formatPercent/formatPercent";
 import { ONE_WEEK_IN_SECONDS } from "base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";

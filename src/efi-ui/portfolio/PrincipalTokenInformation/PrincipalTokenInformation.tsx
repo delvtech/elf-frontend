@@ -6,7 +6,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { CalendarEvent, google } from "calendar-link";
 import { jt, t } from "ttag";
 
-import { makeEtherscanTokenUrl } from "integrations/efi-etherscan/links";
+import { makeEtherscanTokenUrl } from "integrations/etherscan/links";
 import tw from "efi-tailwindcss-classnames";
 import { AddressesJson } from "addresses/addresses";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";

@@ -5,7 +5,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { t } from "ttag";
 
 import { getTokenAddressForBalancer } from "efi/balancer/getTokenAddressForBalancer";
-import { SwapKind } from "integrations/efi-balancer/SwapKind";
+import { SwapKind } from "integrations/balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useCalculatePrincipalTokenAmountOut } from "efi-ui/ccpools/useCalculatePrincipalTokenAmountOut";
