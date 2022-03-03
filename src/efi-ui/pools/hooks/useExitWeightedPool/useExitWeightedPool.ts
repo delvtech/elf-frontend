@@ -14,7 +14,7 @@ import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { WeightedPoolExitKind } from "efi/pools/weightedPool";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { BigNumber, ContractReceipt, Signer } from "ethers";
 import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
 import { useCallback } from "react";

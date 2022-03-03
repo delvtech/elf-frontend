@@ -25,8 +25,6 @@ const tokenlistJsonId = getTokenListJsonId();
 
 export const tokenListJson: TokenList = getTokenListJson();
 
-const tokenInfos = tokenListJson.tokens;
-
 function getTokenListJson(): TokenList {
   if (tokenlistJsonId === "testnet") {
     return TokenListJsonFileTestnet as TokenList;
@@ -54,7 +52,7 @@ export function getTokenInfo<T extends TokenInfo>(address: string): T {
   return TokenMetadata[address] as T;
 }
 export const TokenMetadata: Record<string, AnyTokenListInfo> = keyBy(
-  tokenInfos,
+  tokenListJson.tokens,
   "address"
 );
 

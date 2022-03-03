@@ -13,7 +13,7 @@ import {
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 import { getPoolContract } from "efi/pools/getPoolContract";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { BigNumber, Signer } from "ethers";
 import { defaultAbiCoder, formatUnits, parseUnits } from "ethers/lib/utils";
 import { useCallback } from "react";

@@ -11,7 +11,7 @@ import { TradePanel } from "efi-ui/trade/TradePanel/TradePanel";
 import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { Signer } from "ethers";
 import Link from "next/link";

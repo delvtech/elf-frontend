@@ -1,10 +1,10 @@
+// TODO: Move these tests over to the elf-tokenlist repo as they're more upstream
+
 import {
+  getTokenInfo,
   tokenListJson,
   TokenMetadata,
-  getTokenInfo,
-} from "efi/tokenlists/tokenlists";
-
-// TODO: Move these tests over to the elf-tokenlist repo as they're more upstream
+} from "tokenlists/tokenlists";
 
 describe("getTokenInfo", () => {
   test("when given an address should return the same token info from TokenMetadata", () => {
