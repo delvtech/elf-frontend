@@ -3,7 +3,7 @@ import { getCoinGeckoId } from "integrations/efi-coingecko";
 import {
   curveVirtualPriceContractsByAddress,
   isCurveStablePool,
-} from "integrations/efi-curve/stablePools";
+} from "efi/curve/stablePools";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import {
   useCrv3CryptoPrice,

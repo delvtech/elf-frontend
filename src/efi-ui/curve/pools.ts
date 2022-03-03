@@ -10,7 +10,7 @@ import {
   crv3CryptoPoolContract,
   crvTriCryptoPoolContract,
   steCrvPoolContract,
-} from "integrations/efi-curve/pools";
+} from "efi/curve/pools";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";

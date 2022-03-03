@@ -13,11 +13,11 @@ import {
   crv3CryptoPoolContract,
   crvTriCryptoPoolContract,
   steCrvPoolContract,
-} from "integrations/efi-curve/pools";
+} from "efi/curve/pools";
 import {
   curveVirtualPriceContractsByAddress,
   isCurveStablePool,
-} from "integrations/efi-curve/stablePools";
+} from "efi/curve/stablePools";
 import { AddressesJson } from "addresses/addresses";
 import { formatBalance } from "base/formatBalance/formatBalance";
 import { isGoerli, NUM_ETH_DECIMALS, ONE_ETHER } from "efi/ethereum/ethereum";
