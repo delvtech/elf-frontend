@@ -21,7 +21,7 @@ import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 

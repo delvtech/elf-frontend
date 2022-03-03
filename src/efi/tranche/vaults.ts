@@ -2,7 +2,7 @@ import { TestYVault__factory } from "@elementfi/core-typechain";
 import { TokenInfo, VaultTokenInfo } from "@elementfi/tokenlist";
 import { TokenTag } from "@elementfi/tokenlist/dist/tags";
 import { defaultProvider } from "efi/providers/providers";
-import { tokenListJson } from "efi/tokenlists/tokenlists";
+import { tokenListJson } from "tokenlists/tokenlists";
 import { assetProxyTokenInfos } from "efi/tranche/positions";
 import keyBy from "lodash.keyby";
 

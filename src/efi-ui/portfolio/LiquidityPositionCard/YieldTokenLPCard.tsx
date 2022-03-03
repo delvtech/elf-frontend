@@ -27,7 +27,7 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 import { getPoolInfo } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";

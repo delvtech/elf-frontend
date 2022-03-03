@@ -15,7 +15,7 @@ import { ONE_DAY_IN_MILLISECONDS } from "efi/base/time";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { Fragment, ReactElement } from "react";
 import { Currencies, Money } from "ts-money";
 import { t } from "ttag";

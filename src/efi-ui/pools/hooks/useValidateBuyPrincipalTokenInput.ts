@@ -5,7 +5,7 @@ import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import {
   TradeValuesValidationResult,
   validateTradeValues,

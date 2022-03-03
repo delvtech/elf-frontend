@@ -9,7 +9,7 @@ import {
 } from "@elementfi/tokenlist";
 import { EMPTY_ARRAY } from "efi/base/emptyArray";
 import { defaultProvider } from "efi/providers/providers";
-import { getTokenInfo, tokenListJson } from "efi/tokenlists/tokenlists";
+import { getTokenInfo, tokenListJson } from "tokenlists/tokenlists";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { vaultContractsByAddress } from "efi/tranche/vaults";
 import keyBy from "lodash.keyby";

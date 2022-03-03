@@ -21,7 +21,7 @@ import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import {
   isUnderlyingAddressERC20Permit,

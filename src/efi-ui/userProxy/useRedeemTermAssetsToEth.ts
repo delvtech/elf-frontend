@@ -11,7 +11,7 @@ import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
 import { flushPromises } from "efi/base/flush/flush";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { userProxyContract } from "efi/userProxy/contract";
 import { BigNumber, Signer } from "ethers";
 import { useCallback, useMemo } from "react";

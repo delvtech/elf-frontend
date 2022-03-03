@@ -12,7 +12,7 @@ import { AddressesJson } from "efi/addresses/addresses";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { isGoerli, isMainnet } from "efi/ethereum/ethereum";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
 import { AssetProxyTokenInfo, PrincipalTokenInfo } from "@elementfi/tokenlist";
 

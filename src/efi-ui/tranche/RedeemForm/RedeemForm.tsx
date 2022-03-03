@@ -11,7 +11,7 @@ import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { IconProps } from "efi-ui/token/TokenIcon";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import React, { ChangeEvent, ReactElement, useCallback } from "react";
 import { t } from "ttag";
 import styles from "./styles.module.css";

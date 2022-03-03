@@ -6,7 +6,7 @@ import {
 
 import { getOpenPrincipalTokensWithSameBaseAsset } from "efi/tranche/tranches";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { getAllPrincipalTokenAddresses } from "efi/tranche/tranches";
 
 import {

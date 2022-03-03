@@ -8,7 +8,7 @@ import {
   TokenTag,
 } from "@elementfi/tokenlist";
 import { defaultProvider } from "efi/providers/providers";
-import { tokenListJson } from "efi/tokenlists/tokenlists";
+import { tokenListJson } from "tokenlists/tokenlists";
 import keyBy from "lodash.keyby";
 
 /**

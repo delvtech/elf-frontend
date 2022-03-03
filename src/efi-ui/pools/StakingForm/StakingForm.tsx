@@ -23,7 +23,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { validateStakingValue } from "efi/staking/validateStakeValue";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { trancheContracts } from "efi/tranche/tranches";
 import { BigNumber, Signer } from "ethers";
 import { formatEther, formatUnits, parseUnits } from "ethers/lib/utils";

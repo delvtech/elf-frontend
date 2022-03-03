@@ -2,7 +2,7 @@ import { Vault } from "@elementfi/core-typechain";
 import { PendingTransactionPref } from "efi-ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import ContractAddresses from "efi/addresses/addresses";
 import { ContractMethodArgs } from "efi/contracts/types";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 
 /**
  * Returns true if the given pending transaction is for a principal token swap.

@@ -5,7 +5,7 @@ import { fetchAccumulatedInterestForTranche } from "efi/tranche/fetchAccumulated
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { fetchBaseAssetReservesInPool } from "efi/pools/fetchBaseAssetReservesInPool";
 import { getPoolForYieldToken } from "efi/pools/weightedPool";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { trancheContractsByAddress } from "efi/tranche/tranches";
 import { PrincipalTokenInfo, YieldPoolTokenInfo } from "@elementfi/tokenlist";
 

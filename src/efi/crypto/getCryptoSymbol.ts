@@ -4,7 +4,7 @@ import {
   CryptoAssetType,
   findTokenContract,
 } from "efi/crypto/CryptoAsset";
-import { TokenMetadata } from "efi/tokenlists/tokenlists";
+import { TokenMetadata } from "tokenlists/tokenlists";
 import { formatTermAssetShortSymbol } from "efi/tranche/format";
 import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 

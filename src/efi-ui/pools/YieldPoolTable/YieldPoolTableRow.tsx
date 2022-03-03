@@ -23,7 +23,7 @@ import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
 import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
 import { TimeLeft } from "efi-ui/base/TimeLeft/TimeLeft";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";

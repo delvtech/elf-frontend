@@ -18,7 +18,7 @@ import {
 import { AddressesJson } from "efi/addresses/addresses";
 import { formatBalance } from "efi/base/formatBalance/formatBalance";
 import { isGoerli, NUM_ETH_DECIMALS, ONE_ETHER } from "efi/ethereum/ethereum";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 
 const {
   addresses: { crvtricryptoAddress, stecrvAddress, crv3cryptoAddress },

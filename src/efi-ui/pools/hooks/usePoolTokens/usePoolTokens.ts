@@ -7,7 +7,7 @@ import { balancerVaultContract } from "efi-balancer/vault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { BigNumber } from "ethers";
 import { QueryObserverResult } from "react-query";
 

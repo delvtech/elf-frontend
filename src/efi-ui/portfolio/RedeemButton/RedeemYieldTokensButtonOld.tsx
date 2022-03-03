@@ -15,7 +15,7 @@ import ContractAddresses from "efi/addresses/addresses";
 import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
-import { getTokenInfo } from "efi/tokenlists/tokenlists";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { formatUnits } from "ethers/lib/utils";
 import React, { Fragment, ReactElement, useCallback, useState } from "react";
 import { t } from "ttag";
