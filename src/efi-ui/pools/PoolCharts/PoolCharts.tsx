@@ -28,7 +28,7 @@ import { ChartMessages } from "efi-ui/pools/PoolCharts/ChartMessagesProps";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import { ONE_WEEK_IN_MILLISECONDS, ONE_WEEK_IN_SECONDS } from "efi/base/time";
+import { ONE_WEEK_IN_MILLISECONDS, ONE_WEEK_IN_SECONDS } from "base/time";
 import { TimeData } from "efi/charts/TimeData";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";

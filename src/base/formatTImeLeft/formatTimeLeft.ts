@@ -1,7 +1,7 @@
 import { formatDuration, intervalToDuration } from "date-fns";
 import { t } from "ttag";
 
-import { ONE_MINUTE_IN_MILLISECONDS } from "efi/base/time";
+import { ONE_MINUTE_IN_MILLISECONDS } from "base/time";
 
 /**
  * Returns a human-readable label for how much time is left between now and the

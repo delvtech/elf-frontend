@@ -8,7 +8,7 @@ import {
   makeSmartContractReadCallUseQueryOptions,
   UseSmartContractReadCallOptions,
 } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { Unpacked } from "efi/base/Unpacked";
+import { Unpacked } from "base/Unpacked";
 import {
   ContractMethodName,
   StaticContractReturnType,

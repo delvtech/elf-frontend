@@ -1,7 +1,7 @@
 import { useLocation } from "react-use";
 
 import { Navigation } from "efi-ui/app/navigation/navigation";
-import { typeAassertNever } from "efi/base/typeAssertNever";
+import { typeAassertNever } from "base/typeAssertNever";
 
 export function useActiveTab(): Navigation {
   const location = useLocation();

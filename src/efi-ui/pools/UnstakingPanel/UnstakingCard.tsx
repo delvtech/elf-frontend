@@ -23,7 +23,7 @@ import { PoolStakeStats } from "efi-ui/pools/UnstakingPanel/PoolStakeStats";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { ElementIcon } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
-import { formatBalance } from "efi/base/formatBalance/formatBalance";
+import { formatBalance } from "base/formatBalance/formatBalance";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";

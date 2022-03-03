@@ -1,4 +1,4 @@
-import { hasSameKeys } from "efi/base/hasSameKeys/hasSameKeys";
+import { hasSameKeys } from "base/hasSameKeys/hasSameKeys";
 
 test("should equal true for objects with the same keys", () => {
   const objectA = { dog: () => true, cat: () => false };

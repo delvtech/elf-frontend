@@ -1,4 +1,4 @@
-import { flushPromises } from "efi/base/flush/flush";
+import { flushPromises } from "base/flush/flush";
 
 beforeEach(() => {
   jest.useFakeTimers();

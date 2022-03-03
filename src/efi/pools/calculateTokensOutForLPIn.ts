@@ -1,8 +1,8 @@
 import {
   clipFixNumberToStringDecimals,
   getSafeFixedNumber,
-} from "efi/base/math/fixedPoint";
-import { isFiniteNumber } from "efi/base/numbers";
+} from "base/math/fixedPoint";
+import { isFiniteNumber } from "base/numbers";
 import warning from "warning";
 
 const undefinedResult = { xNeeded: undefined, yNeeded: undefined };

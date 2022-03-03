@@ -5,8 +5,8 @@ import { formatDistance } from "date-fns";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
-import { formatTimeLeft } from "efi/base/formatTImeLeft/formatTimeLeft";
+import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
+import { formatTimeLeft } from "base/formatTImeLeft/formatTimeLeft";
 import { getIsMature } from "efi/tranche/getIsMature";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 

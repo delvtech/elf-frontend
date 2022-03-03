@@ -1,4 +1,4 @@
-import { formatPercent } from "efi/base/formatPercent/formatPercent";
+import { formatPercent } from "base/formatPercent/formatPercent";
 
 test("should return correct percent given a decimal value", () => {
   const expectedOutput = "50.00%";

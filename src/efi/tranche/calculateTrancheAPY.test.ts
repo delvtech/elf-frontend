@@ -1,7 +1,4 @@
-import {
-  ONE_WEEK_IN_MILLISECONDS,
-  ONE_YEAR_IN_MILLISECONDS,
-} from "efi/base/time";
+import { ONE_WEEK_IN_MILLISECONDS, ONE_YEAR_IN_MILLISECONDS } from "base/time";
 import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
 
 test("it should calculate the tranche apy on a one year tranche", () => {

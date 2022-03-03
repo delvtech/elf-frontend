@@ -12,7 +12,7 @@ import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { RedeemYieldTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemYieldTokensDrawer";
 import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 import ContractAddresses from "addresses/addresses";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "tokenlists/tokenlists";

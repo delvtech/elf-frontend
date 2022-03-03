@@ -20,11 +20,8 @@ import tw from "efi-tailwindcss-classnames";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { useIsTailwindLargeScreen } from "efi-ui/base/mediaBreakpoints";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
-import { EMPTY_ARRAY } from "efi/base/emptyArray";
-import {
-  ONE_DAY_IN_MILLISECONDS,
-  ONE_WEEK_IN_MILLISECONDS,
-} from "efi/base/time";
+import { EMPTY_ARRAY } from "base/emptyArray";
+import { ONE_DAY_IN_MILLISECONDS, ONE_WEEK_IN_MILLISECONDS } from "base/time";
 import { formatMoney } from "efi/money/formatMoney";
 
 const margin: Partial<Margin> = { top: 20, right: 40, bottom: 40, left: 80 };

@@ -2,7 +2,7 @@ import { ERC20 } from "@elementfi/core-typechain";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { getQueryCombinedStatus } from "efi-ui/query/getQueryCombinedStatus";
 import { useTokenBalanceOfMulti } from "efi-ui/token/hooks/useTokenBalanceOf";
-import { EMPTY_ARRAY } from "efi/base/emptyArray";
+import { EMPTY_ARRAY } from "base/emptyArray";
 import { BigNumber } from "ethers";
 import zip from "lodash.zip";
 

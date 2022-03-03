@@ -1,4 +1,4 @@
-import { ONE_YEAR_IN_MILLISECONDS } from "efi/base/time";
+import { ONE_YEAR_IN_MILLISECONDS } from "base/time";
 
 export function calculateTrancheAPY(
   trancheSpotPrice: number,

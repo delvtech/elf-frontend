@@ -1,8 +1,8 @@
 import { SwapKind } from "integrations/efi-balancer/SwapKind";
-import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
+import { clipStringValueToDecimals } from "base/math/fixedPoint";
 import { calcSwapCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import { QueryBatchSwapCalcResults } from "efi/pools/QueryBatchSwapCalcResults";
-import { assertNever } from "efi/base/assertNever";
+import { assertNever } from "base/assertNever";
 import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 
 export enum PrincipalPoolCalcSwapError {

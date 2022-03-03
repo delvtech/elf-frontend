@@ -1,5 +1,5 @@
 import { ERC20, ERC20Permit } from "@elementfi/core-typechain";
-import { assertNever } from "efi/base/assertNever";
+import { assertNever } from "base/assertNever";
 
 export enum CryptoAssetType {
   ETHEREUM = "ethereum",

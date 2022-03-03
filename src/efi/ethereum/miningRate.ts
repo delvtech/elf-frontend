@@ -1,5 +1,5 @@
 import { AddressesJson } from "addresses/addresses";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { ONE_DAY_IN_SECONDS } from "base/time";
 import { ChainId } from "efi/ethereum/ethereum";
 
 // TODO: get a better source for this.  I picked this up from https://etherscan.io/chart/blocktime

@@ -4,7 +4,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { Classes, Divider, H2, H4, Tab, Tabs } from "@blueprintjs/core";
-import { assertNever } from "efi/base/assertNever";
+import { assertNever } from "base/assertNever";
 import { Title } from "efi-ui/base/Title";
 import classNames from "classnames";
 import { PrincipalPoolCardList } from "efi-ui/pools/PrincipalPoolCardList/PrincipalPoolCardList";

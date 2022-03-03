@@ -1,7 +1,7 @@
 import {
   clipStringValueToDecimals,
   getPlacesAfterDecimal,
-} from "efi/base/math/fixedPoint";
+} from "base/math/fixedPoint";
 
 describe("clipStringValueToDecimals", () => {
   test("when first arg is undefined should return an empty string", () => {

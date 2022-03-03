@@ -9,7 +9,7 @@ import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
 import {
   clipFixNumberToStringDecimals,
   getSafeFixedNumber,
-} from "efi/base/math/fixedPoint";
+} from "base/math/fixedPoint";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { calculateTokensOutForLPInFixed } from "efi/pools/calculateTokensOutForLPIn";
 import { getPoolContract } from "efi/pools/getPoolContract";

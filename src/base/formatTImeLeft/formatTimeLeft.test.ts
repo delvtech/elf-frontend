@@ -1,9 +1,9 @@
-import { formatTimeLeft } from "efi/base/formatTImeLeft/formatTimeLeft";
+import { formatTimeLeft } from "base/formatTImeLeft/formatTimeLeft";
 import {
   ONE_DAY_IN_MILLISECONDS,
   ONE_HOUR_IN_MILLISECONDS,
   ONE_MINUTE_IN_MILLISECONDS,
-} from "efi/base/time";
+} from "base/time";
 
 test("should return 'in less than one minute' when less than 1 minute away", () => {
   const inThirtySeconds = 30 * 1000;

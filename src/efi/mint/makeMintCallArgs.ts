@@ -1,5 +1,5 @@
 import { UserProxy } from "@elementfi/core-typechain";
-import { PermitCallData } from "efi/base/fetchPermitData";
+import { PermitCallData } from "base/fetchPermitData";
 import {
   ContractMethodArgs,
   StaticContractMethodArgs,

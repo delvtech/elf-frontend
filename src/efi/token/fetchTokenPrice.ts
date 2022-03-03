@@ -19,7 +19,7 @@ import {
   isCurveStablePool,
 } from "integrations/efi-curve/stablePools";
 import { AddressesJson } from "addresses/addresses";
-import { formatBalance } from "efi/base/formatBalance/formatBalance";
+import { formatBalance } from "base/formatBalance/formatBalance";
 import { isGoerli, NUM_ETH_DECIMALS, ONE_ETHER } from "efi/ethereum/ethereum";
 import { getTokenInfo } from "tokenlists/tokenlists";
 

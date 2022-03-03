@@ -5,7 +5,7 @@ import {
   mapETHSentinalToWETH,
   mapWETHToETHSentinal,
 } from "efi/balancer/balancer";
-import { sortAddresses } from "efi/base/sortAddresses/sortAddresses";
+import { sortAddresses } from "base/sortAddresses/sortAddresses";
 
 interface ParsedQueryBatchSwapResult {
   tokenOut: BigNumber | undefined;

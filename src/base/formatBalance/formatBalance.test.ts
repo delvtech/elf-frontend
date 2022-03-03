@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { formatBalance } from "efi/base/formatBalance/formatBalance";
+import { formatBalance } from "base/formatBalance/formatBalance";
 
 test("should return '0.0000' when given undefined parameters", () => {
   const oneEther = BigNumber.from("1000000000000000000");

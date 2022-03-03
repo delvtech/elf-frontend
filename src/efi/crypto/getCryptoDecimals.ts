@@ -1,4 +1,4 @@
-import { assertNever } from "efi/base/assertNever";
+import { assertNever } from "base/assertNever";
 import {
   CryptoAsset,
   CryptoAssetType,

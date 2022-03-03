@@ -1,4 +1,4 @@
-import { calculateProgress } from "efi/base/calculateProgress/calculateProgress";
+import { calculateProgress } from "base/calculateProgress/calculateProgress";
 
 test("when createdAtDate is undefined should return 0", () => {
   expect(calculateProgress(undefined, new Date())).toEqual(0);

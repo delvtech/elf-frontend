@@ -6,7 +6,7 @@ import userEvent from "@testing-library/user-event";
 import { usePref } from "efi-ui/prefs/usePref/usePref";
 import { renderHookWithClient } from "efi-ui/testing/renderHookWithClient";
 import { renderWithClient } from "efi-ui/testing/renderWithClient";
-import efiLocalStorage from "efi/base/localStorage";
+import efiLocalStorage from "base/localStorage";
 import { makePrefEnvelope } from "efi/prefs/prefEnvelope";
 import { createQueryClient } from "efi/queryClient";
 

@@ -5,7 +5,7 @@ import {
   isERC20PermitAsset,
 } from "efi/crypto/CryptoAsset";
 import ContractAddresses from "addresses/addresses";
-import { assertNever } from "efi/base/assertNever";
+import { assertNever } from "base/assertNever";
 
 /**
  * Pools use weth instead of eth, so if you're building a ui for pools you can

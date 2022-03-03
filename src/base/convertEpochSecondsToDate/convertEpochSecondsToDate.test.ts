@@ -1,4 +1,4 @@
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 
 test("when given 5 as an input should return correct date", () => {
   const expectedOutput = new Date(

@@ -1,6 +1,6 @@
 import { scaleLinear } from "d3-scale";
 
-import { isIntegerNumber } from "efi/base/numbers";
+import { isIntegerNumber } from "base/numbers";
 
 export function calculateProgress(
   createdAtDate: Date | number | undefined,

@@ -13,8 +13,8 @@ import {
   mapETHSentinalToWETH,
   mapWETHToETHSentinal,
 } from "efi/balancer/balancer";
-import { sortAddresses } from "efi/base/sortAddresses/sortAddresses";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { sortAddresses } from "base/sortAddresses/sortAddresses";
+import { ONE_DAY_IN_SECONDS } from "base/time";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { serializeError } from "eth-rpc-errors";
 import {

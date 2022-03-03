@@ -4,7 +4,7 @@ import {
   formatAbbreviatedDate,
   formatAbbreviatedMonthAndDay,
   formatYear,
-} from "efi/base/dates/dates";
+} from "base/dates/dates";
 
 const inputDate = new Date("6/3/1994");
 

@@ -6,7 +6,7 @@ import { formatUnits } from "ethers/lib/utils";
 import { SwapKind } from "integrations/efi-balancer/SwapKind";
 import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
+import { clipStringValueToDecimals } from "base/math/fixedPoint";
 import {
   calcSwapInGivenOutWeightedPoolUNSAFE,
   calcSwapOutGivenInWeightedPoolUNSAFE,

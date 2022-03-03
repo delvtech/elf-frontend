@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 
 import { CanPerformJsonFile } from "canperform/CanPerformJsonFile";
 
-import { ONE_MINUTE_IN_MILLISECONDS } from "efi/base/time";
+import { ONE_MINUTE_IN_MILLISECONDS } from "base/time";
 import {
   canPerformJson as canPerformJsonFromBuild,
   CAN_PERFORM_URL,

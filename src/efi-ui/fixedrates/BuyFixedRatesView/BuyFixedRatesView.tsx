@@ -23,7 +23,7 @@ import { TokenAmountInput2 } from "efi-ui/token/TokenAmountInput/TokenAmountInpu
 import { getMarketRateLabel } from "efi-ui/tranche/getMarketRateLabel";
 import { PrincipalTokenTermButtonLabel2 } from "efi-ui/tranche/TermPicker/PrincipalTokenTermButtonLabel2";
 import { TermPicker2 } from "efi-ui/tranche/TermPicker/TermPicker2";
-import { formatBalance } from "efi/base/formatBalance/formatBalance";
+import { formatBalance } from "base/formatBalance/formatBalance";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
 import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";

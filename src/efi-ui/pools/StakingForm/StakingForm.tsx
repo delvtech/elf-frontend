@@ -14,7 +14,7 @@ import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectW
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
 import ContractAddresses from "addresses/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
-import { formatBalance } from "efi/base/formatBalance/formatBalance";
+import { formatBalance } from "base/formatBalance/formatBalance";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";

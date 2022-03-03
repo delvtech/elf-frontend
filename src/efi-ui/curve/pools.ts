@@ -15,7 +15,7 @@ import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { AddressesJson } from "addresses/addresses";
-import { ONE_MINUTE_IN_MILLISECONDS } from "efi/base/time";
+import { ONE_MINUTE_IN_MILLISECONDS } from "base/time";
 import {
   isGoerli,
   isMainnet,

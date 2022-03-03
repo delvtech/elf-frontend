@@ -9,7 +9,7 @@ import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { RedeemPrincipalTokensDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensDrawer";
 import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
 import ContractAddresses from "addresses/addresses";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
+import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { CryptoAsset } from "efi/crypto/CryptoAsset";
 import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";
 import { formatUnits } from "ethers/lib/utils";
