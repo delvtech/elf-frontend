@@ -5,7 +5,7 @@ import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadC
 import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "addresses/addresses";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
+import { BALANCER_ETH_SENTINEL } from "integrations/efi-balancer/ethSentinel";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { PoolContract } from "efi/pools/PoolContract";
 import { BigNumber, CallOverrides, ContractReceipt, Signer } from "ethers";

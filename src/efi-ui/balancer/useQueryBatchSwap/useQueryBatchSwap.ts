@@ -17,7 +17,7 @@ import { PoolContract } from "efi/pools/PoolContract";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
+import { BALANCER_ETH_SENTINEL } from "integrations/efi-balancer/ethSentinel";
 import { balancerVaultContract } from "efi/balancer/vault";
 import { QueryBatchSwapCalcResults } from "efi/pools/QueryBatchSwapCalcResults";
 import { calcSwapPrincipalPoolOld } from "efi/pools/calcSwapPrincipalPool";

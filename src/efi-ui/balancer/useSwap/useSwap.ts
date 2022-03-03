@@ -9,10 +9,10 @@ import {
 } from "efi-ui/toaster/AppToaster/AppToaster";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import {
-  BALANCER_ETH_SENTINEL,
   mapETHSentinalToWETH,
   mapWETHToETHSentinal,
 } from "efi/balancer/balancer";
+import { BALANCER_ETH_SENTINEL } from "integrations/efi-balancer/ethSentinel";
 import { sortAddresses } from "base/sortAddresses/sortAddresses";
 import { ONE_DAY_IN_SECONDS } from "base/time";
 import { ContractMethodArgs } from "efi/contracts/types";

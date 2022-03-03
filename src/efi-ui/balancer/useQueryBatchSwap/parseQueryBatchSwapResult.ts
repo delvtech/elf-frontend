@@ -1,10 +1,10 @@
 import { BigNumber } from "ethers";
 
 import {
-  BALANCER_ETH_SENTINEL,
   mapETHSentinalToWETH,
   mapWETHToETHSentinal,
 } from "efi/balancer/balancer";
+import { BALANCER_ETH_SENTINEL } from "integrations/efi-balancer/ethSentinel";
 import { sortAddresses } from "base/sortAddresses/sortAddresses";
 
 interface ParsedQueryBatchSwapResult {

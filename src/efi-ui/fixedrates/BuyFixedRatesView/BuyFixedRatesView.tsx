@@ -31,7 +31,7 @@ import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
 import { SwapKind } from "integrations/efi-balancer/SwapKind";
 import { SwapTokensTransactionConfirmationDrawer } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
-import { getTokenAddressForBalancer } from "integrations/efi-balancer/getTokenAddressForBalancer";
+import { getTokenAddressForBalancer } from "efi/balancer/getTokenAddressForBalancer";
 import { IconNames } from "@blueprintjs/icons";
 import { useNavigation } from "efi-ui/app/navigation/hooks/useNavigation";
 import { Navigation } from "efi-ui/app/navigation/navigation";

@@ -2,7 +2,7 @@ import { Button, Callout, Intent } from "@blueprintjs/core";
 import { ERC20 } from "@elementfi/core-typechain";
 import { TokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import { getTokenAddressForBalancer } from "integrations/efi-balancer/getTokenAddressForBalancer";
+import { getTokenAddressForBalancer } from "efi/balancer/getTokenAddressForBalancer";
 import { SwapKind } from "integrations/efi-balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
@@ -20,7 +20,7 @@ import {
 } from "efi-ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { TradeInput } from "efi-ui/trade/TradeInput/TradeInput";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
-import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
+import { BALANCER_ETH_SENTINEL } from "integrations/efi-balancer/ethSentinel";
 import { formatBalance } from "base/formatBalance/formatBalance";
 import { CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
