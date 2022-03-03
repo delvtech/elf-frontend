@@ -243,7 +243,7 @@ module.exports = {
         )})`,
       },
       to: {
-        path: "efi/base/localStorage.ts",
+        path: "src/base/localStorage.ts",
       },
     },
 
@@ -272,13 +272,14 @@ module.exports = {
     },
     {
       name: "efi-not-outside-base",
-      comment: "Importing modules outside of base/ is prohibited",
+      comment:
+        "Importing anything other than base/ and node_modules/ is prohibited in base/",
       severity: "error",
       from: {
-        path: "efi/base",
+        path: "src/base",
       },
       to: {
-        path: "efi/(?!base)",
+        pathNot: `(${["node_modules", "src/base"].join("|")})`,
       },
     },
     {
