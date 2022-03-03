@@ -3,7 +3,7 @@ import { QueryObserverResult } from "react-query";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 
-import { SwapKind } from "efi-balancer/SwapKind";
+import { SwapKind } from "integrations/efi-balancer/SwapKind";
 import { makeQueryBatchSwapCallArgs } from "efi-ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
@@ -18,7 +18,7 @@ import { PoolInfo } from "efi/pools/PoolInfo";
 import { isYieldPool } from "efi/pools/weightedPool";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";
-import { balancerVaultContract } from "efi-balancer/vault";
+import { balancerVaultContract } from "integrations/efi-balancer/vault";
 import { QueryBatchSwapCalcResults } from "efi/pools/QueryBatchSwapCalcResults";
 import { calcSwapPrincipalPoolOld } from "efi/pools/calcSwapPrincipalPool";
 

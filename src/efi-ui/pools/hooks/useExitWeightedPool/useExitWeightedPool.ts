@@ -1,8 +1,8 @@
 import { Vault } from "@elementfi/core-typechain";
 import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
-import { ExitRequest } from "efi-balancer/ExitRequest";
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
-import { balancerVaultContract } from "efi-balancer/vault";
+import { ExitRequest } from "integrations/efi-balancer/ExitRequest";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/efi-balancer/pools";
+import { balancerVaultContract } from "integrations/efi-balancer/vault";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "addresses/addresses";
 import { BALANCER_ETH_SENTINEL } from "efi/balancer/balancer";

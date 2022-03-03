@@ -5,7 +5,7 @@ import { BigNumber } from "ethers";
 import { formatEther, parseUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
-import { SwapKind } from "efi-balancer/SwapKind";
+import { SwapKind } from "integrations/efi-balancer/SwapKind";
 import { getBalancerApprovalMessage } from "efi-ui/balancer/balancerApprovalMessage";
 import { parseQueryBatchSwapResult } from "efi-ui/balancer/useQueryBatchSwap/parseQueryBatchSwapResult";
 import { useQueryBatchSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";

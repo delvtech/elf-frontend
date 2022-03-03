@@ -1,4 +1,4 @@
-import { SwapKind } from "efi-balancer/SwapKind";
+import { SwapKind } from "integrations/efi-balancer/SwapKind";
 import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
 import { calcSwapCCPoolUNSAFE } from "efi/pools/calcPoolSwap";
 import { QueryBatchSwapCalcResults } from "efi/pools/QueryBatchSwapCalcResults";

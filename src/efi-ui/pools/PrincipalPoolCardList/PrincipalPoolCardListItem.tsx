@@ -21,7 +21,7 @@ import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
 import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
-import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
+import { getYearnVaultAPY } from "integrations/efi-yearn/fetchYearnVaults";
 import { formatPercent } from "efi/base/formatPercent/formatPercent";
 import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";

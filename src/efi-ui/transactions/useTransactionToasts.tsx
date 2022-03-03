@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { t } from "ttag";
 
-import { ETHERSCAN_DOMAIN } from "efi-etherscan/ETHERSCAN_DOMAIN";
+import { ETHERSCAN_DOMAIN } from "integrations/efi-etherscan/ETHERSCAN_DOMAIN";
 import {
   AppToaster,
   makeSuccessToast,

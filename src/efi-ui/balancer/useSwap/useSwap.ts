@@ -1,8 +1,8 @@
 import { Vault } from "@elementfi/core-typechain";
-import { FundManagement } from "efi-balancer/FundManagement";
-import { SingleSwap } from "efi-balancer/SingleSwap";
-import { SwapKind } from "efi-balancer/SwapKind";
-import { balancerVaultContract } from "efi-balancer/vault";
+import { FundManagement } from "integrations/efi-balancer/FundManagement";
+import { SingleSwap } from "integrations/efi-balancer/SingleSwap";
+import { SwapKind } from "integrations/efi-balancer/SwapKind";
+import { balancerVaultContract } from "integrations/efi-balancer/vault";
 import {
   AppToaster,
   makeErrorToast,

@@ -1,6 +1,6 @@
 import { Vault } from "@elementfi/core-typechain";
-import { FundManagement } from "efi-balancer/FundManagement";
-import { SwapKind } from "efi-balancer/SwapKind";
+import { FundManagement } from "integrations/efi-balancer/FundManagement";
+import { SwapKind } from "integrations/efi-balancer/SwapKind";
 import { BatchSwapStep } from "efi-ui/balancer/SwapRequest";
 import {
   BALANCER_ETH_SENTINEL,

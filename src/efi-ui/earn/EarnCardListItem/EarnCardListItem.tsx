@@ -26,7 +26,7 @@ import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/hooks/useTotalValueLockedForTranche";
 import { useSigner } from "efi-ui/provider/useBlockFromTag/useSigner/useSigner";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
-import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
+import { getYearnVaultAPY } from "integrations/efi-yearn/fetchYearnVaults";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import {
   getPoolInfoForPrincipalToken,

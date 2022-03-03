@@ -5,12 +5,12 @@ import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { Currencies, Money } from "ts-money";
 
-import { getCoinGeckoId } from "efi-coingecko";
+import { getCoinGeckoId } from "integrations/efi-coingecko";
 import {
   crv3CryptoPoolContract,
   crvTriCryptoPoolContract,
   steCrvPoolContract,
-} from "efi-curve/pools";
+} from "integrations/efi-curve/pools";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";

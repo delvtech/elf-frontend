@@ -1,5 +1,5 @@
 import { ERC20 } from "@elementfi/core-typechain";
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/efi-balancer/pools";
 import { getQueriesData } from "efi-ui/base/queryResults";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractReadCalls } from "efi-ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";

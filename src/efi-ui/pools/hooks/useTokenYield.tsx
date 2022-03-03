@@ -1,7 +1,7 @@
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { useYearnVault } from "efi-ui/yearn/useYearnVault";
-import { getYearnVaultAPY } from "efi-yearn/fetchYearnVaults";
+import { getYearnVaultAPY } from "integrations/efi-yearn/fetchYearnVaults";
 import { ONE_YEAR_IN_SECONDS } from "efi/base/time";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";

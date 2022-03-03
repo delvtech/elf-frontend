@@ -3,7 +3,7 @@ import { QueryObserverResult, useQuery } from "react-query";
 import {
   EtherChainGasPriceResult,
   fetchGasPrice,
-} from "efi-etherchain/fetchGasPrice";
+} from "integrations/efi-etherchain/fetchGasPrice";
 
 export function useGasPrice(): QueryObserverResult<EtherChainGasPriceResult> {
   return useQuery({

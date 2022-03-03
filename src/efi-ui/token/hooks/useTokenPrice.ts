@@ -1,9 +1,9 @@
 import { ERC20 } from "@elementfi/core-typechain";
-import { getCoinGeckoId } from "efi-coingecko";
+import { getCoinGeckoId } from "integrations/efi-coingecko";
 import {
   curveVirtualPriceContractsByAddress,
   isCurveStablePool,
-} from "efi-curve/stablePools";
+} from "integrations/efi-curve/stablePools";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import {
   useCrv3CryptoPrice,

@@ -1,6 +1,6 @@
 import { Vault, WeightedPool } from "@elementfi/core-typechain";
-import { JoinRequest } from "efi-balancer/JoinRequest";
-import { balancerVaultContract } from "efi-balancer/vault";
+import { JoinRequest } from "integrations/efi-balancer/JoinRequest";
+import { balancerVaultContract } from "integrations/efi-balancer/vault";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";

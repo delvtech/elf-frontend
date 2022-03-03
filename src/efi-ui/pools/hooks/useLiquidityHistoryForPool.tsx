@@ -1,4 +1,4 @@
-import { balancerVaultContract } from "efi-balancer/vault";
+import { balancerVaultContract } from "integrations/efi-balancer/vault";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
