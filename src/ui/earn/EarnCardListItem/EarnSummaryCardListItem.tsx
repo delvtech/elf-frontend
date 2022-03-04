@@ -12,7 +12,7 @@ import { useStakingAPY } from "ui/pools/hooks/useStakingAPY";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { IconProps } from "ui/token/TokenIcon";
 import { formatPercent } from "base/formatPercent/formatPercent";
-import { formatMoney } from "efi/money/formatMoney";
+import { formatMoney } from "elf/money/formatMoney";
 import classNames from "classnames";
 import {
   PrincipalPoolTokenInfo,

@@ -1,10 +1,10 @@
 import { BigNumber } from "ethers";
 
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { assetProxyContractsByAddress } from "efi/tranche/positions";
+import { PoolInfo } from "elf/pools/PoolInfo";
+import { getPrincipalTokenInfoForPool } from "elf/pools/getPrincipalTokenInfoForPool";
+import { trancheContractsByAddress } from "elf/tranche/tranches";
+import { assetProxyContractsByAddress } from "elf/tranche/positions";
 
 export function useAccumulatedInterestForTranche(
   poolInfo: PoolInfo

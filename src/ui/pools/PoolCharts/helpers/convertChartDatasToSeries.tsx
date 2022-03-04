@@ -1,7 +1,7 @@
 import { Serie } from "@nivo/line";
 import { convertTimeDataToSerie } from "ui/pools/PoolCharts/helpers/convertTimeDataToSerie";
 import { dedupeLiquidityData } from "ui/pools/PoolCharts/helpers/dedupeLiquidityData";
-import { TimeData } from "efi/charts/TimeData";
+import { TimeData } from "elf/charts/TimeData";
 
 export function convertChartDatasToSeries(
   liquidityData: TimeData[] | undefined,

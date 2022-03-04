@@ -5,7 +5,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { PrincipalTokenActionTabId } from "ui/portfolio/PrincipalTokenActionTabs/tabs";
-import { getIsMature } from "efi/tranche/getIsMature";
+import { getIsMature } from "elf/tranche/getIsMature";
 import { useIsTailwindLargeScreen } from "ui/base/mediaBreakpoints";
 import classNames from "classnames";
 import styles from "./tabs.module.css";

@@ -9,11 +9,11 @@ import {
 } from "@elementfi/tokenlist";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import { assetProxyContractsByAddress } from "efi/tranche/positions";
+import { assetProxyContractsByAddress } from "elf/tranche/positions";
 import {
   getVaultContractForTranche,
   trancheContractsByAddress,
-} from "efi/tranche/tranches";
+} from "elf/tranche/tranches";
 import { formatUnits } from "ethers/lib/utils";
 
 /**

@@ -1,13 +1,13 @@
 import { Vault } from "@elementfi/core-typechain";
 import { JoinRequest } from "integrations/balancer/JoinRequest";
-import { balancerVaultContract } from "efi/balancer/vault";
+import { balancerVaultContract } from "elf/balancer/vault";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useSmartContractTransactionPersisted } from "ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import ContractAddresses from "addresses/addresses";
 import { BALANCER_ETH_SENTINEL } from "integrations/balancer/ethSentinel";
-import { ContractMethodArgs } from "efi/contracts/types";
-import { PoolContract } from "efi/pools/PoolContract";
+import { ContractMethodArgs } from "elf/contracts/types";
+import { PoolContract } from "elf/pools/PoolContract";
 import { BigNumber, CallOverrides, ContractReceipt, Signer } from "ethers";
 import { defaultAbiCoder } from "ethers/lib/utils";
 import zipObject from "lodash.zipobject";

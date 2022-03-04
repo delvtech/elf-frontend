@@ -2,7 +2,7 @@ import { QueryObserverResult, useQuery } from "react-query";
 
 import { Provider } from "@ethersproject/providers";
 
-import { defaultProvider } from "efi/providers/providers";
+import { defaultProvider } from "elf/providers/providers";
 
 /**
  * Returns the block number (or height) of the most recently mined block.

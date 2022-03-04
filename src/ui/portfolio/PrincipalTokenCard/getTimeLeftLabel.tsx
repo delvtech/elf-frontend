@@ -7,7 +7,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { formatTimeLeft } from "base/formatTImeLeft/formatTimeLeft";
-import { getIsMature } from "efi/tranche/getIsMature";
+import { getIsMature } from "elf/tranche/getIsMature";
 import { useNowMs } from "ui/base/hooks/useNowMs/useNowMs";
 
 interface TimeLeftLabelProps {

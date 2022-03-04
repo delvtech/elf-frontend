@@ -12,8 +12,8 @@ import { RedeemPrincipalTokensDrawer } from "ui/tranche/RedeemTokensDrawer/Redee
 import { useTrancheCanPerform } from "ui/tranche/useTrancheCanPerform";
 import ContractAddresses from "addresses/addresses";
 import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { trancheContractsByAddress as principalTokenContractsByAddress } from "efi/tranche/tranches";
+import { CryptoAsset } from "elf/crypto/CryptoAsset";
+import { trancheContractsByAddress as principalTokenContractsByAddress } from "elf/tranche/tranches";
 import { formatUnits } from "ethers/lib/utils";
 import React, { Fragment, ReactElement, useCallback, useState } from "react";
 import { t } from "ttag";

@@ -6,7 +6,7 @@ import {
 } from "@elementfi/core-typechain";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractReadCalls } from "ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
-import { ContractMethodArgs } from "efi/contracts/types";
+import { ContractMethodArgs } from "elf/contracts/types";
 import { BigNumber } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 import zip from "lodash.zip";

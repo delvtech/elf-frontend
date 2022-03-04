@@ -4,7 +4,7 @@ import { Intent, ProgressBar } from "@blueprintjs/core";
 
 import tw from "efi-tailwindcss-classnames";
 import { TimeLeftLabel } from "ui/portfolio/PrincipalTokenCard/getTimeLeftLabel";
-import { getIsMature } from "efi/tranche/getIsMature";
+import { getIsMature } from "elf/tranche/getIsMature";
 
 interface MaturityTimeBarLabelProps {
   progress: number;

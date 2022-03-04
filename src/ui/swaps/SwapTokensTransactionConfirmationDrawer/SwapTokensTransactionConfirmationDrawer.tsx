@@ -16,17 +16,17 @@ import { SwapDetailsForm } from "ui/swaps/SwapDetailsPreview/SwapDetailsForm";
 import { SwapTokenDetails } from "ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensDetails";
 import { IconProps } from "ui/token/TokenIcon";
 import { TransactionDrawer } from "ui/transactions/TransactionDrawer/TransactionDrawer";
-import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getPoolContract } from "efi/pools/getPoolContract";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { isConvergentCurvePool } from "efi/pools/PoolContract";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { getToleranceAmount } from "efi/trade/getToleranceAmount";
-import { TermAssetType } from "efi/tranche/TermAssetType";
+import { CryptoAsset, CryptoAssetType } from "elf/crypto/CryptoAsset";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { getPoolContract } from "elf/pools/getPoolContract";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { isConvergentCurvePool } from "elf/pools/PoolContract";
+import { PoolInfo } from "elf/pools/PoolInfo";
+import { getToleranceAmount } from "elf/trade/getToleranceAmount";
+import { TermAssetType } from "elf/tranche/TermAssetType";
 import { AddressesJson } from "addresses/addresses";
-import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
+import { WalletApprovalInfo } from "elf/wallets/WalletApprovalInfo";
 
 interface SwapTokensTransactionConfirmationDrawerProps {
   account: string | null | undefined;

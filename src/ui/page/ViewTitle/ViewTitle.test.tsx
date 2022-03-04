@@ -2,7 +2,7 @@ import React from "react";
 
 import { ViewTitle } from "ui/page/ViewTitle/ViewTitle";
 import { renderWithClient } from "ui/testing/renderWithClient";
-import { createQueryClient } from "efi/queryClient";
+import { createQueryClient } from "elf/queryClient";
 
 test("should render normally", async () => {
   const queryClient = createQueryClient();

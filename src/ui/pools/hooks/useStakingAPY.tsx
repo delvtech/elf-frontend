@@ -2,7 +2,7 @@ import { useNowMs } from "ui/base/hooks/useNowMs/useNowMs";
 import { useFeeVolumeFiatForPool } from "ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
 import { useTotalFiatLiquidity } from "ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { ONE_WEEK_IN_SECONDS, ONE_YEAR_IN_SECONDS } from "base/time";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { PoolInfo } from "elf/pools/PoolInfo";
 
 export function useStakingAPY(
   poolInfo: PoolInfo,

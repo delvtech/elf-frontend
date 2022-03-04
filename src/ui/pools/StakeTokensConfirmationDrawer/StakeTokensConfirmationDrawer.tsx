@@ -14,18 +14,18 @@ import { usePoolTokens } from "ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useStakingAPY } from "ui/pools/hooks/useStakingAPY";
 import { useTokenAllowance } from "ui/token/hooks/useTokenAllowance";
 import { TransactionDrawer } from "ui/transactions/TransactionDrawer/TransactionDrawer";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
+import { ERC20Shim } from "elf/contracts/ERC20Shim";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
-} from "efi/crypto/CryptoAsset";
-import { isPrincipalPool } from "efi/pools/ccpool";
-import { getPoolContract } from "efi/pools/getPoolContract";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { isConvergentCurvePool } from "efi/pools/PoolContract";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
+} from "elf/crypto/CryptoAsset";
+import { isPrincipalPool } from "elf/pools/ccpool";
+import { getPoolContract } from "elf/pools/getPoolContract";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { isConvergentCurvePool } from "elf/pools/PoolContract";
+import { PoolInfo } from "elf/pools/PoolInfo";
+import { WalletApprovalInfo } from "elf/wallets/WalletApprovalInfo";
 import { AddressesJson } from "addresses/addresses";
 
 interface StakingConfirmationDrawerProps {

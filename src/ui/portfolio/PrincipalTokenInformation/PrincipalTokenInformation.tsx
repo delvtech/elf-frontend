@@ -9,11 +9,11 @@ import { jt, t } from "ttag";
 import { makeEtherscanTokenUrl } from "integrations/etherscan/links";
 import tw from "efi-tailwindcss-classnames";
 import { AddressesJson } from "addresses/addresses";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
 import { isGoerli, isMainnet } from "base/ethereum/ethereum";
-import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
+import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
+import { getBaseAssetForTranche } from "elf/tranche/baseAssets";
 import { AssetProxyTokenInfo, PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 interface PrincipalTokenInformationProps {

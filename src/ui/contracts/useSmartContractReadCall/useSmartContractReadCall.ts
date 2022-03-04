@@ -8,7 +8,7 @@ import {
   ContractMethodArgs,
   ContractMethodName,
   StaticContractReturnType,
-} from "efi/contracts/types";
+} from "elf/contracts/types";
 
 export interface UseSmartContractReadCallOptions<
   TContract extends Contract,

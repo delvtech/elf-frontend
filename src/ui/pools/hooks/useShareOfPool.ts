@@ -7,7 +7,7 @@ import {
   useTokenBalanceOf,
   useTokenBalanceOfMulti,
 } from "ui/token/hooks/useTokenBalanceOf";
-import { PoolContract } from "efi/pools/PoolContract";
+import { PoolContract } from "elf/pools/PoolContract";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import zip from "lodash.zip";

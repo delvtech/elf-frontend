@@ -23,8 +23,8 @@ import { PrincipalTokenPortfolio } from "ui/portfolio/PrincipalTokenPortfolio/Pr
 import { YieldTokenPortfolio } from "ui/portfolio/YieldTokenPortfolio/YieldTokenPortfolio";
 import { useTokensWithBalance } from "ui/token/hooks/useTokensWithBalance";
 import { usePrincipalTokensWithoutDust } from "ui/tranche/usePrincipalTokensWithoutDust";
-import { interestTokenContracts } from "efi/interestToken/interestToken";
-import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
+import { interestTokenContracts } from "elf/interestToken/interestToken";
+import { formatWalletAddress } from "elf/wallets/formatWalletAddress";
 import { ReactElement, useCallback } from "react";
 import { t } from "ttag";
 export interface PortfolioViewSmallScreenProps {

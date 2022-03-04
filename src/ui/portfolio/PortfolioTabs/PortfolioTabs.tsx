@@ -6,7 +6,7 @@ import { useConvergentCurvePoolsWithLPBalance } from "ui/portfolio/hooks/useConv
 import { useWeightedPoolsWithLPBalance } from "ui/portfolio/hooks/useWeightedPoolsWithLPBalance";
 import { useTokensWithBalance } from "ui/token/hooks/useTokensWithBalance";
 import { usePrincipalTokensWithoutDust } from "ui/tranche/usePrincipalTokensWithoutDust";
-import { interestTokenContracts } from "efi/interestToken/interestToken";
+import { interestTokenContracts } from "elf/interestToken/interestToken";
 import React, { ReactElement } from "react";
 import { t } from "ttag";
 import styles from "./PortfolioTabs.module.css";

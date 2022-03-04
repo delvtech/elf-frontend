@@ -3,7 +3,7 @@ import { QueryObserverResult, useQuery } from "react-query";
 import { Web3Provider } from "@ethersproject/providers";
 import { BigNumber } from "ethers";
 
-import { fetchEthBalance } from "efi/coins/ether/fetchEthBalance";
+import { fetchEthBalance } from "elf/coins/ether/fetchEthBalance";
 
 export const ETH_BALANCE_QUERY_KEY = ["ethereum", "balanceOf"];
 

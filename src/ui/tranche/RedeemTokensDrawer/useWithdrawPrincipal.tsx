@@ -1,6 +1,6 @@
 import { Tranche } from "@elementfi/core-typechain";
 import { useSmartContractTransactionPersisted } from "ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import { ContractMethodArgs } from "efi/contracts/types";
+import { ContractMethodArgs } from "elf/contracts/types";
 import { BigNumber, Signer } from "ethers";
 import { useCallback } from "react";
 

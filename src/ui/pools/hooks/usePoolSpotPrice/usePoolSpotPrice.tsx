@@ -10,10 +10,10 @@ import {
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { SwapKind } from "integrations/balancer/SwapKind";
-import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { PoolContract } from "efi/pools/PoolContract";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { getPoolTokenInfoFromContract } from "elf/pools/getPoolInfo";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { PoolContract } from "elf/pools/PoolContract";
+import { PoolInfo } from "elf/pools/PoolInfo";
 
 /**
  * Lazy spot price technique until we get a better method.  Right now just calculates how much out

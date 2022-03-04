@@ -13,7 +13,7 @@ import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/conver
 import { formatAbbreviatedDate } from "base/dates/dates";
 import { formatPercent } from "base/formatPercent/formatPercent";
 import { ONE_DAY_IN_MILLISECONDS } from "base/time";
-import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
+import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 interface PrincipalTokenTermButtonLabel2Props {

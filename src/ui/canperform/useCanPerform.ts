@@ -6,7 +6,7 @@ import { ONE_MINUTE_IN_MILLISECONDS } from "base/time";
 import {
   canPerformJson as canPerformJsonFromBuild,
   CAN_PERFORM_URL,
-} from "efi/canperform/canperform";
+} from "elf/canperform/canperform";
 
 export function useCanPerform(): CanPerformJsonFile {
   const { data: canPerformJson } = useQuery({

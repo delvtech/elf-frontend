@@ -6,8 +6,8 @@ import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
 import { WalletJazzicon } from "ui/wallets/WalletJazzicon/WalletJazzicon";
-import { formatChainName } from "efi/crypto/formatChainName";
-import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
+import { formatChainName } from "elf/crypto/formatChainName";
+import { formatWalletAddress } from "elf/wallets/formatWalletAddress";
 
 interface WalletSummaryProps {
   account: string | null | undefined;

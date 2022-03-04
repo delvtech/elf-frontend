@@ -5,7 +5,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "ui/base/LabeledText/LabeledText";
 import { formatPercent } from "base/formatPercent/formatPercent";
-import { TermAssetType } from "efi/tranche/TermAssetType";
+import { TermAssetType } from "elf/tranche/TermAssetType";
 
 /**
  * Generalize this further to handle any transaction confirmation

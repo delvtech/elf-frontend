@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions, UseQueryResult } from "react-query";
 
-import { AVG_MINE_RATE_SECONDS } from "efi/miningRate";
-import { defaultProvider } from "efi/providers/providers";
+import { AVG_MINE_RATE_SECONDS } from "elf/miningRate";
+import { defaultProvider } from "elf/providers/providers";
 
 export function usePreviousBlockNumber(
   secondsAgo: number | undefined,

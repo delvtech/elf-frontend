@@ -2,9 +2,9 @@ import { Money } from "ts-money";
 
 import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "ui/token/hooks/useTokenPrice";
-import { convertToFiatBalance } from "efi/money/convertToFiatBalance";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { convertToFiatBalance } from "elf/money/convertToFiatBalance";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { PoolInfo } from "elf/pools/PoolInfo";
 
 import { useAccumulatedInterestForTranche } from "./useAccumulatedInterestForTranche";
 

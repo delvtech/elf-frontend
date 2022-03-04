@@ -10,8 +10,8 @@ import {
 } from "ui/contracts/useSmartContractTransaction/useSmartContractTransaction";
 import { usePendingTransactionPref } from "ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 import { ETH_BALANCE_QUERY_KEY } from "ui/wallets/hooks/useEthBalance/useEthBalance";
-import { TransactionStatus } from "efi/contracts/transaction";
-import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
+import { TransactionStatus } from "elf/contracts/transaction";
+import { ContractMethodArgs, ContractMethodName } from "elf/contracts/types";
 
 interface UseSmartContractTransactionPersistedOptions<
   TContract extends Contract,

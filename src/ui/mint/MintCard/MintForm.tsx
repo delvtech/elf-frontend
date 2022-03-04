@@ -17,12 +17,12 @@ import { TokenAmountInput } from "ui/token/TokenAmountInput/TokenAmountInput";
 import { useTrancheCanPerform } from "ui/tranche/useTrancheCanPerform";
 import { ConnectWalletDialog } from "ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { formatBalance } from "base/formatBalance/formatBalance";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoDecimals } from "elf/crypto/getCryptoDecimals";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { formatYieldTokenShortSymbol } from "elf/interestToken/formatYieldTokenShortSymbol";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
+import { formatPrincipalTokenShortSymbol } from "elf/tranche/format";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 interface MintFormProps {

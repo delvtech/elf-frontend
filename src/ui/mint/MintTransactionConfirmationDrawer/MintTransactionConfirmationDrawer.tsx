@@ -17,17 +17,17 @@ import { TokenIcon } from "ui/token/TokenIcon";
 import { TransactionDrawer } from "ui/transactions/TransactionDrawer/TransactionDrawer";
 import ContractAddresses from "addresses/addresses";
 import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
-import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { CryptoAsset, CryptoAssetType } from "elf/crypto/CryptoAsset";
+import { getCryptoDecimals } from "elf/crypto/getCryptoDecimals";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { interestTokenContractsByAddress } from "elf/interestToken/interestToken";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { trancheContractsByAddress } from "elf/tranche/tranches";
 import {
   isUnderlyingAddressERC20Permit,
   underlyingContractsByAddress,
-} from "efi/underlying/underlying";
-import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
+} from "elf/underlying/underlying";
+import { WalletApprovalInfo } from "elf/wallets/WalletApprovalInfo";
 import { Signer } from "ethers";
 import {
   Fragment,

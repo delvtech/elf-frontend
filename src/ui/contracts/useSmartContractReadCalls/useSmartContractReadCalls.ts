@@ -12,7 +12,7 @@ import { Unpacked } from "base/Unpacked";
 import {
   ContractMethodName,
   StaticContractReturnType,
-} from "efi/contracts/types";
+} from "elf/contracts/types";
 
 /**
  * A hook for calling the same method on a list of contracts.

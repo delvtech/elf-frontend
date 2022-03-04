@@ -7,8 +7,8 @@ import { usePref } from "ui/prefs/usePref/usePref";
 import { renderHookWithClient } from "ui/testing/renderHookWithClient";
 import { renderWithClient } from "ui/testing/renderWithClient";
 import efiLocalStorage from "base/localStorage";
-import { makePrefEnvelope } from "efi/prefs/prefEnvelope";
-import { createQueryClient } from "efi/queryClient";
+import { makePrefEnvelope } from "elf/prefs/prefEnvelope";
+import { createQueryClient } from "elf/queryClient";
 
 test.skip("Default value is provided when no pref exists", () => {
   const { result } = renderUsePref();

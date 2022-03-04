@@ -4,8 +4,8 @@ import { useSmartContractEvents } from "ui/contracts/useSmartContractEvents/useS
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePreviousBlockNumber } from "ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
 import { ONE_DAY_IN_SECONDS } from "base/time";
-import { PoolContract } from "efi/pools/PoolContract";
-import { balancerVaultContract } from "efi/balancer/vault";
+import { PoolContract } from "elf/pools/PoolContract";
+import { balancerVaultContract } from "elf/balancer/vault";
 
 type PoolBalanceChangedArguments = [
   poolId: string,

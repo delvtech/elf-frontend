@@ -20,7 +20,7 @@ import { useEagerConnect } from "ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "ui/wallets/hooks/useSyncWithInjectedEthereum";
 import { AddressesJson } from "addresses/addresses";
 import { ChainId, ChainNames } from "base/ethereum/ethereum";
-import { getConnectorName } from "efi/wallets/connectors";
+import { getConnectorName } from "elf/wallets/connectors";
 
 import styles from "./App.module.css";
 

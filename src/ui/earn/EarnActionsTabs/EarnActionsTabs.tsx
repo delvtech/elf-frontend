@@ -5,7 +5,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { EarnActionsTabId } from "ui/earn/EarnActionsTabs/EarnActionsTabId";
-import { getIsMature } from "efi/tranche/getIsMature";
+import { getIsMature } from "elf/tranche/getIsMature";
 
 interface EarnActionsTabsProps {
   activeTabId: EarnActionsTabId;

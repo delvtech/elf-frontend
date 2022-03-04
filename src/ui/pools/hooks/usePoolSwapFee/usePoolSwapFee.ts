@@ -2,9 +2,9 @@ import { ConvergentCurvePool, WeightedPool } from "@elementfi/core-typechain";
 import { BigNumber } from "ethers";
 
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { isConvergentCurvePool, isWeightedPool } from "efi/pools/PoolContract";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { getPoolContract } from "efi/pools/getPoolContract";
+import { isConvergentCurvePool, isWeightedPool } from "elf/pools/PoolContract";
+import { PoolInfo } from "elf/pools/PoolInfo";
+import { getPoolContract } from "elf/pools/getPoolContract";
 
 export function usePoolSwapFee(poolInfo: PoolInfo): BigNumber | undefined {
   const pool = getPoolContract(poolInfo.address);

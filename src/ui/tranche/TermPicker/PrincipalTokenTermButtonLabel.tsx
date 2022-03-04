@@ -12,9 +12,9 @@ import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/conver
 import { formatAbbreviatedDate } from "base/dates/dates";
 import { formatPercent } from "base/formatPercent/formatPercent";
 import { ONE_DAY_IN_MILLISECONDS } from "base/time";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
+import { CryptoAsset } from "elf/crypto/CryptoAsset";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import { Fragment, ReactElement } from "react";
 import { Currencies, Money } from "ts-money";

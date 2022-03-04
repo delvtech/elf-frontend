@@ -12,15 +12,15 @@ import { useIsTailwindSmallScreen } from "ui/base/mediaBreakpoints";
 import { usePoolTokens } from "ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
 import { formatPercent } from "base/formatPercent/formatPercent";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { formatMoney } from "efi/money/formatMoney";
-import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
-import { getPoolContract } from "efi/pools/getPoolContract";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { isConvergentCurvePool } from "efi/pools/PoolContract";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { isYieldPool } from "efi/pools/weightedPool";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { formatMoney } from "elf/money/formatMoney";
+import { getOppositePoolInfo } from "elf/pools/getOppositePoolInfo";
+import { getPoolContract } from "elf/pools/getPoolContract";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { isConvergentCurvePool } from "elf/pools/PoolContract";
+import { PoolInfo } from "elf/pools/PoolInfo";
+import { isYieldPool } from "elf/pools/weightedPool";
 
 interface PoolSummaryProps {
   liquidity: Money | undefined;

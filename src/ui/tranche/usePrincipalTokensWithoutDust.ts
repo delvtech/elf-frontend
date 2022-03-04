@@ -1,9 +1,9 @@
 import { ERC20 } from "@elementfi/core-typechain";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { useTokensWithBalance } from "ui/token/hooks/useTokensWithBalance";
-import { isDust } from "efi/coins/isDust";
+import { isDust } from "elf/coins/isDust";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import { trancheContracts } from "efi/tranche/tranches";
+import { trancheContracts } from "elf/tranche/tranches";
 import { BigNumber } from "ethers";
 import zip from "lodash.zip";
 

@@ -11,7 +11,7 @@ import { SwapKind } from "integrations/balancer/SwapKind";
 import { validateInput } from "ui/base/hooks/useNumericInput/useNumericInput";
 import { IconProps } from "ui/token/TokenIcon";
 import { clipStringValueToDecimals } from "base/math/fixedPoint";
-import { PoolContract } from "efi/pools/PoolContract";
+import { PoolContract } from "elf/pools/PoolContract";
 
 import styles from "./TradeInput.module.css";
 

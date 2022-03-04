@@ -2,17 +2,11 @@ import { Vault } from "@elementfi/core-typechain";
 import { FundManagement } from "integrations/balancer/FundManagement";
 import { SingleSwap } from "integrations/balancer/SingleSwap";
 import { SwapKind } from "integrations/balancer/SwapKind";
-import { balancerVaultContract } from "efi/balancer/vault";
+import { balancerVaultContract } from "elf/balancer/vault";
 import { AppToaster, makeErrorToast } from "ui/toaster/AppToaster/AppToaster";
 import { useSmartContractTransactionPersisted } from "ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import {
-  mapETHSentinalToWETH,
-  mapWETHToETHSentinal,
-} from "efi/balancer/balancer";
 import { BALANCER_ETH_SENTINEL } from "integrations/balancer/ethSentinel";
 import { sortAddresses } from "base/sortAddresses/sortAddresses";
-import { ONE_DAY_IN_SECONDS } from "base/time";
-import { ContractMethodArgs } from "efi/contracts/types";
 import { serializeError } from "eth-rpc-errors";
 import {
   BigNumber,
@@ -23,6 +17,12 @@ import {
 } from "ethers";
 import { useCallback } from "react";
 import { UseMutationResult } from "react-query";
+import { ONE_DAY_IN_SECONDS } from "base/time";
+import {
+  mapETHSentinalToWETH,
+  mapWETHToETHSentinal,
+} from "elf/balancer/balancer";
+import { ContractMethodArgs } from "elf/contracts/types";
 
 /**
  * Hook for Balancer Vault's swap method.

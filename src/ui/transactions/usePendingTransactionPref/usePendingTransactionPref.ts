@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 import { usePref } from "ui/prefs/usePref/usePref";
-import { TransactionStatus } from "efi/contracts/transaction";
+import { TransactionStatus } from "elf/contracts/transaction";
 
 export interface PendingTransactionPref {
   contractAddress: string | undefined;

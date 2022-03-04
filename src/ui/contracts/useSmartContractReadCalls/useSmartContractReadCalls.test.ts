@@ -1,7 +1,7 @@
 import { ERC20 } from "@elementfi/core-typechain";
 import { useSmartContractReadCalls } from "ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { renderHookWithClient } from "ui/testing/renderHookWithClient";
-import { createQueryClient } from "efi/queryClient";
+import { createQueryClient } from "elf/queryClient";
 import { BigNumber } from "ethers";
 import { QueryObserverResult } from "react-query";
 

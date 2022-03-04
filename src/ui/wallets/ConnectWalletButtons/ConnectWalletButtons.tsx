@@ -21,7 +21,7 @@ import {
   latticeConnector,
   ledgerConnector,
   trezorConnector,
-} from "efi/wallets/connectors";
+} from "elf/wallets/connectors";
 
 const connectorButtonClassName = tw("p-12", "w-1/4", "flex-col", "space-y-3");
 const iconStyle: CSSProperties = {

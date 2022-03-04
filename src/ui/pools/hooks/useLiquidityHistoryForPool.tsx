@@ -1,4 +1,4 @@
-import { balancerVaultContract } from "efi/balancer/vault";
+import { balancerVaultContract } from "elf/balancer/vault";
 import { useNowMs } from "ui/base/hooks/useNowMs/useNowMs";
 import { useLatestBlockNumber } from "ui/ethereum/hooks/useLatestBlockNumber";
 import { usePreviousBlockNumber } from "ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
@@ -7,11 +7,11 @@ import { useTotalFiatLiquidity } from "ui/pools/hooks/useTotalFiatLiquidityForPo
 import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "ui/token/hooks/useTokenPrice";
 import { ONE_DAY_IN_SECONDS } from "base/time";
-import { TimeData } from "efi/charts/TimeData";
-import { AVG_MINE_RATE_SECONDS } from "efi/miningRate";
-import { getPoolContract } from "efi/pools/getPoolContract";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { TimeData } from "elf/charts/TimeData";
+import { AVG_MINE_RATE_SECONDS } from "elf/miningRate";
+import { getPoolContract } from "elf/pools/getPoolContract";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { PoolInfo } from "elf/pools/PoolInfo";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";

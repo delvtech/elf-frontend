@@ -4,14 +4,14 @@ import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/balancer/pools";
 import { SwapKind } from "integrations/balancer/SwapKind";
 import { usePoolTokens } from "ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "ui/pools/hooks/usePoolTotalSupply";
-import { getPoolContract } from "efi/pools/getPoolContract";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { getPoolContract } from "elf/pools/getPoolContract";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import {
   calcSwapPrincipalPool,
   PrincipalPoolCalcSwapResult,
   SwapAsset,
-} from "efi/pools/calcSwapPrincipalPool";
+} from "elf/pools/calcSwapPrincipalPool";
 import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 
 export function useCalculatePrincipalTokenAmountOut(

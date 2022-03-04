@@ -29,9 +29,9 @@ import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { useTokenPrice } from "ui/token/hooks/useTokenPrice";
 import { ONE_WEEK_IN_MILLISECONDS, ONE_WEEK_IN_SECONDS } from "base/time";
-import { TimeData } from "efi/charts/TimeData";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { TimeData } from "elf/charts/TimeData";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { PoolInfo } from "elf/pools/PoolInfo";
 
 import { binDataByDay } from "./helpers/binDataByDay";
 import { convertChartDatasToSeries } from "./helpers/convertChartDatasToSeries";

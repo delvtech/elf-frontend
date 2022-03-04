@@ -2,7 +2,7 @@ import { CSSProperties, ReactElement, useMemo } from "react";
 
 import tw from "efi-tailwindcss-classnames";
 import { useOpenYieldPools } from "ui/pools/hooks/useOpenYieldPools";
-import { yieldPools } from "efi/pools/weightedPool";
+import { yieldPools } from "elf/pools/weightedPool";
 
 import { YieldPoolTableHeader } from "./YieldPoolTableHeader";
 import { YieldPoolTableRow } from "ui/pools/YieldPoolTable/YieldPoolTableRow";

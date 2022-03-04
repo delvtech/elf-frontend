@@ -4,7 +4,7 @@ import { Contract } from "@ethersproject/contracts";
 import isEqual from "lodash.isequal";
 
 import { makeSmartContractReadCallQueryKey } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { ContractMethodName } from "efi/contracts/types";
+import { ContractMethodName } from "elf/contracts/types";
 
 /**
  * Utility for matching smart contract read call queries when busting the cache.

@@ -12,7 +12,7 @@ import {
 import { PrincipalTokenPortfolioOld } from "ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolioOld";
 import { YieldTokenPortfolio } from "ui/portfolio/YieldTokenPortfolio/YieldTokenPortfolio";
 import { assertNever } from "base/assertNever";
-import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
+import { formatWalletAddress } from "elf/wallets/formatWalletAddress";
 import styles from "./styles.module.css";
 
 export interface PortfolioViewOriginalProps {

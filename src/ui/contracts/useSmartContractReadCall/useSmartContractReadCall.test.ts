@@ -4,7 +4,7 @@ import { Contract } from "ethers";
 
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { renderHookWithClient } from "ui/testing/renderHookWithClient";
-import { createQueryClient } from "efi/queryClient";
+import { createQueryClient } from "elf/queryClient";
 
 const SAMPLE_READ_CONTRACT_CALL_RESULT = { 0: "sample contract name" };
 

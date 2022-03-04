@@ -9,7 +9,7 @@ import tw from "efi-tailwindcss-classnames";
 import { StakingForm } from "ui/pools/StakingForm/StakingForm";
 import { StakingInput } from "ui/pools/StakingInput/StakingInput";
 import { useCanPerformPool } from "ui/pools/hooks/usePoolCanPerform/usePoolCanPerform";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { PoolInfo } from "elf/pools/PoolInfo";
 
 interface StakingPanelProps {
   library: Web3Provider | undefined;

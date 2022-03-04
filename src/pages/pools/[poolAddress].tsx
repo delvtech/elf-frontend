@@ -3,7 +3,7 @@ import {
   GetStaticPropsResult,
   GetStaticPathsResult,
 } from "next";
-import { getAllPoolAddresses, getPoolInfo } from "efi/pools/getPoolInfo";
+import { getAllPoolAddresses, getPoolInfo } from "elf/pools/getPoolInfo";
 
 import { PoolView, PoolViewProps } from "ui/pools/PoolView/PoolView";
 

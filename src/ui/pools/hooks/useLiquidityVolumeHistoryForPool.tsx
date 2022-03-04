@@ -5,9 +5,9 @@ import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "ui/token/hooks/useTokenPrice";
 import { EMPTY_ARRAY } from "base/emptyArray";
 import { ONE_DAY_IN_SECONDS } from "base/time";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { TimeData } from "efi/charts/TimeData";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { PoolInfo } from "elf/pools/PoolInfo";
+import { TimeData } from "elf/charts/TimeData";
 
 /**
  * Returns the fiat volume for a pool in a given time range

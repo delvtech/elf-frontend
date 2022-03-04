@@ -4,7 +4,7 @@ import { Button, Callout, Intent } from "@blueprintjs/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { t } from "ttag";
 
-import { getTokenAddressForBalancer } from "efi/balancer/getTokenAddressForBalancer";
+import { getTokenAddressForBalancer } from "elf/balancer/getTokenAddressForBalancer";
 import { SwapKind } from "integrations/balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "ui/base/hooks/useNumericInput/useNumericInput";
@@ -19,13 +19,13 @@ import { SwapTokensTransactionConfirmationDrawer } from "ui/swaps/SwapTokensTran
 import { TokenAmountInput } from "ui/token/TokenAmountInput/TokenAmountInput";
 import { formatBalance } from "base/formatBalance/formatBalance";
 import { formatPercent } from "base/formatPercent/formatPercent";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoDecimals } from "elf/crypto/getCryptoDecimals";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
 import {
   getPoolInfoForPrincipalToken,
   getPrincipalPoolContractForTranche,
-} from "efi/pools/ccpool";
+} from "elf/pools/ccpool";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 interface BuyPrincipalTokensFormProps {

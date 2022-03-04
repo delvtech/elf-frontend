@@ -6,7 +6,7 @@ import { useWeb3React } from "@web3-react/core";
 import tw from "efi-tailwindcss-classnames";
 import { PoolDetails } from "ui/pools/PoolDetails/PoolDetails";
 import { useSigner } from "ui/provider/useBlockFromTag/useSigner/useSigner";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { PoolInfo } from "elf/pools/PoolInfo";
 
 import { PoolViewHeader } from "./PoolViewHeader";
 import { PoolViewTitle } from "./PoolViewTitle";

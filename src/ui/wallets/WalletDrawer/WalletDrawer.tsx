@@ -9,7 +9,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { WalletConnectionSummary } from "ui/wallets/WalletConnectionCard/WalletConnectionSummary";
-import { getConnectorName } from "efi/wallets/connectors";
+import { getConnectorName } from "elf/wallets/connectors";
 
 import { ConnectWalletCallout } from "./ConnectWalletCallout";
 import styles from "./WalletDrawer.module.css";

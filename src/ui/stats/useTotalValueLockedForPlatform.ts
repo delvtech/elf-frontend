@@ -1,9 +1,9 @@
 import { ERC20 } from "@elementfi/core-typechain";
 import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
-import { fetchTokenPrice } from "efi/token/fetchTokenPrice";
-import { fetchTotalValueLockedForTerm } from "efi/tranche/fetchTotalValueLockedForTerm";
-import { principalTokenInfos } from "efi/tranche/tranches";
-import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { fetchTokenPrice } from "elf/token/fetchTokenPrice";
+import { fetchTotalValueLockedForTerm } from "elf/tranche/fetchTotalValueLockedForTerm";
+import { principalTokenInfos } from "elf/tranche/tranches";
+import { underlyingContractsByAddress } from "elf/underlying/underlying";
 import { useQuery } from "react-query";
 import { Money } from "ts-money";
 

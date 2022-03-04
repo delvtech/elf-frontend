@@ -1,6 +1,6 @@
 import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
 import { useNowMs } from "ui/base/hooks/useNowMs/useNowMs";
-import { yieldPools } from "efi/pools/weightedPool";
+import { yieldPools } from "elf/pools/weightedPool";
 
 export function useOpenYieldPools(): YieldPoolTokenInfo[] {
   const nowMs = useNowMs();

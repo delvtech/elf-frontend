@@ -1,5 +1,5 @@
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { PoolContract } from "efi/pools/PoolContract";
+import { PoolContract } from "elf/pools/PoolContract";
 import { BigNumber } from "ethers";
 import { QueryObserverResult } from "react-query";
 

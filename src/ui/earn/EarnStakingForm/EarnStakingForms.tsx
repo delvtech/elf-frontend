@@ -11,8 +11,8 @@ import { StakeYieldTokensForm } from "ui/earn/EarnStakingForm/StakeYieldTokensFo
 import { useStakingAPY } from "ui/pools/hooks/useStakingAPY";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { formatPercent } from "base/formatPercent/formatPercent";
-import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
-import { getPoolInfoForYieldToken } from "efi/pools/weightedPool";
+import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
+import { getPoolInfoForYieldToken } from "elf/pools/weightedPool";
 
 import { StakePrincipalTokenForm } from "./StakePrincipalTokensForm";
 import Link from "next/link";

@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import { useQuery, useQueryClient } from "react-query";
 
 import { useLocalStorage, LocalStorage } from "ui/base/useLocalStorage";
-import { makePrefEnvelope, PrefEnvelope } from "efi/prefs/prefEnvelope";
+import { makePrefEnvelope, PrefEnvelope } from "elf/prefs/prefEnvelope";
 
 interface PrefResult<T> {
   pref: T;
@@ -48,10 +48,10 @@ function usePrefQueryKey(id: string) {
   return queryKey;
 }
 
-const useGetPrefFromLocalStorage = (localStorage: LocalStorage) =>
-  useCallback(
+function useGetPrefFromLocalStorage(efiLocalStorage: LocalStorage) {
+  return useCallback(
     function <T>(id: string): PrefEnvelope<T> | undefined {
-      const prefString = localStorage.getItem(id);
+      const prefString = efiLocalStorage.getItem(id);
       if (!prefString) {
         return;
       }
@@ -59,5 +59,6 @@ const useGetPrefFromLocalStorage = (localStorage: LocalStorage) =>
       const prefEnvelope: PrefEnvelope<T> = JSON.parse(prefString);
       return prefEnvelope;
     },
-    [localStorage]
+    [efiLocalStorage]
   );
+}

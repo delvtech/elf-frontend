@@ -8,7 +8,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { calculateProgress } from "base/calculateProgress/calculateProgress";
 import { formatTimeLeft } from "base/formatTImeLeft/formatTimeLeft";
-import { formatLengthOfTime } from "efi/time/formatLengthOfTime/formatLengthOfTime";
+import { formatLengthOfTime } from "elf/time/formatLengthOfTime/formatLengthOfTime";
 import { useNowMs } from "ui/base/hooks/useNowMs/useNowMs";
 
 interface TimeLeftProps {

@@ -1,5 +1,5 @@
 import { Serie } from "@nivo/line";
-import { TimeData } from "efi/charts/TimeData";
+import { TimeData } from "elf/charts/TimeData";
 
 export function convertTimeDataToSerie(
   timeData: TimeData[],

@@ -14,14 +14,14 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useERC20Approve } from "ui/token/hooks/useERC20Approve";
 import { useTokenAllowance } from "ui/token/hooks/useTokenAllowance";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
+import { ERC20Shim } from "elf/contracts/ERC20Shim";
 import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
-} from "efi/crypto/CryptoAsset";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+} from "elf/crypto/CryptoAsset";
+import { getCryptoDecimals } from "elf/crypto/getCryptoDecimals";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
 
 interface WalletApprovalCalloutProps {
   signer: Signer | undefined;

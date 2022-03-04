@@ -16,18 +16,18 @@ import { useSmartContractTransactionPersisted } from "ui/transactions/useSmartCo
 import ContractAddresses from "addresses/addresses";
 import { EMPTY_ARRAY } from "base/emptyArray";
 import { fetchPermitData, PermitCallData } from "base/fetchPermitData";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
-import { makeMintCallArgs } from "efi/mint/makeMintCallArgs";
-import { getPermitVersion } from "efi/permit/getPermitVersion";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { CryptoAsset } from "elf/crypto/CryptoAsset";
+import { getCryptoDecimals } from "elf/crypto/getCryptoDecimals";
+import { interestTokenContractsByAddress } from "elf/interestToken/interestToken";
+import { makeMintCallArgs } from "elf/mint/makeMintCallArgs";
+import { getPermitVersion } from "elf/permit/getPermitVersion";
+import { trancheContractsByAddress } from "elf/tranche/tranches";
 import {
   isUnderlyingAddressERC20Permit,
   underlyingContractsByAddress,
-} from "efi/underlying/underlying";
-import { getTokenAddressForUserProxy } from "efi/userProxy/address";
-import { userProxyContract } from "efi/userProxy/contract";
+} from "elf/underlying/underlying";
+import { getTokenAddressForUserProxy } from "elf/userProxy/address";
+import { userProxyContract } from "elf/userProxy/contract";
 import { Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 import { useCallback, useMemo } from "react";

@@ -3,12 +3,12 @@ import { usePoolSpotPrice } from "ui/pools/hooks/usePoolSpotPrice/usePoolSpotPri
 import { useYearnVault } from "ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";
 import { ONE_YEAR_IN_SECONDS } from "base/time";
-import { getPoolContract } from "efi/pools/getPoolContract";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { TermAssetType } from "efi/tranche/TermAssetType";
-import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
+import { getPoolContract } from "elf/pools/getPoolContract";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { getPrincipalTokenInfoForPool } from "elf/pools/getPrincipalTokenInfoForPool";
+import { PoolInfo } from "elf/pools/PoolInfo";
+import { TermAssetType } from "elf/tranche/TermAssetType";
+import { getVaultTokenInfoForTranche } from "elf/tranche/tranches";
 
 /**
  * Returns the APY for either a principal token or a yield token

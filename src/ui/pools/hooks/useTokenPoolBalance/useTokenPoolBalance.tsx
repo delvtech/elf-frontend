@@ -1,6 +1,6 @@
 import { ERC20 } from "@elementfi/core-typechain";
 import { usePoolTokens } from "ui/pools/hooks/usePoolTokens/usePoolTokens";
-import { PoolContract } from "efi/pools/PoolContract";
+import { PoolContract } from "elf/pools/PoolContract";
 import { BigNumber } from "ethers";
 
 export function useTokenPoolBalance(

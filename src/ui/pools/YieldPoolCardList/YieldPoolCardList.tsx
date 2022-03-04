@@ -5,7 +5,7 @@ import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { useOpenYieldPools } from "ui/pools/hooks/useOpenYieldPools";
 import { YieldPoolCardListItem } from "ui/pools/YieldPoolCardList/YieldPoolCardListItem";
-import { yieldPools } from "efi/pools/weightedPool";
+import { yieldPools } from "elf/pools/weightedPool";
 
 interface YieldPoolCardListProps {
   showMaturePools?: boolean;

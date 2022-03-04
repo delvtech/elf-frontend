@@ -5,7 +5,7 @@ import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { useOpenPrincipalPools } from "ui/pools/hooks/useOpenPrincipalPools";
 import { PrincipalPoolCardListItem } from "ui/pools/PrincipalPoolCardList/PrincipalPoolCardListItem";
-import { principalPools } from "efi/pools/ccpool";
+import { principalPools } from "elf/pools/ccpool";
 
 interface PrincipalPoolCardListProps {
   showMaturePools?: boolean;

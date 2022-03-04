@@ -4,9 +4,9 @@ import { BigNumber } from "ethers";
 
 import tw from "efi-tailwindcss-classnames";
 import { validateInput } from "ui/base/hooks/useNumericInput/useNumericInput";
-import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
+import { CryptoSymbol } from "elf/crypto/CryptoSymbol";
 import { clipStringValueToDecimals } from "base/math/fixedPoint";
-import { calculateLPOutGivenIn } from "efi/pools/calculateLPOutGivenIn";
+import { calculateLPOutGivenIn } from "elf/pools/calculateLPOutGivenIn";
 
 import { TokenAmountInput } from "ui/token/TokenAmountInput/TokenAmountInput";
 import { IconProps } from "ui/token/TokenIcon";

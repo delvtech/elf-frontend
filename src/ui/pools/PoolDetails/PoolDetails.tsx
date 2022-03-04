@@ -17,10 +17,10 @@ import { useTotalFiatLiquidity } from "ui/pools/hooks/useTotalFiatLiquidityForPo
 import { useTotalValueLockedForTranche } from "ui/pools/hooks/useTotalValueLockedForTranche";
 import { useVolumeForPool } from "ui/pools/hooks/useVolumeForPool/useVolumeForPool";
 import { ONE_WEEK_IN_SECONDS } from "base/time";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { getPrincipalTokenInfoForPool } from "elf/pools/getPrincipalTokenInfoForPool";
+import { PoolInfo } from "elf/pools/PoolInfo";
+import { trancheContractsByAddress } from "elf/tranche/tranches";
 import { PoolAction } from "ui/pools/hooks/usePoolViewPoolActionsPref/usePoolViewPoolActionsPref";
 
 interface PoolDetailsProps {

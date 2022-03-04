@@ -6,9 +6,9 @@ import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
 import { findAssetIcon } from "ui/crypto/CryptoIcon";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getCryptoName } from "efi/crypto/getCryptoName/getCryptoName";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { CryptoAsset } from "elf/crypto/CryptoAsset";
+import { getCryptoName } from "elf/crypto/getCryptoName/getCryptoName";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
 import { AssetLabel } from "./AssetLabel";
 
 interface CryptoAssetButtonProps {

@@ -1,8 +1,8 @@
 import { ERC20, WeightedPool } from "@elementfi/core-typechain";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/balancer/pools";
 import { useTokensWithBalance } from "ui/token/hooks/useTokensWithBalance";
-import { isDust } from "efi/coins/isDust";
-import { yieldPoolContracts } from "efi/pools/weightedPool";
+import { isDust } from "elf/coins/isDust";
+import { yieldPoolContracts } from "elf/pools/weightedPool";
 
 export function useWeightedPoolsWithLPBalance(
   account: string | null | undefined

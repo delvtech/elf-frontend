@@ -11,15 +11,15 @@ import {
   useIsTailwindSmallScreen,
 } from "ui/base/mediaBreakpoints";
 import { findAssetIcon } from "ui/crypto/CryptoIcon";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getOppositePoolInfo } from "efi/pools/getOppositePoolInfo";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { isYieldPool } from "efi/pools/weightedPool";
-import { formatLengthOfTime } from "efi/time/formatLengthOfTime/formatLengthOfTime";
-import { formatTermAssetShortSymbol } from "efi/tranche/format";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { getOppositePoolInfo } from "elf/pools/getOppositePoolInfo";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { getPrincipalTokenInfoForPool } from "elf/pools/getPrincipalTokenInfoForPool";
+import { PoolInfo } from "elf/pools/PoolInfo";
+import { isYieldPool } from "elf/pools/weightedPool";
+import { formatLengthOfTime } from "elf/time/formatLengthOfTime/formatLengthOfTime";
+import { formatTermAssetShortSymbol } from "elf/tranche/format";
 import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 
 interface PoolViewHeaderProps {

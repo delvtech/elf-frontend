@@ -13,8 +13,8 @@ import { RedeemYieldTokensDrawer } from "ui/tranche/RedeemTokensDrawer/RedeemYie
 import { useTrancheCanPerform } from "ui/tranche/useTrancheCanPerform";
 import ContractAddresses from "addresses/addresses";
 import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { CryptoAsset } from "elf/crypto/CryptoAsset";
+import { interestTokenContractsByAddress } from "elf/interestToken/interestToken";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import { formatUnits } from "ethers/lib/utils";
 import React, { Fragment, ReactElement, useCallback, useState } from "react";

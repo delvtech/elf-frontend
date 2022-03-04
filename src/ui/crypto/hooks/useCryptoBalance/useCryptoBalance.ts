@@ -8,7 +8,7 @@ import {
   CryptoAsset,
   CryptoAssetType,
   findTokenContract,
-} from "efi/crypto/CryptoAsset";
+} from "elf/crypto/CryptoAsset";
 
 export function useCryptoBalanceOf(
   library: Web3Provider | undefined,

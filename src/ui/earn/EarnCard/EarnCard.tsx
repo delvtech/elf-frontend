@@ -14,19 +14,19 @@ import { useTokenYield } from "ui/pools/hooks/useTokenYield";
 import { useTotalValueLockedForTranche } from "ui/pools/hooks/useTotalValueLockedForTranche";
 import { useYearnVault } from "ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
 import {
   getPoolInfoForPrincipalToken,
   principalPoolContractsByAddress,
-} from "efi/pools/ccpool";
+} from "elf/pools/ccpool";
 import {
   getPoolInfoForYieldToken,
   yieldPoolContractsByAddress,
-} from "efi/pools/weightedPool";
+} from "elf/pools/weightedPool";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import { getIsMature } from "efi/tranche/getIsMature";
-import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
-import { underlyingContractsByAddress } from "efi/underlying/underlying";
+import { getIsMature } from "elf/tranche/getIsMature";
+import { getVaultTokenInfoForTranche } from "elf/tranche/tranches";
+import { underlyingContractsByAddress } from "elf/underlying/underlying";
 import { Signer } from "ethers";
 import { CSSProperties, ReactElement, useCallback, useState } from "react";
 import { EarnSummaryCard } from "./EarnSummaryCard";

@@ -1,8 +1,8 @@
 import { ConvergentCurvePool, ERC20 } from "@elementfi/core-typechain";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/balancer/pools";
 import { useTokensWithBalance } from "ui/token/hooks/useTokensWithBalance";
-import { isDust } from "efi/coins/isDust";
-import { principalPoolContracts } from "efi/pools/ccpool";
+import { isDust } from "elf/coins/isDust";
+import { principalPoolContracts } from "elf/pools/ccpool";
 import { useMemo } from "react";
 
 export function useConvergentCurvePoolsWithLPBalance(

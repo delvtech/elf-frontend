@@ -33,17 +33,17 @@ import { calculateProgress } from "base/calculateProgress/calculateProgress";
 import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "base/dates/dates";
 import { formatPercent } from "base/formatPercent/formatPercent";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
-import { formatMoney } from "efi/money/formatMoney";
-import { getPoolForYieldToken } from "efi/pools/weightedPool";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoDecimals } from "elf/crypto/getCryptoDecimals";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { formatYieldTokenShortSymbol } from "elf/interestToken/formatYieldTokenShortSymbol";
+import { formatMoney } from "elf/money/formatMoney";
+import { getPoolForYieldToken } from "elf/pools/weightedPool";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import {
   getVaultContractForTranche,
   getVaultTokenInfoForTranche,
-} from "efi/tranche/tranches";
+} from "elf/tranche/tranches";
 import { formatUnits } from "ethers/lib/utils";
 import Link from "next/link";
 import React, { ReactElement, ReactNode } from "react";

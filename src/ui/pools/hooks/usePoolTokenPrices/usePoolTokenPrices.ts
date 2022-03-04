@@ -1,6 +1,6 @@
 import { ERC20 } from "@elementfi/core-typechain";
 import { usePoolSpotPrice } from "ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
-import { PoolContract } from "efi/pools/PoolContract";
+import { PoolContract } from "elf/pools/PoolContract";
 
 interface PoolTokenPrices {
   spotPriceBaseAssetForOneToken: number | undefined;

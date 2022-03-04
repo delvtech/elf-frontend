@@ -5,9 +5,9 @@ import { usePoolSpotPrice } from "ui/pools/hooks/usePoolSpotPrice/usePoolSpotPri
 import { usePoolTokens } from "ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useTokenDeltasForPool } from "ui/pools/hooks/useTokenDeltasForPool/useTokenDeltasForPool";
 import { ONE_DAY_IN_SECONDS } from "base/time";
-import { getPoolContract } from "efi/pools/getPoolContract";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { getPoolContract } from "elf/pools/getPoolContract";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { PoolInfo } from "elf/pools/PoolInfo";
 
 /**
  * Returns the amount of liquidity added or removed for each token in a time period.

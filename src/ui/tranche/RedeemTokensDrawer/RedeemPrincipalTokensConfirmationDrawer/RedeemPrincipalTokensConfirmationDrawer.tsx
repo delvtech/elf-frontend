@@ -8,18 +8,18 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "ui/base/LabeledText/LabeledText";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
 import { RedeemForm } from "ui/tranche/RedeemForm/RedeemForm";
 import { WalletDrawer } from "ui/wallets/WalletDrawer/WalletDrawer";
 import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { formatFullDate } from "base/dates/dates";
-import { CryptoAssetType } from "efi/crypto/CryptoAsset";
+import { CryptoAssetType } from "elf/crypto/CryptoAsset";
 
 import { useRedeemTermAssetsToEth } from "ui/userProxy/useRedeemTermAssetsToEth";
 import { useWithdrawPrincipal } from "ui/tranche/RedeemTokensDrawer/useWithdrawPrincipal";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
-import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
+import { trancheContractsByAddress } from "elf/tranche/tranches";
+import { getBaseAssetForTranche } from "elf/tranche/baseAssets";
 
 interface RedeemPrincipalTokensConfirmationDrawerProps {
   account: string | null | undefined;

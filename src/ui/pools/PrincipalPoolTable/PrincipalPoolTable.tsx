@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
 import { useOpenPrincipalPools } from "ui/pools/hooks/useOpenPrincipalPools";
-import { principalPools } from "efi/pools/ccpool";
+import { principalPools } from "elf/pools/ccpool";
 
 import { PrincipalPoolTableHeader } from "./PrincipalPoolTableHeader";
 import { PrincipalPoolTableRow } from "ui/pools/PrincipalPoolTable/PrincipalPoolTableRow";

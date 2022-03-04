@@ -7,8 +7,8 @@ import {
   TransactionError,
 } from "ui/contracts/TransactionError";
 import { lookupAddressKey } from "addresses/addresses";
-import { TransactionStatus } from "efi/contracts/transaction";
-import { ContractMethodArgs, ContractMethodName } from "efi/contracts/types";
+import { TransactionStatus } from "elf/contracts/transaction";
+import { ContractMethodArgs, ContractMethodName } from "elf/contracts/types";
 
 export interface UseSmartContractTransactionOptions<
   TContract extends Contract,

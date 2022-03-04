@@ -6,7 +6,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { Title } from "ui/base/Title";
 import { useTotalValueLockedForPlatform } from "ui/stats/useTotalValueLockedForPlatform";
-import { formatMoney } from "efi/money/formatMoney";
+import { formatMoney } from "elf/money/formatMoney";
 
 interface StatsViewProps {}
 

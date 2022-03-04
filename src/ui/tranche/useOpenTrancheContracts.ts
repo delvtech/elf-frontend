@@ -1,6 +1,6 @@
 import { Tranche } from "@elementfi/core-typechain";
 import { useOpenPrincipalTokenInfos } from "ui/tranche/useOpenPrincipalTokenInfos";
-import { trancheContractsByAddress } from "efi/tranche/tranches";
+import { trancheContractsByAddress } from "elf/tranche/tranches";
 
 export function useOpenTrancheContracts(): Tranche[] {
   const openPrincipalTokenInfos = useOpenPrincipalTokenInfos();

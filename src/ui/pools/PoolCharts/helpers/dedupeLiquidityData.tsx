@@ -1,4 +1,4 @@
-import { TimeData } from "efi/charts/TimeData";
+import { TimeData } from "elf/charts/TimeData";
 
 /**
  * dedupes by timestamp.  if two or more values have the same second value,

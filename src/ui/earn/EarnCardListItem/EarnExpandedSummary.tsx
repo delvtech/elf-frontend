@@ -7,8 +7,8 @@ import { LabeledText } from "ui/base/LabeledText/LabeledText";
 import { useTokenYield } from "ui/pools/hooks/useTokenYield";
 import { useTotalFiatLiquidity } from "ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { formatPercent } from "base/formatPercent/formatPercent";
-import { formatMoney } from "efi/money/formatMoney";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { formatMoney } from "elf/money/formatMoney";
+import { PoolInfo } from "elf/pools/PoolInfo";
 import classNames from "classnames";
 import { Classes } from "@blueprintjs/core";
 import {

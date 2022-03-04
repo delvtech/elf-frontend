@@ -15,11 +15,11 @@ import styles from "efi-ui/fixedrates/grid.module.css";
 import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "base/dates/dates";
 import { formatPercent } from "base/formatPercent/formatPercent";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import { getIsMature } from "efi/tranche/getIsMature";
+import { getIsMature } from "elf/tranche/getIsMature";
 import { usePrincipalTokenYield } from "ui/pools/hooks/usePrincipalTokenYield";
 import { AssetProxyTokenInfo, PrincipalTokenInfo } from "@elementfi/tokenlist";
 

@@ -5,8 +5,8 @@ import tw from "efi-tailwindcss-classnames";
 import { YieldTokenCard } from "ui/portfolio/YieldTokenCard/YieldTokenCard";
 import { useTokensWithBalance } from "ui/token/hooks/useTokensWithBalance";
 import { NoYieldTokensInWalletNonIdealState } from "ui/wallets/NoYieldTokensInWalletNonIdealState/NoYieldTokensInWalletNonIdealState";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
-import { interestTokenContracts } from "efi/interestToken/interestToken";
+import { ERC20Shim } from "elf/contracts/ERC20Shim";
+import { interestTokenContracts } from "elf/interestToken/interestToken";
 import React, { ReactElement } from "react";
 import { t } from "ttag";
 

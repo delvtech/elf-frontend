@@ -3,7 +3,7 @@ import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { useNowMs } from "ui/base/hooks/useNowMs/useNowMs";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
-import { formatLengthOfTime } from "efi/time/formatLengthOfTime/formatLengthOfTime";
+import { formatLengthOfTime } from "elf/time/formatLengthOfTime/formatLengthOfTime";
 import { ReactElement } from "react";
 
 interface TermTagProps {

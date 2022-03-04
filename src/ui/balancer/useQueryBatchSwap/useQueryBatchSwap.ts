@@ -10,17 +10,17 @@ import { clipStringValueToDecimals } from "base/math/fixedPoint";
 import {
   calcSwapInGivenOutWeightedPoolUNSAFE,
   calcSwapOutGivenInWeightedPoolUNSAFE,
-} from "efi/pools/calcPoolSwap";
-import { isPrincipalPool } from "efi/pools/ccpool";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { PoolContract } from "efi/pools/PoolContract";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { isYieldPool } from "efi/pools/weightedPool";
+} from "elf/pools/calcPoolSwap";
+import { isPrincipalPool } from "elf/pools/ccpool";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { PoolContract } from "elf/pools/PoolContract";
+import { PoolInfo } from "elf/pools/PoolInfo";
+import { isYieldPool } from "elf/pools/weightedPool";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import { BALANCER_ETH_SENTINEL } from "integrations/balancer/ethSentinel";
-import { balancerVaultContract } from "efi/balancer/vault";
-import { QueryBatchSwapCalcResults } from "efi/pools/QueryBatchSwapCalcResults";
-import { calcSwapPrincipalPoolOld } from "efi/pools/calcSwapPrincipalPool";
+import { balancerVaultContract } from "elf/balancer/vault";
+import { QueryBatchSwapCalcResults } from "elf/pools/QueryBatchSwapCalcResults";
+import { calcSwapPrincipalPoolOld } from "elf/pools/calcSwapPrincipalPool";
 
 /**
  * Useful for previewing a swap in the balancer V2 vault.

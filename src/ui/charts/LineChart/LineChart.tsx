@@ -22,7 +22,7 @@ import { useIsTailwindLargeScreen } from "ui/base/mediaBreakpoints";
 import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
 import { EMPTY_ARRAY } from "base/emptyArray";
 import { ONE_DAY_IN_MILLISECONDS, ONE_WEEK_IN_MILLISECONDS } from "base/time";
-import { formatMoney } from "efi/money/formatMoney";
+import { formatMoney } from "elf/money/formatMoney";
 
 const margin: Partial<Margin> = { top: 20, right: 40, bottom: 40, left: 80 };
 const smallScreenMargin: Partial<Margin> = {

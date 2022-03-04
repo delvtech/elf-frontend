@@ -31,18 +31,18 @@ import { calculateProgress } from "base/calculateProgress/calculateProgress";
 import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "base/dates/dates";
 import { formatPercent } from "base/formatPercent/formatPercent";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { formatMoney } from "efi/money/formatMoney";
-import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
-import { getPoolContract } from "efi/pools/getPoolContract";
-import { calculateTrancheAPY } from "efi/tranche/calculateTrancheAPY";
-import { formatPrincipalTokenShortSymbol } from "efi/tranche/format";
+import { ERC20Shim } from "elf/contracts/ERC20Shim";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { formatMoney } from "elf/money/formatMoney";
+import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
+import { getPoolContract } from "elf/pools/getPoolContract";
+import { calculateTrancheAPY } from "elf/tranche/calculateTrancheAPY";
+import { formatPrincipalTokenShortSymbol } from "elf/tranche/format";
 import {
   getVaultContractForTranche,
   trancheContractsByAddress,
-} from "efi/tranche/tranches";
+} from "elf/tranche/tranches";
 
 import { MaturityTimeBar } from "./MaturityTimeBar";
 import { useNowMs } from "ui/base/hooks/useNowMs/useNowMs";

@@ -1,7 +1,7 @@
 import { sum } from "d3-array";
 import { nest } from "d3-collection";
 import { timeDay } from "d3-time";
-import { TimeData } from "efi/charts/TimeData";
+import { TimeData } from "elf/charts/TimeData";
 
 export function binDataByDay(
   data: TimeData[],

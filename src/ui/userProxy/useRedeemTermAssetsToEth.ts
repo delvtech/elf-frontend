@@ -9,10 +9,10 @@ import { useTokenAllowance } from "ui/token/hooks/useTokenAllowance";
 import { useSmartContractTransactionPersisted } from "ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { fetchPermitData, PermitCallData } from "base/fetchPermitData";
 import { flushPromises } from "base/flush/flush";
-import { ContractMethodArgs } from "efi/contracts/types";
-import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
+import { ContractMethodArgs } from "elf/contracts/types";
+import { interestTokenContractsByAddress } from "elf/interestToken/interestToken";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import { userProxyContract } from "efi/userProxy/contract";
+import { userProxyContract } from "elf/userProxy/contract";
 import { BigNumber, Signer } from "ethers";
 import { useCallback, useMemo } from "react";
 

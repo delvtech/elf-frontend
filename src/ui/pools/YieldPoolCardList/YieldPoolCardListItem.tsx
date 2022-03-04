@@ -24,17 +24,17 @@ import { useYearnVault } from "ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";
 import { formatPercent } from "base/formatPercent/formatPercent";
 import { ONE_WEEK_IN_SECONDS } from "base/time";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { formatMoney } from "efi/money/formatMoney";
-import { getVaultTokenInfoForTranche } from "efi/tranche/tranches";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { formatMoney } from "elf/money/formatMoney";
+import { getVaultTokenInfoForTranche } from "elf/tranche/tranches";
 import { TermTag } from "ui/tranche/TermTag";
 import { format } from "date-fns";
 import { calculateProgress } from "base/calculateProgress/calculateProgress";
 import { useNowMs } from "ui/base/hooks/useNowMs/useNowMs";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import { formatYieldTokenShortSymbol } from "efi/interestToken/formatYieldTokenShortSymbol";
-import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
+import { formatYieldTokenShortSymbol } from "elf/interestToken/formatYieldTokenShortSymbol";
+import { yieldPoolContractsByAddress } from "elf/pools/weightedPool";
 import { YieldPoolTokenInfo } from "@elementfi/tokenlist";
 
 interface YieldPoolCardListItemProps {

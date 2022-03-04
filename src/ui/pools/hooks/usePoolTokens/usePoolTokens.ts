@@ -3,10 +3,10 @@ import {
   PrincipalPoolTokenInfo,
   YieldPoolTokenInfo,
 } from "@elementfi/tokenlist";
-import { balancerVaultContract } from "efi/balancer/vault";
+import { balancerVaultContract } from "elf/balancer/vault";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { ContractMethodArgs } from "efi/contracts/types";
-import { PoolContract } from "efi/pools/PoolContract";
+import { ContractMethodArgs } from "elf/contracts/types";
+import { PoolContract } from "elf/pools/PoolContract";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import { BigNumber } from "ethers";
 import { QueryObserverResult } from "react-query";

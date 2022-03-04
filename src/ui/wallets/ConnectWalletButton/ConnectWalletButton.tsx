@@ -9,7 +9,7 @@ import tw from "efi-tailwindcss-classnames";
 import { ConnectWalletDialog } from "ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
 import { WalletJazzicon } from "ui/wallets/WalletJazzicon/WalletJazzicon";
 import { ChainId } from "base/ethereum/ethereum";
-import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
+import { formatWalletAddress } from "elf/wallets/formatWalletAddress";
 
 interface ConnectWalletButtonProps {
   account: string | null | undefined;

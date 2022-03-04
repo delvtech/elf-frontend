@@ -5,8 +5,8 @@ import { useSwaps } from "ui/pools/hooks/useSwaps/useSwaps";
 import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "ui/token/hooks/useTokenPrice";
 import { ONE_DAY_IN_SECONDS } from "base/time";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { PoolInfo } from "elf/pools/PoolInfo";
 
 /**
  * Returns the fiat volume for a pool in a given time range

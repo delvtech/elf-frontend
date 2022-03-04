@@ -18,8 +18,8 @@ import {
   CrvEursIcon,
 } from "ui/token/TokenIcon";
 import ContractAddresses from "addresses/addresses";
-import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
+import { CryptoAsset, CryptoAssetType } from "elf/crypto/CryptoAsset";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
 
 const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.usdcAddress]: UsdcIcon,

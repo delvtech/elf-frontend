@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { BigNumber } from "ethers";
 import { Money } from "ts-money";
 
-import { convertToFiatBalance } from "efi/money/convertToFiatBalance";
+import { convertToFiatBalance } from "elf/money/convertToFiatBalance";
 
 /**
  * Converts a cryptocurrency balance to the user's preferred fiat balance.

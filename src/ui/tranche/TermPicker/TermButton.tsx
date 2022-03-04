@@ -3,8 +3,8 @@ import { IconNames } from "@blueprintjs/icons";
 import { Tranche } from "@elementfi/core-typechain";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { getBaseAssetForTranche } from "efi/tranche/baseAssets";
+import { CryptoAsset } from "elf/crypto/CryptoAsset";
+import { getBaseAssetForTranche } from "elf/tranche/baseAssets";
 import React from "react";
 
 interface TrancheButtonProps {

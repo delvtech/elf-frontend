@@ -1,6 +1,6 @@
 import { useNowMs } from "ui/base/hooks/useNowMs/useNowMs";
-import { principalPoolContractsByAddress } from "efi/pools/ccpool";
-import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
+import { principalPoolContractsByAddress } from "elf/pools/ccpool";
+import { getPrincipalTokenInfoForPool } from "elf/pools/getPrincipalTokenInfoForPool";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import { usePoolSpotPrice } from "ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 import { ONE_YEAR_IN_SECONDS } from "base/time";

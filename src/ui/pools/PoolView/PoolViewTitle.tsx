@@ -3,11 +3,11 @@ import { ReactElement } from "react";
 import { t } from "ttag";
 
 import { Title } from "ui/base/Title";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { PoolInfo } from "efi/pools/PoolInfo";
-import { formatTermAssetShortSymbol } from "efi/tranche/format";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { PoolInfo } from "elf/pools/PoolInfo";
+import { formatTermAssetShortSymbol } from "elf/tranche/format";
 import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 
 interface PoolViewTitleProps {

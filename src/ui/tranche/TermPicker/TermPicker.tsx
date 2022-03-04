@@ -3,7 +3,7 @@ import { ItemRenderer, Select } from "@blueprintjs/select";
 import { Tranche } from "@elementfi/core-typechain";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
+import { CryptoAsset } from "elf/crypto/CryptoAsset";
 import React, { ReactElement, useCallback } from "react";
 import { TermButton } from "./TermButton";
 import styles from "./TermPicker.module.css";

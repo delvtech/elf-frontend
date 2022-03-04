@@ -3,8 +3,8 @@ import { Money } from "ts-money";
 import { useTotalLiquidity } from "ui/pools/hooks/useTotalLiquidity";
 import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "ui/token/hooks/useTokenPrice";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { PoolInfo } from "elf/pools/PoolInfo";
 
 export function useTotalFiatLiquidity(poolInfo: PoolInfo): Money | undefined {
   const { currency } = useCurrencyPref();

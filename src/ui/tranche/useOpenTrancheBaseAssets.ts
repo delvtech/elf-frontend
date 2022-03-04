@@ -1,8 +1,8 @@
 import { Tranche } from "@elementfi/core-typechain";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { useOpenTrancheContracts } from "ui/tranche/useOpenTrancheContracts";
-import { CryptoAsset } from "efi/crypto/CryptoAsset";
-import { CryptoAssets } from "efi/crypto/CryptoAssetRegistry";
+import { CryptoAsset } from "elf/crypto/CryptoAsset";
+import { CryptoAssets } from "elf/crypto/CryptoAssetRegistry";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import uniqBy from "lodash.uniqby";
 

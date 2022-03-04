@@ -4,7 +4,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 
 import { ChainId } from "base/ethereum/ethereum";
-import { injectedConnector } from "efi/wallets/connectors";
+import { injectedConnector } from "elf/wallets/connectors";
 
 /**
  * It's possible for an ethereum client to exist on window, which can change

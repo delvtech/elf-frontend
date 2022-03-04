@@ -12,14 +12,14 @@ import { useYearnVault } from "ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";
 import { formatAbbreviatedDate } from "base/dates/dates";
 import { formatPercent } from "base/formatPercent/formatPercent";
-import { formatMoney } from "efi/money/formatMoney";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { formatMoney } from "elf/money/formatMoney";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { PoolInfo } from "elf/pools/PoolInfo";
 import {
   getVaultTokenInfoForTranche,
   isPrincipalToken,
-} from "efi/tranche/tranches";
-import { getPrincipalTokenForYieldToken } from "efi/tranche/yieldTokens";
+} from "elf/tranche/tranches";
+import { getPrincipalTokenForYieldToken } from "elf/tranche/yieldTokens";
 
 interface TermSummaryProps {
   poolInfo: PoolInfo;

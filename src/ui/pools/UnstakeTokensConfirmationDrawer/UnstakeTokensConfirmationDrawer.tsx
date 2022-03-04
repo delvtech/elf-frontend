@@ -7,10 +7,10 @@ import { Web3Provider } from "@ethersproject/providers";
 import { UnstakeConfirmationForm } from "ui/pools/UnstakeTokensConfirmationDrawer/UnstakeConfirmationForm";
 import { TransactionDrawer } from "ui/transactions/TransactionDrawer/TransactionDrawer";
 import { EMPTY_ARRAY } from "base/emptyArray";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
-import { formatTermAssetShortSymbol } from "efi/tranche/format";
-import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { formatTermAssetShortSymbol } from "elf/tranche/format";
+import { WalletApprovalInfo } from "elf/wallets/WalletApprovalInfo";
 import { ReactElement } from "react";
 import { t } from "ttag";
 

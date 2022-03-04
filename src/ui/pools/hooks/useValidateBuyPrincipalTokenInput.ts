@@ -2,14 +2,14 @@ import { Web3Provider } from "@ethersproject/providers";
 
 import { useCryptoBalanceOf } from "ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { usePoolTokens } from "ui/pools/hooks/usePoolTokens/usePoolTokens";
-import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
-import { getPoolContract } from "efi/pools/getPoolContract";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getPoolContract } from "elf/pools/getPoolContract";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import {
   TradeValuesValidationResult,
   validateTradeValues,
-} from "efi/trade/validateTradeValues";
+} from "elf/trade/validateTradeValues";
 import { useCalculatePrincipalTokenAmountOut } from "ui/ccpools/useCalculatePrincipalTokenAmountOut";
 import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 

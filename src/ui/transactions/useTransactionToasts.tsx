@@ -8,8 +8,8 @@ import {
   makeToast,
 } from "ui/toaster/AppToaster/AppToaster";
 import { usePendingTransactionPref } from "ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
-import { defaultProvider } from "efi/providers/providers";
-import { TransactionStatus } from "efi/contracts/transaction";
+import { defaultProvider } from "elf/providers/providers";
+import { TransactionStatus } from "elf/contracts/transaction";
 import { Intent } from "@blueprintjs/core";
 import { AddressesJson } from "addresses/addresses";
 import { getEtherscanDomain } from "integrations/etherscan/links";

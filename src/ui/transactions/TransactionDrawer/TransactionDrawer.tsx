@@ -11,13 +11,13 @@ import tw from "efi-tailwindcss-classnames";
 import { getQueriesData } from "ui/base/queryResults";
 import { useTokenAllowanceMulti } from "ui/token/hooks/useTokenAllowance";
 import { WalletDrawer } from "ui/wallets/WalletDrawer/WalletDrawer";
-import { ERC20Shim } from "efi/contracts/ERC20Shim";
-import { findTokenContract } from "efi/crypto/CryptoAsset";
-import { WalletApprovalInfo } from "efi/wallets/WalletApprovalInfo";
+import { ERC20Shim } from "elf/contracts/ERC20Shim";
+import { findTokenContract } from "elf/crypto/CryptoAsset";
+import { WalletApprovalInfo } from "elf/wallets/WalletApprovalInfo";
 
 import { WalletApprovalCallout } from "./WalletApprovalCallout";
 import { parseUnits } from "ethers/lib/utils";
-import { getCryptoDecimals } from "efi/crypto/getCryptoDecimals";
+import { getCryptoDecimals } from "elf/crypto/getCryptoDecimals";
 
 interface TransactionDrawerProps {
   account: string | null | undefined;

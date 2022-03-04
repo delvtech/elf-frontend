@@ -9,7 +9,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "ui/base/LabeledText/LabeledText";
 import { useEthBalance } from "ui/wallets/hooks/useEthBalance/useEthBalance";
-import { formatEth } from "efi/coins/ether/formatEth";
+import { formatEth } from "elf/coins/ether/formatEth";
 
 interface EthereumBalanceWidgetProps {
   library: Web3Provider | undefined;

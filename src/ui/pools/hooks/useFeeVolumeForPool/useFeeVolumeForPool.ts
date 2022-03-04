@@ -7,11 +7,11 @@ import { useSwaps } from "ui/pools/hooks/useSwaps/useSwaps";
 import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "ui/token/hooks/useTokenPrice";
 import { ONE_DAY_IN_SECONDS } from "base/time";
-import { convertNumberToFiatBalance } from "efi/money/convertToFiatBalance";
-import { getPoolContract } from "efi/pools/getPoolContract";
-import { getPoolTokens } from "efi/pools/getPoolTokens";
-import { isConvergentCurvePool, isWeightedPool } from "efi/pools/PoolContract";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { convertNumberToFiatBalance } from "elf/money/convertToFiatBalance";
+import { getPoolContract } from "elf/pools/getPoolContract";
+import { getPoolTokens } from "elf/pools/getPoolTokens";
+import { isConvergentCurvePool, isWeightedPool } from "elf/pools/PoolContract";
+import { PoolInfo } from "elf/pools/PoolInfo";
 
 /**
  * Returns the fiat volume for a pool in a given time range
