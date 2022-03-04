@@ -12,7 +12,7 @@ import { getAllPrincipalTokenAddresses } from "efi/tranche/tranches";
 import {
   BuyFixedRatesView,
   BuyFixedRatesViewProps,
-} from "efi-ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
+} from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 export async function getStaticProps({

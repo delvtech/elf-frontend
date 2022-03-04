@@ -1,1 +1,1 @@
-export { EarnView as default } from "efi-ui/earn/EarnView/EarnView";
+export { EarnView as default } from "ui/earn/EarnView/EarnView";

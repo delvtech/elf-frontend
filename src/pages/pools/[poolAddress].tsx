@@ -5,7 +5,7 @@ import {
 } from "next";
 import { getAllPoolAddresses, getPoolInfo } from "efi/pools/getPoolInfo";
 
-import { PoolView, PoolViewProps } from "efi-ui/pools/PoolView/PoolView";
+import { PoolView, PoolViewProps } from "ui/pools/PoolView/PoolView";
 
 export async function getStaticProps({
   params,

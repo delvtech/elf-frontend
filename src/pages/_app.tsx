@@ -37,8 +37,8 @@ import type { AppProps } from "next/app";
 import React, { ReactElement, useEffect } from "react";
 import { QueryClientProvider } from "react-query";
 
-import App from "efi-ui/app/App/App";
-import { useClearLocalStorageOnNewVersion } from "efi-ui/base/useClearLocalStorageOnNewVersion";
+import App from "ui/app/App/App";
+import { useClearLocalStorageOnNewVersion } from "ui/base/useClearLocalStorageOnNewVersion";
 import { getEthereumProviderLibrary } from "efi/wallets/providers";
 
 import { efiQueryClient } from "efi/queryClient";
