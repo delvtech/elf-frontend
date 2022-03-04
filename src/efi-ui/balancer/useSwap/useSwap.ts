@@ -1,20 +1,20 @@
 import { Vault } from "@elementfi/core-typechain";
-import { FundManagement } from "efi-balancer/FundManagement";
-import { SingleSwap } from "efi-balancer/SingleSwap";
-import { SwapKind } from "efi-balancer/SwapKind";
-import { balancerVaultContract } from "efi-balancer/vault";
+import { FundManagement } from "integrations/balancer/FundManagement";
+import { SingleSwap } from "integrations/balancer/SingleSwap";
+import { SwapKind } from "integrations/balancer/SwapKind";
+import { balancerVaultContract } from "efi/balancer/vault";
 import {
   AppToaster,
   makeErrorToast,
 } from "efi-ui/toaster/AppToaster/AppToaster";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import {
-  BALANCER_ETH_SENTINEL,
   mapETHSentinalToWETH,
   mapWETHToETHSentinal,
 } from "efi/balancer/balancer";
-import { sortAddresses } from "efi/base/sortAddresses/sortAddresses";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { BALANCER_ETH_SENTINEL } from "integrations/balancer/ethSentinel";
+import { sortAddresses } from "base/sortAddresses/sortAddresses";
+import { ONE_DAY_IN_SECONDS } from "base/time";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { serializeError } from "eth-rpc-errors";
 import {

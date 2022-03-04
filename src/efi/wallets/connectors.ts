@@ -9,7 +9,7 @@ import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 import { t } from "ttag";
 
 import { AddressesJson } from "addresses/addresses";
-import { ChainId, ChainNames, DEFAULT_CHAIN_IDS } from "efi/ethereum/ethereum";
+import { ChainId, ChainNames, DEFAULT_CHAIN_IDS } from "base/ethereum/ethereum";
 import {
   ALCHEMY_GOERLI_HTTP_URL,
   ALCHEMY_MAINNET_HTTP_URL,

@@ -1,7 +1,7 @@
 import {
   clipFixNumberToStringDecimals,
   getSafeFixedNumber,
-} from "efi/base/math/fixedPoint";
+} from "base/math/fixedPoint";
 
 export interface LPOutGivenTokenIn {
   otherNeeded: string;

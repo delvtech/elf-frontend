@@ -3,7 +3,7 @@ import { QueryObserverResult, useQuery, UseQueryOptions } from "react-query";
 import { Contract } from "ethers";
 
 import { lookupAddressKey } from "addresses/addresses";
-import { Unpacked } from "efi/base/Unpacked";
+import { Unpacked } from "base/Unpacked";
 import {
   ContractMethodArgs,
   ContractMethodName,

@@ -19,7 +19,7 @@ import { ConnectWalletButton } from "efi-ui/wallets/ConnectWalletButton/ConnectW
 import { useEagerConnect } from "efi-ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "efi-ui/wallets/hooks/useSyncWithInjectedEthereum";
 import { AddressesJson } from "addresses/addresses";
-import { ChainId, ChainNames } from "efi/ethereum/ethereum";
+import { ChainId, ChainNames } from "base/ethereum/ethereum";
 import { getConnectorName } from "efi/wallets/connectors";
 
 import styles from "./App.module.css";

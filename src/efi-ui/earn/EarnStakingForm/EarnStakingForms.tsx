@@ -10,7 +10,7 @@ import tw from "efi-tailwindcss-classnames";
 import { StakeYieldTokensForm } from "efi-ui/earn/EarnStakingForm/StakeYieldTokensForm";
 import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { formatPercent } from "efi/base/formatPercent/formatPercent";
+import { formatPercent } from "base/formatPercent/formatPercent";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getPoolInfoForYieldToken } from "efi/pools/weightedPool";
 

@@ -8,7 +8,7 @@ import {
   YieldTokenInfo,
 } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/balancer/pools";
 import tw from "efi-tailwindcss-classnames";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useIsTailwindSmallScreen } from "efi-ui/base/mediaBreakpoints";
@@ -23,7 +23,7 @@ import { PoolStakeStats } from "efi-ui/pools/UnstakingPanel/PoolStakeStats";
 import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { ElementIcon } from "efi-ui/token/TokenIcon";
 import { ConnectWalletDialog } from "efi-ui/wallets/ConnectWalletDialog/ConnectWalletDialog";
-import { formatBalance } from "efi/base/formatBalance/formatBalance";
+import { formatBalance } from "base/formatBalance/formatBalance";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";

@@ -1,5 +1,5 @@
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
-import { assertNever } from "efi/base/assertNever";
+import { assertNever } from "base/assertNever";
 import {
   CryptoAsset,
   CryptoAssetType,

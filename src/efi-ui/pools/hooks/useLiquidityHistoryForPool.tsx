@@ -1,4 +1,4 @@
-import { balancerVaultContract } from "efi-balancer/vault";
+import { balancerVaultContract } from "efi/balancer/vault";
 import { useNowMs } from "efi-ui/base/hooks/useNowMs/useNowMs";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
@@ -6,9 +6,9 @@ import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpo
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { ONE_DAY_IN_SECONDS } from "base/time";
 import { TimeData } from "efi/charts/TimeData";
-import { AVG_MINE_RATE_SECONDS } from "efi/ethereum/miningRate";
+import { AVG_MINE_RATE_SECONDS } from "efi/miningRate";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";

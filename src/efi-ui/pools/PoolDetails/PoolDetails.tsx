@@ -16,7 +16,7 @@ import { useStakingAPY } from "efi-ui/pools/hooks/useStakingAPY";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { useTotalValueLockedForTranche } from "efi-ui/pools/hooks/useTotalValueLockedForTranche";
 import { useVolumeForPool } from "efi-ui/pools/hooks/useVolumeForPool/useVolumeForPool";
-import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
+import { ONE_WEEK_IN_SECONDS } from "base/time";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { PoolInfo } from "efi/pools/PoolInfo";

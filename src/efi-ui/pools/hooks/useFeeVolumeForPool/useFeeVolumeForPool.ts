@@ -1,12 +1,12 @@
 import { formatEther, formatUnits } from "ethers/lib/utils";
 import { Money } from "ts-money";
 
-import { SwapEventWithTimeStamp } from "efi-balancer/SwapEvent";
+import { SwapEventWithTimeStamp } from "integrations/balancer/SwapEvent";
 import { usePoolSwapFee } from "efi-ui/pools/hooks/usePoolSwapFee/usePoolSwapFee";
 import { useSwaps } from "efi-ui/pools/hooks/useSwaps/useSwaps";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { ONE_DAY_IN_SECONDS } from "base/time";
 import { convertNumberToFiatBalance } from "efi/money/convertToFiatBalance";
 import { getPoolContract } from "efi/pools/getPoolContract";
 import { getPoolTokens } from "efi/pools/getPoolTokens";

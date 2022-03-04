@@ -1,13 +1,13 @@
 import { Vault } from "@elementfi/core-typechain";
-import { FundManagement } from "efi-balancer/FundManagement";
-import { SwapKind } from "efi-balancer/SwapKind";
+import { FundManagement } from "integrations/balancer/FundManagement";
+import { SwapKind } from "integrations/balancer/SwapKind";
 import { BatchSwapStep } from "efi-ui/balancer/SwapRequest";
 import {
-  BALANCER_ETH_SENTINEL,
   mapETHSentinalToWETH,
   mapWETHToETHSentinal,
 } from "efi/balancer/balancer";
-import { sortAddresses } from "efi/base/sortAddresses/sortAddresses";
+import { BALANCER_ETH_SENTINEL } from "integrations/balancer/ethSentinel";
+import { sortAddresses } from "base/sortAddresses/sortAddresses";
 import { StaticContractMethodArgs } from "efi/contracts/types";
 import { BigNumber } from "ethers";
 import { parseEther } from "ethers/lib/utils";

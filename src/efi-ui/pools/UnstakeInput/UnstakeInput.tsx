@@ -9,7 +9,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { TokenIcon } from "efi-ui/token/TokenIcon";
-import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
+import { clipStringValueToDecimals } from "base/math/fixedPoint";
 
 import styles from "./UnstakeInput.module.css";
 

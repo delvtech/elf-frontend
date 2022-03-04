@@ -1,8 +1,8 @@
 import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 
-import { SwapKind } from "efi-balancer/SwapKind";
-import { getSafeFixedNumber } from "efi/base/math/fixedPoint";
+import { SwapKind } from "integrations/balancer/SwapKind";
+import { getSafeFixedNumber } from "base/math/fixedPoint";
 
 /**
  * Given an expected amount and a tolerance, returns the tolerance value for a transaction to

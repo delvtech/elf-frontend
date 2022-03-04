@@ -5,7 +5,7 @@ import { BigNumber } from "ethers";
 import tw from "efi-tailwindcss-classnames";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { CryptoSymbol } from "efi/crypto/CryptoSymbol";
-import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
+import { clipStringValueToDecimals } from "base/math/fixedPoint";
 import { calculateLPOutGivenIn } from "efi/pools/calculateLPOutGivenIn";
 
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";

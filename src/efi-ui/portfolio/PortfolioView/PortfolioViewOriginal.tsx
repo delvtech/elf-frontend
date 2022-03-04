@@ -11,7 +11,7 @@ import {
 } from "efi-ui/portfolio/PortfolioTabs/PortfolioTabs";
 import { PrincipalTokenPortfolioOld } from "efi-ui/portfolio/PrincipalTokenPortfolio/PrincipalTokenPortfolioOld";
 import { YieldTokenPortfolio } from "efi-ui/portfolio/YieldTokenPortfolio/YieldTokenPortfolio";
-import { assertNever } from "efi/base/assertNever";
+import { assertNever } from "base/assertNever";
 import { formatWalletAddress } from "efi/wallets/formatWalletAddress";
 import styles from "./styles.module.css";
 

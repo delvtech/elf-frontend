@@ -3,7 +3,7 @@ import { BigNumber } from "ethers";
 
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useEthBalance } from "efi-ui/wallets/hooks/useEthBalance/useEthBalance";
-import { assertNever } from "efi/base/assertNever";
+import { assertNever } from "base/assertNever";
 import {
   CryptoAsset,
   CryptoAssetType,

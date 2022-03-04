@@ -1,9 +1,9 @@
 import { ERC20 } from "@elementfi/core-typechain";
-import { getCoinGeckoId } from "efi-coingecko";
+import { getCoinGeckoId } from "integrations/coingecko";
 import {
   curveVirtualPriceContractsByAddress,
   isCurveStablePool,
-} from "efi-curve/stablePools";
+} from "efi/curve/stablePools";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import {
   useCrv3CryptoPrice,
@@ -12,7 +12,7 @@ import {
 } from "efi-ui/curve/pools";
 import { useCurveStablecoinPoolVirtualPrice } from "efi-ui/curve/stablePools";
 import { AddressesJson } from "addresses/addresses";
-import { isMainnet } from "efi/ethereum/ethereum";
+import { isMainnet } from "base/ethereum/ethereum";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import { QueryObserverResult } from "react-query";
 import { Currency, Money } from "ts-money";

@@ -3,9 +3,9 @@ import { BigNumber } from "ethers";
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { ONE_DAY_IN_SECONDS } from "base/time";
 import { PoolContract } from "efi/pools/PoolContract";
-import { balancerVaultContract } from "efi-balancer/vault";
+import { balancerVaultContract } from "efi/balancer/vault";
 
 type PoolBalanceChangedArguments = [
   poolId: string,

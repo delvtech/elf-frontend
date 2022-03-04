@@ -8,7 +8,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { getSafeFixedNumber } from "efi/base/math/fixedPoint";
+import { getSafeFixedNumber } from "base/math/fixedPoint";
 
 interface FixedRatePreviewCalloutProps {
   principalTokensOut: string;

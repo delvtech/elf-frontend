@@ -12,7 +12,7 @@ import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenHistoricalPrice } from "efi-ui/token/hooks/useTokenHistoricalPrice";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import { formatPercent } from "efi/base/formatPercent/formatPercent";
+import { formatPercent } from "base/formatPercent/formatPercent";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { formatMoney } from "efi/money/formatMoney";

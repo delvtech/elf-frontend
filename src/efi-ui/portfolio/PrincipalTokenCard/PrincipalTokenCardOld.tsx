@@ -15,7 +15,7 @@ import classNames from "classnames";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { jt, t } from "ttag";
 
-import { getCoinGeckoId } from "efi-coingecko";
+import { getCoinGeckoId } from "integrations/coingecko";
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
@@ -27,10 +27,10 @@ import { PoolAction } from "efi-ui/pools/hooks/usePoolViewPoolActionsPref/usePoo
 import { RedeemPrincipalTokensButtonOld } from "efi-ui/portfolio/RedeemButton/RedeemPrincipalTokensButtonOld";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceUNSAFE } from "efi-ui/token/hooks/useTokenBalance";
-import { calculateProgress } from "efi/base/calculateProgress/calculateProgress";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
-import { formatAbbreviatedDate } from "efi/base/dates/dates";
-import { formatPercent } from "efi/base/formatPercent/formatPercent";
+import { calculateProgress } from "base/calculateProgress/calculateProgress";
+import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
+import { formatAbbreviatedDate } from "base/dates/dates";
+import { formatPercent } from "base/formatPercent/formatPercent";
 import { ERC20Shim } from "efi/contracts/ERC20Shim";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";

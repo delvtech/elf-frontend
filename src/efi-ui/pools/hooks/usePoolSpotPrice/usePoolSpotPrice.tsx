@@ -2,14 +2,14 @@ import { useMemo } from "react";
 
 import { formatUnits } from "ethers/lib/utils";
 
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/balancer/pools";
 import {
   getCalcSwap,
   getTokenReserves,
 } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
-import { SwapKind } from "efi-balancer/SwapKind";
+import { SwapKind } from "integrations/balancer/SwapKind";
 import { getPoolTokenInfoFromContract } from "efi/pools/getPoolInfo";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolContract } from "efi/pools/PoolContract";

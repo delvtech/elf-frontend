@@ -175,6 +175,28 @@ module.exports = {
       },
     },
     {
+      name: "no-app-code-in-integrations",
+      comment: "Importing app code into integrations/ is prohibited",
+      severity: "error",
+      from: {
+        path: `(${["integrations"].join("|")})`,
+      },
+      to: {
+        // integrations cannot import from any of these folders
+        path: `(${[
+          "efi",
+          "efi-ui",
+          "addresses",
+          "tokenlists",
+          "pages",
+          "canperform",
+          "styles",
+        ].join("|")})`,
+        // integrations can import from itself or base/
+        pathNot: `(${["integrations", "base"].join("|")})`,
+      },
+    },
+    {
       name: "efi-not-to-ui",
       comment: "Importing from ui/ is prohibited outside of the ui/ directory",
       severity: "error",
@@ -221,7 +243,7 @@ module.exports = {
         )})`,
       },
       to: {
-        path: "efi/base/localStorage.ts",
+        path: "src/base/localStorage.ts",
       },
     },
 
@@ -250,13 +272,14 @@ module.exports = {
     },
     {
       name: "efi-not-outside-base",
-      comment: "Importing modules outside of base/ is prohibited",
+      comment:
+        "Importing anything other than base/ and node_modules/ is prohibited in base/",
       severity: "error",
       from: {
-        path: "efi/base",
+        path: "src/base",
       },
       to: {
-        path: "efi/(?!base)",
+        pathNot: `(${["node_modules", "src/base"].join("|")})`,
       },
     },
     {

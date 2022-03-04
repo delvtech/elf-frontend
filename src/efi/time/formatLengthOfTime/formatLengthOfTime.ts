@@ -1,9 +1,6 @@
 import { t } from "ttag";
 
-import {
-  ONE_DAY_IN_MILLISECONDS,
-  ONE_HOUR_IN_MILLISECONDS,
-} from "efi/base/time";
+import { ONE_DAY_IN_MILLISECONDS, ONE_HOUR_IN_MILLISECONDS } from "base/time";
 
 export function formatLengthOfTime(startMs: number, endMs: number): string {
   const differenceMs = endMs - startMs;

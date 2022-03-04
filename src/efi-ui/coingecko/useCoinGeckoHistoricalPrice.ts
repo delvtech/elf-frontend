@@ -2,7 +2,7 @@ import { QueryObserverResult, useQuery } from "react-query";
 
 import { Currencies, Currency, Money } from "ts-money";
 
-import { fetchCoinGeckoHistoricalPrice } from "efi-coingecko";
+import { fetchCoinGeckoHistoricalPrice } from "integrations/coingecko";
 
 export function useCoinGeckoHistoricalPrice(
   coinGeckoId: string | undefined,

@@ -4,7 +4,7 @@ import {
   TokenInfo,
   YieldPoolTokenInfo,
 } from "@elementfi/tokenlist";
-import { sortAddresses } from "efi/base/sortAddresses/sortAddresses";
+import { sortAddresses } from "base/sortAddresses/sortAddresses";
 // TODO Replace
 import { getSmartContractFromRegistry } from "efi/contracts/SmartContractsRegistry";
 import { PoolInfo } from "efi/pools/PoolInfo";

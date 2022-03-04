@@ -7,10 +7,10 @@ import { formatUnits } from "ethers/lib/utils";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { SwapKind } from "efi-balancer/SwapKind";
+import { SwapKind } from "integrations/balancer/SwapKind";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { IconProps } from "efi-ui/token/TokenIcon";
-import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
+import { clipStringValueToDecimals } from "base/math/fixedPoint";
 import { PoolContract } from "efi/pools/PoolContract";
 
 import styles from "./TradeInput.module.css";

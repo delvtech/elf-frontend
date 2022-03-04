@@ -4,8 +4,8 @@ import {
   ANY_NUMBER_REGEX,
   isFiniteNumber,
   isIntegerNumber,
-} from "efi/base/numbers";
-import { getPlacesAfterDecimal } from "efi/base/math/fixedPoint";
+} from "base/numbers";
+import { getPlacesAfterDecimal } from "base/math/fixedPoint";
 
 export interface NumericInputOptions {
   /**

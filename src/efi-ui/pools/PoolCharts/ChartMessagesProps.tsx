@@ -4,7 +4,7 @@ import { Callout, H4, Intent } from "@blueprintjs/core";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { ONE_DAY_IN_SECONDS } from "base/time";
 
 interface ChartMessagesProps {
   poolAgeInSeconds: number;

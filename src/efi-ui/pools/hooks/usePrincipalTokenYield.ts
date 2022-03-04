@@ -3,7 +3,7 @@ import { principalPoolContractsByAddress } from "efi/pools/ccpool";
 import { getPrincipalTokenInfoForPool } from "efi/pools/getPrincipalTokenInfoForPool";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
-import { ONE_YEAR_IN_SECONDS } from "efi/base/time";
+import { ONE_YEAR_IN_SECONDS } from "base/time";
 import {
   PrincipalPoolTokenInfo,
   PrincipalTokenInfo,

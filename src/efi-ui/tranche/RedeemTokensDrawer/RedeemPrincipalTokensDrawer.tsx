@@ -13,8 +13,8 @@ import { WalletApprovalCallout } from "efi-ui/transactions/TransactionDrawer/Wal
 import { useRedeemTermAssetsToEth } from "efi-ui/userProxy/useRedeemTermAssetsToEth";
 import { WalletDrawer } from "efi-ui/wallets/WalletDrawer/WalletDrawer";
 import ContractAddresses from "addresses/addresses";
-import { convertEpochSecondsToDate } from "efi/base/convertEpochSecondsToDate/convertEpochSecondsToDate";
-import { formatFullDate } from "efi/base/dates/dates";
+import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
+import { formatFullDate } from "base/dates/dates";
 import { CryptoAsset, CryptoAssetType } from "efi/crypto/CryptoAsset";
 import { getCryptoAssetForToken } from "efi/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";

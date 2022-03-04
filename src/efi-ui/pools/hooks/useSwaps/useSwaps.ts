@@ -1,14 +1,14 @@
 import { useMemo } from "react";
 
-import { SwapEventWithTimeStamp } from "efi-balancer/SwapEvent";
+import { SwapEventWithTimeStamp } from "integrations/balancer/SwapEvent";
 import { useSmartContractEvents } from "efi-ui/contracts/useSmartContractEvents/useSmartContractEvents";
 import { useLatestBlockNumber } from "efi-ui/ethereum/hooks/useLatestBlockNumber";
 import { usePreviousBlockNumber } from "efi-ui/ethereum/usePreviousBlockNumber/usePreviousBlockNumber";
-import { EMPTY_ARRAY } from "efi/base/emptyArray";
-import { ONE_WEEK_IN_SECONDS } from "efi/base/time";
-import { AVG_MINE_RATE_SECONDS } from "efi/ethereum/miningRate";
+import { EMPTY_ARRAY } from "base/emptyArray";
+import { ONE_WEEK_IN_SECONDS } from "base/time";
+import { AVG_MINE_RATE_SECONDS } from "efi/miningRate";
 import { PoolInfo } from "efi/pools/PoolInfo";
-import { balancerVaultContract } from "efi-balancer/vault";
+import { balancerVaultContract } from "efi/balancer/vault";
 
 export function useSwaps(
   poolInfo: PoolInfo,

@@ -10,7 +10,7 @@ import tw from "efi-tailwindcss-classnames";
 import { validateInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
 import styles from "efi-ui/token/TokenAmountInput/TokenAmountInput.module.css";
-import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
+import { clipStringValueToDecimals } from "base/math/fixedPoint";
 
 interface TokenAmountInput2Props {
   formGroupClassName?: string;

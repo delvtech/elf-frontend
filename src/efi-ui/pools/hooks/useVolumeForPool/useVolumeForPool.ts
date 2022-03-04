@@ -4,7 +4,7 @@ import { useConvertToFiat } from "efi-ui/money/hooks/useConvertToFiat";
 import { useSwaps } from "efi-ui/pools/hooks/useSwaps/useSwaps";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { useTokenPrice } from "efi-ui/token/hooks/useTokenPrice";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { ONE_DAY_IN_SECONDS } from "base/time";
 import { getPoolTokens } from "efi/pools/getPoolTokens";
 import { PoolInfo } from "efi/pools/PoolInfo";
 

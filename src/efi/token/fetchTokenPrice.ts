@@ -5,19 +5,19 @@ import { CRVLUSD } from "@elementfi/core-typechain/dist/CRVLUSD";
 import { formatUnits } from "ethers/lib/utils";
 import { Currencies, Currency, Money } from "ts-money";
 
-import { fetchCoinGeckoPrice, getCoinGeckoId } from "efi-coingecko";
+import { fetchCoinGeckoPrice, getCoinGeckoId } from "integrations/coingecko";
 import {
   crv3CryptoPoolContract,
   crvTriCryptoPoolContract,
   steCrvPoolContract,
-} from "efi-curve/pools";
+} from "efi/curve/pools";
 import {
   curveVirtualPriceContractsByAddress,
   isCurveStablePool,
-} from "efi-curve/stablePools";
+} from "efi/curve/stablePools";
 import { AddressesJson } from "addresses/addresses";
-import { formatBalance } from "efi/base/formatBalance/formatBalance";
-import { isGoerli, NUM_ETH_DECIMALS, ONE_ETHER } from "efi/ethereum/ethereum";
+import { formatBalance } from "base/formatBalance/formatBalance";
+import { isGoerli, NUM_ETH_DECIMALS, ONE_ETHER } from "base/ethereum/ethereum";
 import { getTokenInfo } from "tokenlists/tokenlists";
 
 const {

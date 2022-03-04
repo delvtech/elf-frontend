@@ -7,8 +7,8 @@ import {
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { useTokenAllowance } from "efi-ui/token/hooks/useTokenAllowance";
 import { useSmartContractTransactionPersisted } from "efi-ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import { fetchPermitData, PermitCallData } from "efi/base/fetchPermitData";
-import { flushPromises } from "efi/base/flush/flush";
+import { fetchPermitData, PermitCallData } from "base/fetchPermitData";
+import { flushPromises } from "base/flush/flush";
 import { ContractMethodArgs } from "efi/contracts/types";
 import { interestTokenContractsByAddress } from "efi/interestToken/interestToken";
 import { getTokenInfo } from "tokenlists/tokenlists";

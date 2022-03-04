@@ -5,8 +5,8 @@ import {
   PrincipalTokenInfo,
 } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
-import { SwapKind } from "efi-balancer/SwapKind";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/balancer/pools";
+import { SwapKind } from "integrations/balancer/SwapKind";
 import tw from "efi-tailwindcss-classnames";
 import { getCalcSwap } from "efi-ui/balancer/useQueryBatchSwap/useQueryBatchSwap";
 import { useNumericInput } from "efi-ui/base/hooks/useNumericInput/useNumericInput";
@@ -16,8 +16,8 @@ import { useTokenBalanceOf } from "efi-ui/token/hooks/useTokenBalanceOf";
 import { TokenAmountInput } from "efi-ui/token/TokenAmountInput/TokenAmountInput";
 import { RedeemPrincipalTokensConfirmationDrawer } from "efi-ui/tranche/RedeemTokensDrawer/RedeemPrincipalTokensConfirmationDrawer/RedeemPrincipalTokensConfirmationDrawer";
 import { useTrancheCanPerform } from "efi-ui/tranche/useTrancheCanPerform";
-import { formatBalance } from "efi/base/formatBalance/formatBalance";
-import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
+import { formatBalance } from "base/formatBalance/formatBalance";
+import { clipStringValueToDecimals } from "base/math/fixedPoint";
 import { getCryptoSymbol } from "efi/crypto/getCryptoSymbol";
 import { getPoolInfoForPrincipalToken } from "efi/pools/ccpool";
 import { getPoolContract } from "efi/pools/getPoolContract";

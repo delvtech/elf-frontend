@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 
-import { clipStringValueToDecimals } from "efi/base/math/fixedPoint";
+import { clipStringValueToDecimals } from "base/math/fixedPoint";
 
 /**
  * When unstaking completely from a pool, it's nigh impossible to avoid the

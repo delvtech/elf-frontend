@@ -1,7 +1,7 @@
 import { formatUnits } from "ethers/lib/utils";
 
-import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "efi-balancer/pools";
-import { SwapKind } from "efi-balancer/SwapKind";
+import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/balancer/pools";
+import { SwapKind } from "integrations/balancer/SwapKind";
 import { usePoolTokens } from "efi-ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { usePoolTotalSupply } from "efi-ui/pools/hooks/usePoolTotalSupply";
 import { getPoolContract } from "efi/pools/getPoolContract";

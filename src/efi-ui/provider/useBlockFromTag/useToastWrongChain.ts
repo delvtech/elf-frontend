@@ -8,7 +8,7 @@ import {
   makeSuccessToast,
 } from "efi-ui/toaster/AppToaster/AppToaster";
 import { AddressesJson } from "addresses/addresses";
-import { ChainId, ChainNames } from "efi/ethereum/ethereum";
+import { ChainId, ChainNames } from "base/ethereum/ethereum";
 import { usePrevious } from "react-use";
 
 export function useToastWrongChain(connectedChainId: number | undefined): void {

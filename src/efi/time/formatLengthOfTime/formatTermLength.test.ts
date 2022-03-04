@@ -3,7 +3,7 @@ import {
   ONE_DAY_IN_MILLISECONDS,
   ONE_HOUR_IN_MILLISECONDS,
   TWELVE_HOUR_IN_MILLISECONDS,
-} from "efi/base/time";
+} from "base/time";
 
 test("should return hours if term length is < 1 day", () => {
   const twelveHours = formatLengthOfTime(0, TWELVE_HOUR_IN_MILLISECONDS);

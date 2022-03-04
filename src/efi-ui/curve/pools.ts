@@ -5,23 +5,23 @@ import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import { Currencies, Money } from "ts-money";
 
-import { getCoinGeckoId } from "efi-coingecko";
+import { getCoinGeckoId } from "integrations/coingecko";
 import {
   crv3CryptoPoolContract,
   crvTriCryptoPoolContract,
   steCrvPoolContract,
-} from "efi-curve/pools";
+} from "efi/curve/pools";
 import { useCoinGeckoPrice } from "efi-ui/coingecko/useCoinGeckoPrice";
 import { useSmartContractReadCall } from "efi-ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCurrencyPref } from "efi-ui/prefs/useCurrency/useCurencyPref";
 import { AddressesJson } from "addresses/addresses";
-import { ONE_MINUTE_IN_MILLISECONDS } from "efi/base/time";
+import { ONE_MINUTE_IN_MILLISECONDS } from "base/time";
 import {
   isGoerli,
   isMainnet,
   NUM_ETH_DECIMALS,
   ONE_ETHER,
-} from "efi/ethereum/ethereum";
+} from "base/ethereum/ethereum";
 
 interface HookPriceOptions {
   enabled: boolean;

@@ -2,7 +2,7 @@ import { Money } from "ts-money";
 
 import { useFeeVolumeFiatForPool } from "efi-ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
 import { useVolumeForPool } from "efi-ui/pools/hooks/useVolumeForPool/useVolumeForPool";
-import { ONE_DAY_IN_SECONDS } from "efi/base/time";
+import { ONE_DAY_IN_SECONDS } from "base/time";
 import { PoolInfo } from "efi/pools/PoolInfo";
 
 export function useVolumeTrend(poolInfo: PoolInfo): {

@@ -6,7 +6,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "efi-ui/prefs/useDarkMode/useDarkMode";
-import { ANY_NUMBER_REGEX } from "efi/base/numbers";
+import { ANY_NUMBER_REGEX } from "base/numbers";
 
 import styles from "./styles.module.css";
 

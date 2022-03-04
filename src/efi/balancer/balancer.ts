@@ -1,7 +1,5 @@
 import ContractAddresses from "addresses/addresses";
-import { ETH_ZERO_ADDRESS } from "efi/ethereum/ethereum";
-
-export const BALANCER_ETH_SENTINEL = ETH_ZERO_ADDRESS;
+import { BALANCER_ETH_SENTINEL } from "integrations/balancer/ethSentinel";
 
 export function mapETHSentinalToWETH(address: string): string {
   if (address === BALANCER_ETH_SENTINEL) {

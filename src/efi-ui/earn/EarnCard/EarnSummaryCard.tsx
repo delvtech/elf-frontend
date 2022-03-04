@@ -9,7 +9,7 @@ import { LabeledText } from "efi-ui/base/LabeledText/LabeledText";
 import styles from "efi-ui/earn/grid.module.css";
 import { useTotalFiatLiquidity } from "efi-ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { IconProps } from "efi-ui/token/TokenIcon";
-import { formatPercent } from "efi/base/formatPercent/formatPercent";
+import { formatPercent } from "base/formatPercent/formatPercent";
 import { formatMoney } from "efi/money/formatMoney";
 import { PoolInfo } from "efi/pools/PoolInfo";
 import { useTokenYield } from "efi-ui/pools/hooks/useTokenYield";
