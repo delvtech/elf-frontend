@@ -3,7 +3,7 @@ import type { Config } from "@jest/types";
 // https://nextjs.org/docs/testing#jest-and-react-testing-library
 const config: Config.InitialOptions = {
   collectCoverageFrom: [
-    "<rootDir>/efi/**/**/*.{ts,tsx}",
+    "<rootDir>/elf/**/**/*.{ts,tsx}",
     "!**/*.d.ts",
     "!**/node_modules/**",
   ],
@@ -16,11 +16,11 @@ const config: Config.InitialOptions = {
     "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
 
     // Handle CSS imports (without CSS modules)
-    "^.+\\.(css|sass|scss)$": "<rootDir>/efi/base/styleMock.js",
+    "^.+\\.(css|sass|scss)$": "<rootDir>/elf/base/styleMock.js",
 
     /* Handle image imports
     https://jestjs.io/docs/webpack#handling-static-assets */
-    "^.+\\.(jpg|jpeg|png|gif|webp|avif|svg)$": "<rootDir>/efi/base/fileMock.js",
+    "^.+\\.(jpg|jpeg|png|gif|webp|avif|svg)$": "<rootDir>/elf/base/fileMock.js",
   },
   rootDir: "src",
   setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],

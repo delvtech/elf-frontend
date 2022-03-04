@@ -53,7 +53,7 @@
       "warn",
       {
         "selector": "Identifier[name='localStorage']",
-        "message": "Direct usage of window.localStorage is forbidden. Use efiLocalStorage instead."
+        "message": "Direct usage of window.localStorage is forbidden. Use elfLocalStorage instead."
       },
       {
         "selector": "CallExpression[callee.name='useConsole']",

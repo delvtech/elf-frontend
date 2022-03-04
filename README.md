@@ -34,7 +34,7 @@ npm start
 ### Adding a new base asset
 
 1. Run `npm run update-elf-tokenlist`.
-1. Add a logo svg to `src/efi-static-assets/svg/` directory.
+1. Add a logo svg to `src/static/svg/` directory.
 1. Update `src/addresses/AddressesJsonFile.d.ts`
 
 ### Running against a mainnet fork environment

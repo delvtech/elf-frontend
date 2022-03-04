@@ -1,1 +1,1 @@
-export { FixedRatesListView as default } from "efi-ui/fixedrates/FixedRatesListView";
+export { FixedRatesListView as default } from "ui/fixedrates/FixedRatesListView";

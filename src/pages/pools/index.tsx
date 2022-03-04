@@ -1,1 +1,1 @@
-export { TradeView as default } from "efi-ui/app/trade/TradeView/TradeView";
+export { TradeView as default } from "ui/app/trade/TradeView/TradeView";

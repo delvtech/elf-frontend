@@ -29,7 +29,7 @@ import "styles/variables.css";
 import "styles/index.css";
 // end our CSS
 
-import "efi/debug/consoleEther";
+import "elf/debug/consoleEther";
 import "addresses/addresses";
 
 import { Web3ReactProvider } from "@web3-react/core";
@@ -37,11 +37,11 @@ import type { AppProps } from "next/app";
 import React, { ReactElement, useEffect } from "react";
 import { QueryClientProvider } from "react-query";
 
-import App from "efi-ui/app/App/App";
-import { useClearLocalStorageOnNewVersion } from "efi-ui/base/useClearLocalStorageOnNewVersion";
-import { getEthereumProviderLibrary } from "efi/wallets/providers";
+import App from "ui/app/App/App";
+import { useClearLocalStorageOnNewVersion } from "ui/base/useClearLocalStorageOnNewVersion";
+import { getEthereumProviderLibrary } from "elf/wallets/providers";
 
-import { efiQueryClient } from "efi/queryClient";
+import { efiQueryClient } from "elf/queryClient";
 import { AddressesJson, lookupAddressKey } from "addresses/addresses";
 import { logAppVersion } from "logAppVersion";
 

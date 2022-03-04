@@ -1,1 +1,1 @@
-export { PortfolioView as default } from "efi-ui/portfolio/PortfolioView/PortfolioView";
+export { PortfolioView as default } from "ui/portfolio/PortfolioView/PortfolioView";
