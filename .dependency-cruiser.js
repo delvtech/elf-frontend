@@ -113,7 +113,7 @@ module.exports = {
         pathNot: `(${[
           "\\.(spec|test)\\.(js|mjs|cjs|ts|tsx|ls|coffee|litcoffee|coffee\\.md)$",
           // test utils aren't tests themselves, but should be allowed to import devDependencies
-          "src/efi/testing/",
+          "src/elf/testing/",
           "src/ui/testing/",
         ].join("|")})`,
       },
@@ -164,14 +164,14 @@ module.exports = {
       },
     },
     {
-      name: "efi-not-to-graveyard",
+      name: "elf-not-to-graveyard",
       comment: "Importing from graveyard/ is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${["ui/graveyard", "efi/graveyard"].join("|")})`,
+        pathNot: `(${["ui/graveyard", "elf/graveyard"].join("|")})`,
       },
       to: {
-        path: `(${["ui/graveyard", "efi/graveyard"].join("|")})`,
+        path: `(${["ui/graveyard", "elf/graveyard"].join("|")})`,
       },
     },
     {
@@ -184,7 +184,7 @@ module.exports = {
       to: {
         // integrations cannot import from any of these folders
         path: `(${[
-          "efi",
+          "elf",
           "ui",
           "addresses",
           "tokenlists",
@@ -197,7 +197,7 @@ module.exports = {
       },
     },
     {
-      name: "efi-not-to-ui",
+      name: "elf-not-to-ui",
       comment: "Importing from ui/ is prohibited outside of the ui/ directory",
       severity: "error",
       from: {
@@ -208,7 +208,7 @@ module.exports = {
       },
     },
     {
-      name: "efi-not-to-portfolio",
+      name: "elf-not-to-portfolio",
       comment:
         "Importing from portfolio/ is prohibited outside of the app/ and  directories.",
       severity: "error",
@@ -221,7 +221,7 @@ module.exports = {
     },
 
     {
-      name: "efi-not-to-react",
+      name: "elf-not-to-react",
       comment: "Importing react from outside the ui/ directory is prohibited",
       severity: "error",
       from: {
@@ -234,11 +234,11 @@ module.exports = {
       },
     },
     {
-      name: "efi-not-to-localStorage",
-      comment: "Importing efiLocalStorage outside of prefs/ is prohibited",
+      name: "elf-not-to-localStorage",
+      comment: "Importing elfLocalStorage outside of prefs/ is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${["efi/prefs", "setupTests.ts", "ui/prefs"].join(
+        pathNot: `(${["elf/prefs", "setupTests.ts", "ui/prefs"].join(
           "|"
         )})`,
       },
@@ -248,7 +248,7 @@ module.exports = {
     },
 
     {
-      name: "efi-not-outside-contracts",
+      name: "elf-not-outside-contracts",
       comment: "Importing modules into useSmartContracts is prohibited",
       severity: "error",
       from: {
@@ -260,7 +260,7 @@ module.exports = {
       },
     },
     {
-      name: "efi-not-outside-ui-base",
+      name: "elf-not-outside-ui-base",
       comment: "Importing modules outside of ui/base/ is prohibited",
       severity: "error",
       from: {
@@ -271,7 +271,7 @@ module.exports = {
       },
     },
     {
-      name: "efi-not-outside-base",
+      name: "elf-not-outside-base",
       comment:
         "Importing anything other than base/ and node_modules/ is prohibited in base/",
       severity: "error",
@@ -283,40 +283,40 @@ module.exports = {
       },
     },
     {
-      name: "efi-not-to-crypto",
+      name: "elf-not-to-crypto",
       comment: "Importing certain modules in crypto/ is prohibited",
       severity: "error",
       from: {
-        path: "efi/crypto",
+        path: "elf/crypto",
       },
       to: {
-        path: `(${["efi/wallets", "efi/pools"].join("|")})`,
+        path: `(${["elf/wallets", "elf/pools"].join("|")})`,
       },
     },
     {
-      name: "efi-static-assets-not-outside-ui",
+      name: "elf-static-assets-not-outside-ui",
       comment: "Importing static assets outside of ui/ is prohibited",
       severity: "error",
       from: {
-        path: "efi-static-assets",
+        path: "elf-static-assets",
       },
       to: {
         path: "ui",
       },
     },
     {
-      name: "efi-not-to-providers",
+      name: "elf-not-to-providers",
       comment: "Importing certain modules in providers/ is prohibited",
       severity: "error",
       from: {
-        path: "efi/providers",
+        path: "elf/providers",
       },
       to: {
         path: `(${[
-          "efi/wallets",
-          "efi/pools",
-          "efi/crypto",
-          "efi/contracts",
+          "elf/wallets",
+          "elf/pools",
+          "elf/crypto",
+          "elf/contracts",
         ].join("|")})`,
       },
     },
