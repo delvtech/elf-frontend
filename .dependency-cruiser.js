@@ -114,7 +114,7 @@ module.exports = {
           "\\.(spec|test)\\.(js|mjs|cjs|ts|tsx|ls|coffee|litcoffee|coffee\\.md)$",
           // test utils aren't tests themselves, but should be allowed to import devDependencies
           "src/efi/testing/",
-          "src/efi-ui/testing/",
+          "src/ui/testing/",
         ].join("|")})`,
       },
       to: {
@@ -168,10 +168,10 @@ module.exports = {
       comment: "Importing from graveyard/ is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${["efi-ui/graveyard", "efi/graveyard"].join("|")})`,
+        pathNot: `(${["ui/graveyard", "efi/graveyard"].join("|")})`,
       },
       to: {
-        path: `(${["efi-ui/graveyard", "efi/graveyard"].join("|")})`,
+        path: `(${["ui/graveyard", "efi/graveyard"].join("|")})`,
       },
     },
     {
@@ -185,7 +185,7 @@ module.exports = {
         // integrations cannot import from any of these folders
         path: `(${[
           "efi",
-          "efi-ui",
+          "ui",
           "addresses",
           "tokenlists",
           "pages",
@@ -201,10 +201,10 @@ module.exports = {
       comment: "Importing from ui/ is prohibited outside of the ui/ directory",
       severity: "error",
       from: {
-        pathNot: `(${["index.tsx", "efi-ui", "pages"].join("|")})`,
+        pathNot: `(${["index.tsx", "ui", "pages"].join("|")})`,
       },
       to: {
-        path: "efi-ui/",
+        path: "ui/",
       },
     },
     {
@@ -213,10 +213,10 @@ module.exports = {
         "Importing from portfolio/ is prohibited outside of the app/ and  directories.",
       severity: "error",
       from: {
-        pathNot: `(${["efi-ui/app", "efi-ui/portfolio", "pages"].join("|")})`,
+        pathNot: `(${["ui/app", "ui/portfolio", "pages"].join("|")})`,
       },
       to: {
-        path: "efi-ui/portfolio",
+        path: "ui/portfolio",
       },
     },
 
@@ -225,7 +225,7 @@ module.exports = {
       comment: "Importing react from outside the ui/ directory is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${["index.tsx", "setupTests.ts", "efi-ui", "pages"].join(
+        pathNot: `(${["index.tsx", "setupTests.ts", "ui", "pages"].join(
           "|"
         )})`,
       },
@@ -238,7 +238,7 @@ module.exports = {
       comment: "Importing efiLocalStorage outside of prefs/ is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${["efi/prefs", "setupTests.ts", "efi-ui/prefs"].join(
+        pathNot: `(${["efi/prefs", "setupTests.ts", "ui/prefs"].join(
           "|"
         )})`,
       },
@@ -252,11 +252,11 @@ module.exports = {
       comment: "Importing modules into useSmartContracts is prohibited",
       severity: "error",
       from: {
-        path: "efi-ui/contracts",
+        path: "ui/contracts",
       },
       to: {
-        path: "efi-ui/(?!contracts)",
-        path: `(${["efi-ui/?!contracts", "efi-ui/?!testing"].join("|")})`,
+        path: "ui/(?!contracts)",
+        path: `(${["ui/?!contracts", "ui/?!testing"].join("|")})`,
       },
     },
     {
@@ -264,10 +264,10 @@ module.exports = {
       comment: "Importing modules outside of ui/base/ is prohibited",
       severity: "error",
       from: {
-        path: "efi-ui/base",
+        path: "ui/base",
       },
       to: {
-        path: "efi-ui/(?!base)",
+        path: "ui/(?!base)",
       },
     },
     {
@@ -294,14 +294,14 @@ module.exports = {
       },
     },
     {
-      name: "efi-static-assets-not-outside-efi-ui",
-      comment: "Importing static assets outside of efi-ui/ is prohibited",
+      name: "efi-static-assets-not-outside-ui",
+      comment: "Importing static assets outside of ui/ is prohibited",
       severity: "error",
       from: {
         path: "efi-static-assets",
       },
       to: {
-        path: "efi-ui",
+        path: "ui",
       },
     },
     {
