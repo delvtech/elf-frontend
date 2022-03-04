@@ -193,7 +193,7 @@ module.exports = {
           "styles",
         ].join("|")})`,
         // integrations can import from itself or base/
-        pathNot: `(${["integrations", "base"].join("|")})`,
+        pathNot: `(${["integrations", "base", "node_modules"].join("|")})`,
       },
     },
     {
@@ -225,9 +225,7 @@ module.exports = {
       comment: "Importing react from outside the ui/ directory is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${["index.tsx", "setupTests.ts", "ui", "pages"].join(
-          "|"
-        )})`,
+        pathNot: `(${["index.tsx", "setupTests.ts", "ui", "pages"].join("|")})`,
       },
       to: {
         path: "node_modules/react/index.js",
@@ -238,9 +236,7 @@ module.exports = {
       comment: "Importing elfLocalStorage outside of prefs/ is prohibited",
       severity: "error",
       from: {
-        pathNot: `(${["elf/prefs", "setupTests.ts", "ui/prefs"].join(
-          "|"
-        )})`,
+        pathNot: `(${["elf/prefs", "setupTests.ts", "ui/prefs"].join("|")})`,
       },
       to: {
         path: "src/base/localStorage.ts",
