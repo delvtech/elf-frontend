@@ -10,7 +10,7 @@ import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "ui/base/LabeledText/LabeledText";
 import { findAssetIcon } from "ui/crypto/CryptoIcon";
 import { GoToPoolButtonOld } from "ui/pools/GoToPoolButton/GoToPoolButtonOld";
-import styles from "efi-ui/pools/YieldPoolTable/grid.module.css";
+import styles from "ui/pools/YieldPoolTable/grid.module.css";
 import { useFeeVolumeForPool } from "ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
 import { useYearnVault } from "ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";

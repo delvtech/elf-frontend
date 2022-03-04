@@ -7,7 +7,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "ui/base/LabeledText/LabeledText";
-import styles from "efi-ui/base/table.module.css";
+import styles from "ui/base/table.module.css";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 
 export function LiquidityPositionTableRow(): ReactElement {

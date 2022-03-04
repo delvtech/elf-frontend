@@ -11,7 +11,7 @@ import { Navigation } from "ui/app/navigation/navigation";
 import { LabeledText } from "ui/base/LabeledText/LabeledText";
 import { useIsTailwindLargeScreen } from "ui/base/mediaBreakpoints";
 import { findAssetIcon } from "ui/crypto/CryptoIcon";
-import styles from "efi-ui/fixedrates/grid.module.css";
+import styles from "ui/fixedrates/grid.module.css";
 import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
 import { formatAbbreviatedDate } from "base/dates/dates";
 import { formatPercent } from "base/formatPercent/formatPercent";

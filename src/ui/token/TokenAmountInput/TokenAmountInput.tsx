@@ -9,7 +9,7 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { validateInput } from "ui/base/hooks/useNumericInput/useNumericInput";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
-import styles from "efi-ui/token/TokenAmountInput/TokenAmountInput.module.css";
+import styles from "ui/token/TokenAmountInput/TokenAmountInput.module.css";
 import { clipStringValueToDecimals } from "base/math/fixedPoint";
 
 interface TokenAmountInputProps {

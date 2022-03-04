@@ -5,7 +5,7 @@ import { IconNames } from "@blueprintjs/icons";
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
-import styles from "efi-ui/base/FormGroupLabel/FormGroupLabel.module.css";
+import styles from "ui/base/FormGroupLabel/FormGroupLabel.module.css";
 
 interface FormGroupLabelProps {
   label: string;

@@ -6,7 +6,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { LabeledText } from "ui/base/LabeledText/LabeledText";
-import styles from "efi-ui/earn/grid.module.css";
+import styles from "ui/earn/grid.module.css";
 import { useTotalFiatLiquidity } from "ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
 import { IconProps } from "ui/token/TokenIcon";
 import { formatPercent } from "base/formatPercent/formatPercent";

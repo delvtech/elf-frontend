@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from "react";
 
-// import App from "efi-ui/app/App/App";
+// import App from "ui/app/App/App";
 
-// import { renderWithAppProviders } from "efi-ui/testing/renderWithAppProviders";
+// import { renderWithAppProviders } from "ui/testing/renderWithAppProviders";
 
 test("full app rendering/navigating", async () => {
   expect(true).toEqual(true);

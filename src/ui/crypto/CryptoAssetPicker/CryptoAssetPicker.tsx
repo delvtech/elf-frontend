@@ -6,7 +6,7 @@ import { ItemRenderer, Select } from "@blueprintjs/select";
 import classNames from "classnames";
 
 import tw from "efi-tailwindcss-classnames";
-import styles from "efi-ui/crypto/CryptoAssetPicker/styles.module.css";
+import styles from "ui/crypto/CryptoAssetPicker/styles.module.css";
 import { CryptoAsset } from "elf/crypto/CryptoAsset";
 
 import { CryptoAssetButton } from "./CryptoAssetButton";

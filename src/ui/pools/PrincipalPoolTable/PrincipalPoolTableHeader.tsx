@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
-import styles from "efi-ui/pools/PrincipalPoolTable/grid.module.css";
+import styles from "ui/pools/PrincipalPoolTable/grid.module.css";
 
 export function PrincipalPoolTableHeader(): ReactElement {
   return (

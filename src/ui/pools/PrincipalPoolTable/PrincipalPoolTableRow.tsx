@@ -16,7 +16,7 @@ import { PoolAction } from "ui/pools/hooks/usePoolViewPoolActionsPref/usePoolVie
 import { useStakingAPY } from "ui/pools/hooks/useStakingAPY";
 import { useTokenYield } from "ui/pools/hooks/useTokenYield";
 import { useTotalFiatLiquidity } from "ui/pools/hooks/useTotalFiatLiquidityForPool/useTotalFiatLiquidityForPool";
-import styles from "efi-ui/pools/PrincipalPoolTable/grid.module.css";
+import styles from "ui/pools/PrincipalPoolTable/grid.module.css";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { useYearnVault } from "ui/yearn/useYearnVault";
 import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";

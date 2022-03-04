@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 import classNames from "classnames";
 import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
-import styles from "efi-ui/fixedrates/grid.module.css";
+import styles from "ui/fixedrates/grid.module.css";
 
 interface FixedRateCardListHeaderProps {
   hide?: boolean;

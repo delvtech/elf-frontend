@@ -8,7 +8,7 @@ import { t } from "ttag";
 
 import tw from "efi-tailwindcss-classnames";
 import { EarnCard } from "ui/earn/EarnCard/EarnCard";
-import styles from "efi-ui/earn/grid.module.css";
+import styles from "ui/earn/grid.module.css";
 import { useOpenPrincipalTokenInfos } from "ui/tranche/useOpenPrincipalTokenInfos";
 
 interface EarnTableProps {

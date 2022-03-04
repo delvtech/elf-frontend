@@ -16,7 +16,7 @@ import { IconName, IconNames } from "@blueprintjs/icons";
  *
  * Example:
  *
- * import { AppToaster } from 'efi-ui/app/AppToaster';
+ * import { AppToaster } from 'ui/app/AppToaster';
  *
  * AppToaster?.show({ message: "Toasted." });
  */
