@@ -1,19 +1,19 @@
 import { CSSProperties, FC, ReactElement } from "react";
 
-import crvAlusdIcon from "efi-static-assets/logos/crvALUSD.png";
-import crvLusdIcon from "efi-static-assets/logos/svg/crvLUSD.svg?url";
-import crvMimIcon from "efi-static-assets/logos/crvMIM.png";
-import crvEursIcon from "efi-static-assets/logos/crvEURS.png";
-import crvStethIcon from "efi-static-assets/logos/svg/crvSTETH.svg?url";
-import crvTricryptoIcon from "efi-static-assets/logos/svg/crvtricrypto.svg?url";
-import daiIcon from "efi-static-assets/logos/svg/DAI.svg?url";
-import elementIconDark from "efi-static-assets/logos/svg/ELEMENT-dark.svg?url";
-import elementIcon from "efi-static-assets/logos/svg/ELEMENT-light.svg?url";
-import ethIconGrey from "efi-static-assets/logos/svg/ethereum-eth.svg?url";
-import lusdIcon from "efi-static-assets/logos/svg/LUSD.svg?url";
-import usdcIcon from "efi-static-assets/logos/svg/USDC.svg?url";
-import wethIcon from "efi-static-assets/logos/svg/WETH.svg?url";
-import wbtcIcon from "efi-static-assets/logos/svg/WBTC.svg?url";
+import crvAlusdIcon from "static/logos/crvALUSD.png";
+import crvLusdIcon from "static/logos/svg/crvLUSD.svg?url";
+import crvMimIcon from "static/logos/crvMIM.png";
+import crvEursIcon from "static/logos/crvEURS.png";
+import crvStethIcon from "static/logos/svg/crvSTETH.svg?url";
+import crvTricryptoIcon from "static/logos/svg/crvtricrypto.svg?url";
+import daiIcon from "static/logos/svg/DAI.svg?url";
+import elementIconDark from "static/logos/svg/ELEMENT-dark.svg?url";
+import elementIcon from "static/logos/svg/ELEMENT-light.svg?url";
+import ethIconGrey from "static/logos/svg/ethereum-eth.svg?url";
+import lusdIcon from "static/logos/svg/LUSD.svg?url";
+import usdcIcon from "static/logos/svg/USDC.svg?url";
+import wethIcon from "static/logos/svg/WETH.svg?url";
+import wbtcIcon from "static/logos/svg/WBTC.svg?url";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 
 interface SvgIconProps {
