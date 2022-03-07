@@ -14,6 +14,7 @@ import {
   BuyFixedRatesViewProps,
 } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
+import { BuyFixedRatesViewWithZap } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesViewWithZap";
 
 export async function getStaticProps({
   params,
@@ -43,7 +44,13 @@ export async function getStaticProps({
   };
 }
 
-export default BuyFixedRatesView;
+const USE_BUY_FIXED_RATES_VIEW_WITH_ZAPS = true;
+
+const X = USE_BUY_FIXED_RATES_VIEW_WITH_ZAPS
+  ? BuyFixedRatesViewWithZap
+  : BuyFixedRatesView;
+
+export default X;
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const addresses = getAllPrincipalTokenAddresses();
