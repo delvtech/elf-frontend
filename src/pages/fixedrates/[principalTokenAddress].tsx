@@ -13,6 +13,10 @@ import { ReactElement } from "react";
 import { useLocalStorage } from "react-use";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import {
+  FeatureFlag,
+  useFeatureFlag,
+} from "ui/base/hooks/useFeatureFlag/useFeatureFlag";
+import {
   BuyFixedRatesView,
   BuyFixedRatesViewProps,
 } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
@@ -50,11 +54,8 @@ export async function getStaticProps({
 export default function BuyFixedRates(
   props: BuyFixedRatesViewProps
 ): ReactElement | null {
-  const [featureToggleZapPurchase] = useLocalStorage(
-    FEATURE_TOGGLE_ZAP_PURCHASE,
-    false
-  );
-  return featureToggleZapPurchase
+  const flagToggleZapPurchase = useFeatureFlag(FeatureFlag.ZAP_PURCHASE);
+  return flagToggleZapPurchase
     ? BuyFixedRatesViewWithZap(props)
     : BuyFixedRatesView(props);
 }
