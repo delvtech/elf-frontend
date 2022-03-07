@@ -10,7 +10,6 @@ import {
   GetStaticPropsResult,
 } from "next";
 import { ReactElement } from "react";
-import { useLocalStorage } from "react-use";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import {
   FeatureFlag,
@@ -21,7 +20,6 @@ import {
   BuyFixedRatesViewProps,
 } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
 import { BuyFixedRatesViewWithZap } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesViewWithZap";
-import { FEATURE_TOGGLE_ZAP_PURCHASE } from "ui/toggles/toggles";
 
 export async function getStaticProps({
   params,

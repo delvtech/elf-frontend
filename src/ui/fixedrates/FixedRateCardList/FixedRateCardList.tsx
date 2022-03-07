@@ -1,17 +1,14 @@
-import { ReactElement } from "react";
-
-import tw from "efi-tailwindcss-classnames";
-import { useIsTailwindLargeScreen } from "ui/base/mediaBreakpoints";
-import { FixedRateCard } from "ui/fixedrates/FixedRateCard/FixedRateCard";
-import { FixedRateCardListHeader } from "./FixedRateCardListHeader";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
-import { FEATURE_TOGGLE_ZAP_PURCHASE } from "ui/toggles/toggles";
-import { useLocalStorage } from "react-use";
-import { FixedRateCardWithZap } from "../FixedRateCard/FixedRateCardWithZap";
+import tw from "efi-tailwindcss-classnames";
+import { ReactElement } from "react";
 import {
   FeatureFlag,
   useFeatureFlag,
 } from "ui/base/hooks/useFeatureFlag/useFeatureFlag";
+import { useIsTailwindLargeScreen } from "ui/base/mediaBreakpoints";
+import { FixedRateCard } from "ui/fixedrates/FixedRateCard/FixedRateCard";
+import { FixedRateCardWithZap } from "ui/fixedrates/FixedRateCard/FixedRateCardWithZap";
+import { FixedRateCardListHeader } from "./FixedRateCardListHeader";
 
 interface FixedRateCardListProps {
   principalTokens: PrincipalTokenInfo[];
