@@ -1,20 +1,23 @@
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
+import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import {
+  getAllPrincipalTokenAddresses,
+  getOpenPrincipalTokensWithSameBaseAsset,
+} from "elf/tranche/tranches";
+import {
+  GetStaticPathsResult,
   GetStaticPropsContext,
   GetStaticPropsResult,
-  GetStaticPathsResult,
 } from "next";
-
-import { getOpenPrincipalTokensWithSameBaseAsset } from "elf/tranche/tranches";
-import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
+import { ReactElement } from "react";
+import { useLocalStorage } from "react-use";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import { getAllPrincipalTokenAddresses } from "elf/tranche/tranches";
-
 import {
   BuyFixedRatesView,
   BuyFixedRatesViewProps,
 } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
-import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { BuyFixedRatesViewWithZap } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesViewWithZap";
+import { FEATURE_TOGGLE_ZAP_PURCHASE } from "ui/toggles/toggles";
 
 export async function getStaticProps({
   params,
@@ -44,13 +47,17 @@ export async function getStaticProps({
   };
 }
 
-const USE_BUY_FIXED_RATES_VIEW_WITH_ZAPS = true;
-
-const X = USE_BUY_FIXED_RATES_VIEW_WITH_ZAPS
-  ? BuyFixedRatesViewWithZap
-  : BuyFixedRatesView;
-
-export default X;
+export default function BuyFixedRates(
+  props: BuyFixedRatesViewProps
+): ReactElement | null {
+  const [featureToggleZapPurchase] = useLocalStorage(
+    FEATURE_TOGGLE_ZAP_PURCHASE,
+    false
+  );
+  return featureToggleZapPurchase
+    ? BuyFixedRatesViewWithZap(props)
+    : BuyFixedRatesView(props);
+}
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const addresses = getAllPrincipalTokenAddresses();

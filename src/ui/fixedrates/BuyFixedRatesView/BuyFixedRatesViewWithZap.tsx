@@ -37,7 +37,7 @@ import { useNavigation } from "ui/app/navigation/hooks/useNavigation";
 import { Navigation } from "ui/app/navigation/navigation";
 import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 
-export interface BuyFixedRatesViewPropsWithZap {
+export interface BuyFixedRatesViewProps {
   availablePrincipalTokens: PrincipalTokenInfo[];
   principalTokenInfo: PrincipalTokenInfo;
   principalTokenPoolInfo: PrincipalPoolTokenInfo;
@@ -51,7 +51,7 @@ export function BuyFixedRatesViewWithZap({
   principalTokenInfo,
   principalTokenPoolInfo,
   principalTokenAddress,
-}: BuyFixedRatesViewPropsWithZap): ReactElement | null {
+}: BuyFixedRatesViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
   const { isDarkMode } = useDarkMode();
   const { changeTab } = useNavigation();
