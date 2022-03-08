@@ -1,8 +1,5 @@
 import { useLocalStorage } from "react-use";
-
-export enum FeatureFlag {
-  ZAP_PURCHASE = "ZAP_PURCHASE",
-}
+import { FeatureFlag } from "elf/featureFlag/featureFlag";
 
 export function useFeatureFlag(flagKey: FeatureFlag): boolean {
   const [flag] = useLocalStorage(flagKey, false);
