@@ -1,19 +1,23 @@
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
+import { FeatureFlag } from "elf/featureFlag/featureFlag";
+import { useFeatureFlag } from "elf/featureFlag/useFeatureFlag";
+import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import {
+  getAllPrincipalTokenAddresses,
+  getOpenPrincipalTokensWithSameBaseAsset,
+} from "elf/tranche/tranches";
+import {
+  GetStaticPathsResult,
   GetStaticPropsContext,
   GetStaticPropsResult,
-  GetStaticPathsResult,
 } from "next";
-
-import { getOpenPrincipalTokensWithSameBaseAsset } from "elf/tranche/tranches";
-import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
+import { ReactElement } from "react";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import { getAllPrincipalTokenAddresses } from "elf/tranche/tranches";
-
 import {
   BuyFixedRatesView,
   BuyFixedRatesViewProps,
 } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
-import { PrincipalTokenInfo } from "@elementfi/tokenlist";
+import { BuyFixedRatesViewWithZap } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesViewWithZap";
 
 export async function getStaticProps({
   params,
@@ -43,7 +47,14 @@ export async function getStaticProps({
   };
 }
 
-export default BuyFixedRatesView;
+export default function BuyFixedRates(
+  props: BuyFixedRatesViewProps
+): ReactElement | null {
+  const flagToggleZapPurchase = useFeatureFlag(FeatureFlag.ZAP_PURCHASE);
+  return flagToggleZapPurchase
+    ? BuyFixedRatesViewWithZap(props)
+    : BuyFixedRatesView(props);
+}
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const addresses = getAllPrincipalTokenAddresses();
