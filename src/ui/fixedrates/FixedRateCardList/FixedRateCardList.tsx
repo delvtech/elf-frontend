@@ -1,10 +1,8 @@
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import tw from "efi-tailwindcss-classnames";
+import { FeatureFlag } from "elf/featureFlag/featureFlag";
+import { useFeatureFlag } from "elf/featureFlag/useFeatureFlag";
 import { ReactElement } from "react";
-import {
-  FeatureFlag,
-  useFeatureFlag,
-} from "ui/base/hooks/useFeatureFlag/useFeatureFlag";
 import { useIsTailwindLargeScreen } from "ui/base/mediaBreakpoints";
 import { FixedRateCard } from "ui/fixedrates/FixedRateCard/FixedRateCard";
 import { FixedRateCardWithZap } from "ui/fixedrates/FixedRateCard/FixedRateCardWithZap";

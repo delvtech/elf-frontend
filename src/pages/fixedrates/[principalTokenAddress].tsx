@@ -1,4 +1,6 @@
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
+import { FeatureFlag } from "elf/featureFlag/featureFlag";
+import { useFeatureFlag } from "elf/featureFlag/useFeatureFlag";
 import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import {
   getAllPrincipalTokenAddresses,
@@ -11,10 +13,6 @@ import {
 } from "next";
 import { ReactElement } from "react";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import {
-  FeatureFlag,
-  useFeatureFlag,
-} from "ui/base/hooks/useFeatureFlag/useFeatureFlag";
 import {
   BuyFixedRatesView,
   BuyFixedRatesViewProps,
