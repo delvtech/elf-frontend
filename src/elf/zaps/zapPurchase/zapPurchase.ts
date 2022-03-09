@@ -1,5 +1,5 @@
-import { TokenTag, TokenInfo, CurveLpTokenInfo } from "@elementfi/tokenlist";
-import { tokenListJson } from "tokenlists/tokenlists";
+import { CurveLpTokenInfo, TokenInfo, TokenTag } from "@elementfi/tokenlist";
+import { getTokenInfo } from "tokenlists/tokenlists";
 
 export function isCurveLpTokenInfo(
   tokenInfo: TokenInfo
@@ -7,18 +7,10 @@ export function isCurveLpTokenInfo(
   return !!tokenInfo?.tags?.includes(TokenTag.CURVE);
 }
 
-const curveLpTokenInfos = tokenListJson.tokens.filter(isCurveLpTokenInfo);
-
 function getPoolAssetTokenInfosForCurveLpTokenInfo(
   tokenInfo: CurveLpTokenInfo
 ) {
-  return tokenInfo.extensions.poolAssets
-    .map((assetAddress) => {
-      return tokenListJson.tokens.find(
-        (tokenInfo) => tokenInfo.address === assetAddress
-      );
-    })
-    .filter((info): info is TokenInfo => !!info);
+  return tokenInfo.extensions.poolAssets.map(getTokenInfo);
 }
 
 // Returns the constituent pool tokens if the underlying token is a curve lp
@@ -27,11 +19,9 @@ function getPoolAssetTokenInfosForCurveLpTokenInfo(
 export function getZappableTokenInfosForUnderlying(
   underlyingAddress: string
 ): TokenInfo[] {
-  const underlyingCurveTokenInfo = curveLpTokenInfos.find(
-    ({ address }) => address === underlyingAddress
-  );
+  const underlyingCurveTokenInfo = getTokenInfo(underlyingAddress);
 
-  if (!underlyingCurveTokenInfo) return [];
+  if (!isCurveLpTokenInfo(underlyingCurveTokenInfo)) return [];
 
   const poolAssetTokenInfos = getPoolAssetTokenInfosForCurveLpTokenInfo(
     underlyingCurveTokenInfo
