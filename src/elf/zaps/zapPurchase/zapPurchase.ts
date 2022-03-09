@@ -21,8 +21,9 @@ function getPoolAssetTokenInfosForCurveLpTokenInfo(
     .filter((info): info is TokenInfo => !!info);
 }
 
-// Returns the various pool tokens if the underlying token
-// is a curve lp token
+// Returns the constituent pool tokens if the underlying token is a curve lp
+// token. This also includes the tokens of a metapool should one of the pool
+// tokens for pool of underlying is also an lp token. e.g MIM-3-LP uses 3CRV
 export function getZappableTokenInfosForUnderlying(
   underlyingAddress: string
 ): TokenInfo[] {
@@ -39,7 +40,6 @@ export function getZappableTokenInfosForUnderlying(
   const poolAssetCurveLpTokenInfos =
     poolAssetTokenInfos.filter(isCurveLpTokenInfo);
 
-  // Curve calls the likes of 3CRV "metapools"
   const metaPoolAssetTokenInfo =
     poolAssetCurveLpTokenInfos.length === 1
       ? getPoolAssetTokenInfosForCurveLpTokenInfo(poolAssetCurveLpTokenInfos[0])
