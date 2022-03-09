@@ -30,7 +30,6 @@ export function getZappableTokenInfosForUnderlying(
   const poolAssetCurveLpTokenInfos =
     poolAssetTokenInfos.filter(isCurveLpTokenInfo);
 
-  // Curve calls the likes of 3CRV "metapools"
   const metaPoolAssetTokenInfo =
     poolAssetCurveLpTokenInfos.length === 1
       ? getPoolAssetTokenInfosForCurveLpTokenInfo(poolAssetCurveLpTokenInfos[0])
