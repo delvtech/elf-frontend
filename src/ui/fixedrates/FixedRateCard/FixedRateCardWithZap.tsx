@@ -1,27 +1,26 @@
-import { ReactElement, useCallback } from "react";
-
 import { Button, Card, Elevation, Intent, Tag } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { useRouter } from "next/router";
+import { AssetProxyTokenInfo, PrincipalTokenInfo } from "@elementfi/tokenlist";
+import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
+import { formatAbbreviatedDate } from "base/dates/dates";
+import { formatPercent } from "base/formatPercent/formatPercent";
 import classNames from "classnames";
-import { t } from "ttag";
-
 import tw from "efi-tailwindcss-classnames";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
+import { getIsMature } from "elf/tranche/getIsMature";
+import { getZappableTokenInfosForUnderlying } from "elf/zaps/zapPurchase/zapPurchase";
+import { useRouter } from "next/router";
+import { ReactElement, useCallback } from "react";
+import { getTokenInfo } from "tokenlists/tokenlists";
+import { t } from "ttag";
 import { Navigation } from "ui/app/navigation/navigation";
 import { LabeledText } from "ui/base/LabeledText/LabeledText";
 import { useIsTailwindLargeScreen } from "ui/base/mediaBreakpoints";
 import { findAssetIcon } from "ui/crypto/CryptoIcon";
 import styles from "ui/fixedrates/grid.module.css";
-import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
-import { formatAbbreviatedDate } from "base/dates/dates";
-import { formatPercent } from "base/formatPercent/formatPercent";
-import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
-import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
-import { getTokenInfo } from "tokenlists/tokenlists";
-import { getIsMature } from "elf/tranche/getIsMature";
 import { usePrincipalTokenYield } from "ui/pools/hooks/usePrincipalTokenYield";
-import { AssetProxyTokenInfo, PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 interface FixedRateCardProps {
   principalToken: PrincipalTokenInfo;
@@ -52,6 +51,7 @@ export function FixedRateCardWithZap(
   const formattedUnlockDate = formatAbbreviatedDate(unlockDate);
   const isRedeemable = getIsMature(unlockTimestamp);
 
+  const zappableTokens = getZappableTokenInfosForUnderlying(underlying);
   const isLargeScreen = useIsTailwindLargeScreen();
 
   return (
@@ -73,15 +73,18 @@ export function FixedRateCardWithZap(
       )}
       onClick={onCardClick}
     >
-      <LabeledText
-        className={tw("text-left", "pl-2")}
-        icon={BaseAssetIcon ? <BaseAssetIcon height={36} width={36} /> : null}
-        iconClassName={tw("flex-shrink-0")}
-        label={t`via ${positionName}`}
-        labelClassName={tw("text-xs")}
-        textClassName={tw("text-base")}
-        text={t`${baseAssetSymbol} Principal Token`}
-      />
+      <div>
+        <LabeledText
+          className={tw("text-left", "pl-2")}
+          icon={BaseAssetIcon ? <BaseAssetIcon height={36} width={36} /> : null}
+          iconClassName={tw("flex-shrink-0")}
+          label={t`via ${positionName}`}
+          labelClassName={tw("text-xs")}
+          textClassName={tw("text-base")}
+          text={t`${baseAssetSymbol} Principal Token`}
+        />
+        <span>{zappableTokens.map(({ symbol }) => symbol).join(", ")}</span>
+      </div>
       <span>
         <Tag large fill intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
           {formattedUnlockDate}
