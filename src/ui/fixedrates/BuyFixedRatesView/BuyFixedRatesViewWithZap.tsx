@@ -16,11 +16,9 @@ import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
 import { getCryptoDecimals } from "elf/crypto/getCryptoDecimals";
 import { getCryptoName } from "elf/crypto/getCryptoName/getCryptoName";
 import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
-import { getZappableTokenInfosForUnderlying } from "elf/zaps/zapPurchase/zapPurchase";
 import { commify } from "ethers/lib/utils";
 import { SwapKind } from "integrations/balancer/SwapKind";
 import { Fragment, ReactElement, useCallback, useState } from "react";
-import { getTokenInfo } from "tokenlists/tokenlists";
 import { t } from "ttag";
 import { useNavigation } from "ui/app/navigation/hooks/useNavigation";
 import { Navigation } from "ui/app/navigation/navigation";
@@ -32,6 +30,7 @@ import { useCalculatePrincipalTokenAmountOut } from "ui/ccpools/useCalculatePrin
 import { useMarketPrice } from "ui/ccpools/useMarketPrice";
 import { findAssetIcon } from "ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
+import { useFixedRateInputTokens } from "ui/fixedrates/useFixedRateInputTokens";
 import { useValidateBuyPrincipalTokenInput } from "ui/pools/hooks/useValidateBuyPrincipalTokenInput";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { SwapTokensTransactionConfirmationDrawer } from "ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
@@ -39,7 +38,6 @@ import { TokenAmountInput2 } from "ui/token/TokenAmountInput/TokenAmountInput2";
 import { getMarketRateLabel } from "ui/tranche/getMarketRateLabel";
 import { PrincipalTokenTermButtonLabel2 } from "ui/tranche/TermPicker/PrincipalTokenTermButtonLabel2";
 import { TermPicker2 } from "ui/tranche/TermPicker/TermPicker2";
-import { useFixedRateInputTokens } from "../useFixedRateInputTokens";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
 
 export interface BuyFixedRatesViewProps {
