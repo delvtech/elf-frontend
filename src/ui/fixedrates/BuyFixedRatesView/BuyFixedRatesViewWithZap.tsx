@@ -39,6 +39,7 @@ import { TokenAmountInput2 } from "ui/token/TokenAmountInput/TokenAmountInput2";
 import { getMarketRateLabel } from "ui/tranche/getMarketRateLabel";
 import { PrincipalTokenTermButtonLabel2 } from "ui/tranche/TermPicker/PrincipalTokenTermButtonLabel2";
 import { TermPicker2 } from "ui/tranche/TermPicker/TermPicker2";
+import { useFixedRateInputTokens } from "../useFixedRateInputTokens";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
 
 export interface BuyFixedRatesViewProps {
@@ -49,6 +50,8 @@ export interface BuyFixedRatesViewProps {
   // `parsedUrlQuery | undefined` so it must be optional.
   principalTokenAddress?: string;
 }
+
+const TokenInfoSelect = Select.ofType<TokenInfo>();
 
 export function BuyFixedRatesViewWithZap({
   availablePrincipalTokens,
@@ -77,25 +80,26 @@ export function BuyFixedRatesViewWithZap({
     extensions: { underlying },
   } = principalTokenInfo;
 
-  const underlyingTokenInfo = getTokenInfo(underlying);
   const baseAsset = getCryptoAssetForToken(underlying);
 
-  const [selectedInputToken, setSelectedInputToken] =
-    useState<TokenInfo>(underlyingTokenInfo);
-  const zappableTokenInfos = getZappableTokenInfosForUnderlying(underlying);
-
-  const inputTokenInfos = [underlyingTokenInfo, ...zappableTokenInfos];
-
-  const isZapPurchase = selectedInputToken.address !== underlying;
+  const inputTokens = useFixedRateInputTokens(underlying);
+  const [selectedInputToken, setSelectedInputToken] = useState<TokenInfo>(
+    inputTokens[0]
+  );
+  const handleInputTokenSelect = useCallback((newTokenInfo: TokenInfo) => {
+    setSelectedInputToken(newTokenInfo);
+  }, []);
 
   const baseAssetUnderlyingAddress = getTokenAddressForBalancer(baseAsset);
   const baseAssetName = getCryptoName(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
+
   const AssetIcon = findAssetIcon(baseAsset);
   const height = isLargeScreen ? 40 : 30;
   const width = height;
 
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
+
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
   const baseAssetDisplayBalance = formatBalance(
     baseAssetBalanceOf,
@@ -206,25 +210,30 @@ export function BuyFixedRatesViewWithZap({
                   tw("flex", "p-1", "border", "rounded", "border-gray-500")
                 )}
               >
-                <Select
-                  items={inputTokenInfos.filter(
-                    (n) => n.address !== selectedInputToken.address
+                <TokenInfoSelect
+                  items={inputTokens}
+                  itemPredicate={(_, s) =>
+                    s.address !== selectedInputToken.address
+                  }
+                  itemRenderer={({ name, symbol }, { handleClick }) => (
+                    <div
+                      className={classNames(tw("p-1"))}
+                      onClick={handleClick}
+                    >
+                      <LabeledText
+                        containerClassName={tw("p-4")}
+                        icon={<AssetIcon height={height} width={width} />}
+                        iconClassName={tw("flex-shrink-0", "mr-4")}
+                        large={isLargeScreen}
+                        labelClassName={tw("text-xs", "text-left")}
+                        label={symbol}
+                        textClassName={tw("lg:text-base", "text-left")}
+                        text={name}
+                      />
+                    </div>
                   )}
-                  itemRenderer={({ name, symbol }) => (
-                    <LabeledText
-                      containerClassName={tw("p-4")}
-                      icon={<AssetIcon height={height} width={width} />}
-                      iconClassName={tw("flex-shrink-0", "mr-4")}
-                      large={isLargeScreen}
-                      labelClassName={tw("text-xs", "text-left")}
-                      label={name}
-                      textClassName={tw("lg:text-base", "text-left")}
-                      text={symbol}
-                    />
-                  )}
-                  onItemSelect={(x) => {
-                    setSelectedInputToken(x);
-                  }}
+                  disabled={inputTokens.length === 1}
+                  onItemSelect={handleInputTokenSelect}
                   filterable={false}
                 >
                   <LabeledText
@@ -237,7 +246,7 @@ export function BuyFixedRatesViewWithZap({
                     textClassName={tw("lg:text-base", "text-left")}
                     text={selectedInputToken.name}
                   />
-                </Select>
+                </TokenInfoSelect>
               </div>
             </div>
 
