@@ -1,14 +1,27 @@
-import { Fragment, ReactElement, useCallback, useState } from "react";
-
 import { Button, Card, Classes, Colors, Icon, Intent } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
+import { Select } from "@blueprintjs/select";
+import {
+  PrincipalPoolTokenInfo,
+  PrincipalTokenInfo,
+  TokenInfo,
+} from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
+import { formatBalance } from "base/formatBalance/formatBalance";
 import classNames from "classnames";
-import { commify } from "ethers/lib/utils";
-import { PrincipalTokenInfo } from "@elementfi/tokenlist";
-import { t } from "ttag";
-
 import tw from "efi-tailwindcss-classnames";
+import { getTokenAddressForBalancer } from "elf/balancer/getTokenAddressForBalancer";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoDecimals } from "elf/crypto/getCryptoDecimals";
+import { getCryptoName } from "elf/crypto/getCryptoName/getCryptoName";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { commify } from "ethers/lib/utils";
+import { SwapKind } from "integrations/balancer/SwapKind";
+import { Fragment, ReactElement, useCallback, useState } from "react";
+import { t } from "ttag";
+import { useNavigation } from "ui/app/navigation/hooks/useNavigation";
+import { Navigation } from "ui/app/navigation/navigation";
 import { useNumericInput } from "ui/base/hooks/useNumericInput/useNumericInput";
 import { LabeledText } from "ui/base/LabeledText/LabeledText";
 import { useIsTailwindLargeScreen } from "ui/base/mediaBreakpoints";
@@ -17,25 +30,15 @@ import { useCalculatePrincipalTokenAmountOut } from "ui/ccpools/useCalculatePrin
 import { useMarketPrice } from "ui/ccpools/useMarketPrice";
 import { findAssetIcon } from "ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
+import { useFixedRateInputTokens } from "ui/fixedrates/useFixedRateInputTokens";
 import { useValidateBuyPrincipalTokenInput } from "ui/pools/hooks/useValidateBuyPrincipalTokenInput";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
+import { SwapTokensTransactionConfirmationDrawer } from "ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { TokenAmountInput2 } from "ui/token/TokenAmountInput/TokenAmountInput2";
 import { getMarketRateLabel } from "ui/tranche/getMarketRateLabel";
 import { PrincipalTokenTermButtonLabel2 } from "ui/tranche/TermPicker/PrincipalTokenTermButtonLabel2";
 import { TermPicker2 } from "ui/tranche/TermPicker/TermPicker2";
-import { formatBalance } from "base/formatBalance/formatBalance";
-import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals } from "elf/crypto/getCryptoDecimals";
-import { getCryptoName } from "elf/crypto/getCryptoName/getCryptoName";
-import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
-import { SwapKind } from "integrations/balancer/SwapKind";
-import { SwapTokensTransactionConfirmationDrawer } from "ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
-import { getTokenAddressForBalancer } from "elf/balancer/getTokenAddressForBalancer";
-import { IconNames } from "@blueprintjs/icons";
-import { useNavigation } from "ui/app/navigation/hooks/useNavigation";
-import { Navigation } from "ui/app/navigation/navigation";
-import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 
 export interface BuyFixedRatesViewProps {
   availablePrincipalTokens: PrincipalTokenInfo[];
@@ -45,6 +48,8 @@ export interface BuyFixedRatesViewProps {
   // `parsedUrlQuery | undefined` so it must be optional.
   principalTokenAddress?: string;
 }
+
+const TokenInfoSelect = Select.ofType<TokenInfo>();
 
 export function BuyFixedRatesViewWithZap({
   availablePrincipalTokens,
@@ -58,6 +63,7 @@ export function BuyFixedRatesViewWithZap({
   const goToFixedRatesListPage = useCallback(() => {
     changeTab(Navigation.FIXED_RATES);
   }, [changeTab]);
+
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const closeDrawer = useCallback(() => {
@@ -71,15 +77,27 @@ export function BuyFixedRatesViewWithZap({
   const {
     extensions: { underlying },
   } = principalTokenInfo;
+
   const baseAsset = getCryptoAssetForToken(underlying);
+
+  const inputTokens = useFixedRateInputTokens(underlying);
+  const [selectedInputToken, setSelectedInputToken] = useState<TokenInfo>(
+    inputTokens[0]
+  );
+  const handleInputTokenSelect = useCallback((newTokenInfo: TokenInfo) => {
+    setSelectedInputToken(newTokenInfo);
+  }, []);
+
   const baseAssetUnderlyingAddress = getTokenAddressForBalancer(baseAsset);
   const baseAssetName = getCryptoName(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
+
   const AssetIcon = findAssetIcon(baseAsset);
   const height = isLargeScreen ? 40 : 30;
   const width = height;
 
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
+
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
   const baseAssetDisplayBalance = formatBalance(
     baseAssetBalanceOf,
@@ -181,6 +199,7 @@ export function BuyFixedRatesViewWithZap({
               <span
                 className={tw("text-base", "text-left")}
               >{t`Choose Token`}</span>
+
               <div
                 style={{
                   background: isDarkMode ? "var(--bp3-dark-bg-color)" : "",
@@ -189,16 +208,43 @@ export function BuyFixedRatesViewWithZap({
                   tw("flex", "p-1", "border", "rounded", "border-gray-500")
                 )}
               >
-                <LabeledText
-                  containerClassName={tw("p-4")}
-                  icon={<AssetIcon height={height} width={width} />}
-                  iconClassName={tw("flex-shrink-0", "mr-4")}
-                  large={isLargeScreen}
-                  labelClassName={tw("text-xs", "text-left")}
-                  label={t`${baseAssetName}`}
-                  textClassName={tw("lg:text-base", "text-left")}
-                  text={baseAssetSymbol}
-                />
+                <TokenInfoSelect
+                  items={inputTokens}
+                  itemPredicate={(_, s) =>
+                    s.address !== selectedInputToken.address
+                  }
+                  itemRenderer={({ name, symbol }, { handleClick }) => (
+                    <div
+                      className={classNames(tw("p-1"))}
+                      onClick={handleClick}
+                    >
+                      <LabeledText
+                        containerClassName={tw("p-4")}
+                        icon={<AssetIcon height={height} width={width} />}
+                        iconClassName={tw("flex-shrink-0", "mr-4")}
+                        large={isLargeScreen}
+                        labelClassName={tw("text-xs", "text-left")}
+                        label={symbol}
+                        textClassName={tw("lg:text-base", "text-left")}
+                        text={name}
+                      />
+                    </div>
+                  )}
+                  disabled={inputTokens.length === 1}
+                  onItemSelect={handleInputTokenSelect}
+                  filterable={false}
+                >
+                  <LabeledText
+                    containerClassName={tw("p-4")}
+                    icon={<AssetIcon height={height} width={width} />}
+                    iconClassName={tw("flex-shrink-0", "mr-4")}
+                    large={isLargeScreen}
+                    labelClassName={tw("text-xs", "text-left")}
+                    label={selectedInputToken.symbol}
+                    textClassName={tw("lg:text-base", "text-left")}
+                    text={selectedInputToken.name}
+                  />
+                </TokenInfoSelect>
               </div>
             </div>
 
