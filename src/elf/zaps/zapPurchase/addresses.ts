@@ -1,3 +1,5 @@
+import { USER_PROXY_ETH_SENTINEL } from "elf/userProxy/address";
+
 // Addresses of mainnet assets available for zapping that do not already exist
 // in `*.addresses.json`.
 export const MainnetExtraAddresses = {
@@ -9,4 +11,5 @@ export const MainnetExtraAddresses = {
   stEthAddress: "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
   eursAddress: "0xdB25f211AB05b1c97D595516F45794528a807ad8",
   sEurAddress: "0xD71eCFF9342A5Ced620049e616c5035F1dB98620",
+  ethAddress: USER_PROXY_ETH_SENTINEL, // SAME AS CURVE
 };
