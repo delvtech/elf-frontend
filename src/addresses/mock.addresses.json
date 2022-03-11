@@ -2,7 +2,11 @@
   "addresses": {
     "alusd3crv-fAddress": "0x0000000000000000000000000000000000000000",
     "balancerVaultAddress": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-    "convergentPoolFactoryAddress": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+    "convergentPoolFactoryAddress": {
+      "latestVersion": "v1_1",
+      "v1": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+      "v1_1": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788"
+    },
     "crv3cryptoAddress": "0x0000000000000000000000000000000000000000",
     "crvtricryptoAddress": "0x0000000000000000000000000000000000000000",
     "daiAddress": "0x0000000000000000000000000000000000000000",
