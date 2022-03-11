@@ -1,7 +1,5 @@
-import {
-  ERC20Permit__factory,
-  ERC20__factory,
-} from "@elementfi/core-typechain";
+import { ERC20__factory } from "@elementfi/core-typechain/dist/libraries/factories/ERC20__factory";
+import { ERC20Permit__factory } from "@elementfi/core-typechain/dist/libraries/factories/ERC20Permit__factory";
 import { MainnetExtraAddresses } from "elf/zaps/zapPurchase/addresses";
 import { defaultProvider } from "elf/providers/providers";
 
