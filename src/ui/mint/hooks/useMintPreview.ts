@@ -2,7 +2,7 @@ import {
   TestYVault,
   Tranche,
   YVaultAssetProxy,
-} from "@elementfi/core-typechain";
+} from "@elementfi/core-typechain/dist/v1";
 import {
   AssetProxyTokenInfo,
   PrincipalTokenInfo as TrancheInfo,

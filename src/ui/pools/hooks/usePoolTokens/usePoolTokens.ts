@@ -1,4 +1,4 @@
-import { Vault } from "@elementfi/core-typechain";
+import { Vault } from "@elementfi/core-typechain/dist/v1";
 import {
   PrincipalPoolTokenInfo,
   YieldPoolTokenInfo,

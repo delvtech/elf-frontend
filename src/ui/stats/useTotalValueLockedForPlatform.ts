@@ -1,4 +1,4 @@
-import { ERC20 } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
 import { fetchTokenPrice } from "elf/token/fetchTokenPrice";
 import { fetchTotalValueLockedForTerm } from "elf/tranche/fetchTotalValueLockedForTerm";

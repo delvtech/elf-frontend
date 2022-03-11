@@ -1,4 +1,4 @@
-import { Vault } from "@elementfi/core-typechain";
+import { Vault } from "@elementfi/core-typechain/dist/v1";
 import { FundManagement } from "integrations/balancer/FundManagement";
 import { SingleSwap } from "integrations/balancer/SingleSwap";
 import { SwapKind } from "integrations/balancer/SwapKind";

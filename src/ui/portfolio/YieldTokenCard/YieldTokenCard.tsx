@@ -8,7 +8,8 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { ERC20, InterestToken } from "@elementfi/core-typechain";
+import { InterestToken } from "@elementfi/core-typechain/dist/v1";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";

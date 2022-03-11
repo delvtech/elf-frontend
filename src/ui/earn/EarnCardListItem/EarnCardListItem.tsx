@@ -9,7 +9,7 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { ERC20, USDC, WETH } from "@elementfi/core-typechain";
+import { ERC20, USDC, WETH } from "@elementfi/core-typechain/dist/libraries";
 import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";

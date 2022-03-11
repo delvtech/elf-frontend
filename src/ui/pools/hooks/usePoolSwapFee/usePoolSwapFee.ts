@@ -1,4 +1,7 @@
-import { ConvergentCurvePool, WeightedPool } from "@elementfi/core-typechain";
+import {
+  ConvergentCurvePool,
+  WeightedPool,
+} from "@elementfi/core-typechain/dist/v1";
 import { BigNumber } from "ethers";
 
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";

@@ -1,5 +1,6 @@
 import { Intent } from "@blueprintjs/core";
-import { ERC20, WeightedPool } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
+import { WeightedPool } from "@elementfi/core-typechain/dist/v1";
 import { Web3Provider } from "@ethersproject/providers";
 import { useNumericInput } from "ui/base/hooks/useNumericInput/useNumericInput";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";

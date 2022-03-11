@@ -1,7 +1,7 @@
 import {
   CurveContract__factory,
   CurveStethPool__factory,
-} from "@elementfi/core-typechain";
+} from "@elementfi/core-typechain/dist/libraries";
 import { defaultProvider } from "elf/providers/providers";
 
 /*

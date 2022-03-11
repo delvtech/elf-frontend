@@ -1,4 +1,4 @@
-import { Tranche } from "@elementfi/core-typechain";
+import { Tranche } from "@elementfi/core-typechain/dist/v1";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { CryptoAsset } from "elf/crypto/CryptoAsset";
 import { CryptoAssets } from "elf/crypto/CryptoAssetRegistry";

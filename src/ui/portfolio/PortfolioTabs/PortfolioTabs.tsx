@@ -1,5 +1,5 @@
 import { Tab, Tabs, Tag } from "@blueprintjs/core";
-import { ERC20 } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { useConvergentCurvePoolsWithLPBalance } from "ui/portfolio/hooks/useConvergentCurvePoolsWithLPBalance";

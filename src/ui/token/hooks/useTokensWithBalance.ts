@@ -1,4 +1,4 @@
-import { ERC20 } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { getQueriesData } from "ui/base/queryResults";
 import { getQueryCombinedStatus } from "ui/query/getQueryCombinedStatus";
 import { useTokenBalanceOfMulti } from "ui/token/hooks/useTokenBalanceOf";
