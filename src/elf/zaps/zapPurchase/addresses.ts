@@ -1,3 +1,5 @@
+// Addresses of mainnet assets available for zapping that do not already exist
+// in `*.addresses.json`.
 export const MainnetExtraAddresses = {
   lusdAddress: "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
   threeCrvAddress: "0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490",
