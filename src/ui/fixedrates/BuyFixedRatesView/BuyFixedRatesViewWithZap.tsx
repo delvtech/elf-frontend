@@ -78,16 +78,14 @@ export function BuyFixedRatesViewWithZap({
     extensions: { underlying },
   } = principalTokenInfo;
 
-  const baseAsset = getCryptoAssetForToken(underlying);
-
   const inputTokens = useFixedRateInputTokens(underlying);
   const [selectedInputToken, setSelectedInputToken] = useState<TokenInfo>(
     inputTokens[0]
   );
-  const handleInputTokenSelect = useCallback((newTokenInfo: TokenInfo) => {
-    setSelectedInputToken(newTokenInfo);
-  }, []);
 
+  const selectedInputAsset = getCryptoAssetForToken(selectedInputToken.address);
+
+  const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetUnderlyingAddress = getTokenAddressForBalancer(baseAsset);
   const baseAssetName = getCryptoName(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
@@ -231,7 +229,7 @@ export function BuyFixedRatesViewWithZap({
                     </div>
                   )}
                   disabled={inputTokens.length === 1}
-                  onItemSelect={handleInputTokenSelect}
+                  onItemSelect={setSelectedInputToken}
                   filterable={false}
                 >
                   <LabeledText

@@ -16,7 +16,10 @@ import {
   trancheContractsByAddress,
 } from "elf/tranche/tranches";
 import { underlyingContractsByAddress } from "elf/underlying/underlying";
+import { MainnetExtraAddresses } from "elf/zaps/zapPurchase/addresses";
+import { MainnetZapContractsByAddress } from "elf/zaps/zapPurchase/contracts";
 import keyBy from "lodash.keyby";
+import { tokenListJson } from "tokenlists/tokenlists";
 
 const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
   id: AddressesJson.addresses.usdcAddress,
@@ -112,6 +115,85 @@ const baseAssetCryptoAssets: Record<string, CryptoAsset> = {
   [AddressesJson.addresses.eurscrvAddress]: CRVEURS_CRYPTO_ASSET,
 };
 
+const LUSD_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
+  id: MainnetExtraAddresses.lusdAddress,
+  type: CryptoAssetType.ERC20PERMIT,
+  tokenContract: MainnetZapContractsByAddress[
+    MainnetExtraAddresses.lusdAddress
+  ] as ERC20Permit,
+};
+
+const USDT_CRYPTO_ASSET: Erc20CryptoAsset = {
+  id: MainnetExtraAddresses.usdtAddress,
+  type: CryptoAssetType.ERC20,
+  tokenContract: MainnetZapContractsByAddress[
+    MainnetExtraAddresses.usdtAddress
+  ] as ERC20,
+};
+
+const ALUSD_CRYPTO_ASSET: Erc20CryptoAsset = {
+  id: MainnetExtraAddresses.alUsdAddress,
+  type: CryptoAssetType.ERC20,
+  tokenContract: MainnetZapContractsByAddress[
+    MainnetExtraAddresses.alUsdAddress
+  ] as ERC20,
+};
+
+const MIM_CRYPTO_ASSET: Erc20CryptoAsset = {
+  id: MainnetExtraAddresses.mimAddress,
+  type: CryptoAssetType.ERC20,
+  tokenContract: MainnetZapContractsByAddress[
+    MainnetExtraAddresses.mimAddress
+  ] as ERC20,
+};
+
+const STETH_CRYPTO_ASSET: Erc20CryptoAsset = {
+  id: MainnetExtraAddresses.stEthAddress,
+  type: CryptoAssetType.ERC20,
+  tokenContract: MainnetZapContractsByAddress[
+    MainnetExtraAddresses.stEthAddress
+  ] as ERC20,
+};
+
+const THREECRV_CRYPTO_ASSET: Erc20CryptoAsset = {
+  id: MainnetExtraAddresses.threeCrvAddress,
+  type: CryptoAssetType.ERC20,
+  tokenContract: MainnetZapContractsByAddress[
+    MainnetExtraAddresses.threeCrvAddress
+  ] as ERC20,
+};
+
+const EURS_CRYPTO_ASSET: Erc20CryptoAsset = {
+  id: MainnetExtraAddresses.eursAddress,
+  type: CryptoAssetType.ERC20,
+  tokenContract: MainnetZapContractsByAddress[
+    MainnetExtraAddresses.eursAddress
+  ] as ERC20,
+};
+
+const SEUR_CRYPTO_ASSET: Erc20CryptoAsset = {
+  id: MainnetExtraAddresses.sEurAddress,
+  type: CryptoAssetType.ERC20,
+  tokenContract: MainnetZapContractsByAddress[
+    MainnetExtraAddresses.sEurAddress
+  ] as ERC20,
+};
+
+const zappableAssetCryptoAssets: Record<string, CryptoAsset> =
+  AddressesJson.chainId === 1 ||
+  process.env.NEXT_PUBLIC_CHAIN_NAME === "mainnet_fork"
+    ? {
+        [MainnetExtraAddresses.usdtAddress]: USDT_CRYPTO_ASSET,
+        [MainnetExtraAddresses.lusdAddress]: LUSD_CRYPTO_ASSET,
+        [MainnetExtraAddresses.alUsdAddress]: ALUSD_CRYPTO_ASSET,
+        [MainnetExtraAddresses.mimAddress]: MIM_CRYPTO_ASSET,
+        [MainnetExtraAddresses.stEthAddress]: STETH_CRYPTO_ASSET,
+        [MainnetExtraAddresses.threeCrvAddress]: THREECRV_CRYPTO_ASSET,
+        [MainnetExtraAddresses.eursAddress]: EURS_CRYPTO_ASSET,
+        [MainnetExtraAddresses.sEurAddress]: SEUR_CRYPTO_ASSET,
+      }
+    : {};
+
 const principalTokenCryptoAssets: Erc20PermitCryptoAsset[] =
   principalTokenInfos.map(({ address }) => ({
     id: address,
@@ -138,6 +220,7 @@ const yieldTokenCryptoAssets: Erc20PermitCryptoAsset[] = yieldTokenInfos.map(
  */
 export const CryptoAssets: Record<string, CryptoAsset> = Object.freeze({
   ...baseAssetCryptoAssets,
+  ...zappableAssetCryptoAssets,
   ...keyBy(
     principalTokenCryptoAssets,
     ({ tokenContract }) => tokenContract.address
