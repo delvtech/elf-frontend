@@ -1,4 +1,7 @@
-import { ConvergentCurvePool, WeightedPool } from "@elementfi/core-typechain";
+import {
+  ConvergentCurvePool,
+  WeightedPool,
+} from "@elementfi/core-typechain/dist/v1";
 
 /**
  * Principal token pools have a custom curve that changes as the two assets

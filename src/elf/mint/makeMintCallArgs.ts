@@ -1,4 +1,4 @@
-import { UserProxy } from "@elementfi/core-typechain";
+import { UserProxy } from "@elementfi/core-typechain/dist/v1";
 import { PermitCallData } from "base/fetchPermitData";
 import {
   ContractMethodArgs,

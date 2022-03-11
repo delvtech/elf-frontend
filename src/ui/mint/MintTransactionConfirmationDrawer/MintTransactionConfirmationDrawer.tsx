@@ -1,5 +1,5 @@
 import { Callout, Switch } from "@blueprintjs/core";
-import { ERC20Permit } from "@elementfi/core-typechain";
+import { ERC20Permit } from "@elementfi/core-typechain/dist/libraries";
 import {
   PrincipalTokenInfo as TrancheInfo,
   YieldTokenInfo,

@@ -1,5 +1,6 @@
 import { Button, Callout, Intent, Tag } from "@blueprintjs/core";
-import { ConvergentCurvePool, ERC20 } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
+import { ConvergentCurvePool } from "@elementfi/core-typechain/dist/v1";
 import {
   PrincipalPoolTokenInfo,
   PrincipalTokenInfo,

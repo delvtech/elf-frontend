@@ -1,4 +1,5 @@
-import { ConvergentCurvePool, ERC20 } from "@elementfi/core-typechain";
+import { ConvergentCurvePool } from "@elementfi/core-typechain/dist/v1";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/balancer/pools";
 import { useTokensWithBalance } from "ui/token/hooks/useTokensWithBalance";
 import { isDust } from "elf/coins/isDust";

@@ -1,4 +1,7 @@
-import { WeightedPool, WeightedPool__factory } from "@elementfi/core-typechain";
+import {
+  WeightedPool,
+  WeightedPool__factory,
+} from "@elementfi/core-typechain/dist/v1";
 import { TokenInfo, TokenTag, YieldPoolTokenInfo } from "@elementfi/tokenlist";
 import { defaultProvider } from "elf/providers/providers";
 import { tokenListJson } from "tokenlists/tokenlists";

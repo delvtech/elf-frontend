@@ -1,6 +1,6 @@
 import { IPopoverProps } from "@blueprintjs/core";
 import { ItemRenderer, Select } from "@blueprintjs/select";
-import { Tranche } from "@elementfi/core-typechain";
+import { Tranche } from "@elementfi/core-typechain/dist/v1";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { CryptoAsset } from "elf/crypto/CryptoAsset";

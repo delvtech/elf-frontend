@@ -1,4 +1,4 @@
-import { ERC20 } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { getCoinGeckoId } from "integrations/coingecko";
 import { useCoinGeckoHistoricalPrice } from "ui/coingecko/useCoinGeckoHistoricalPrice";
 import { getTokenInfo } from "tokenlists/tokenlists";

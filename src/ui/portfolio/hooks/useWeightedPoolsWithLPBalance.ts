@@ -1,4 +1,5 @@
-import { ERC20, WeightedPool } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
+import { WeightedPool } from "@elementfi/core-typechain/dist/v1";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/balancer/pools";
 import { useTokensWithBalance } from "ui/token/hooks/useTokensWithBalance";
 import { isDust } from "elf/coins/isDust";

@@ -1,4 +1,4 @@
-import { InterestToken } from "@elementfi/core-typechain";
+import { InterestToken } from "@elementfi/core-typechain/dist/v1";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import tw from "efi-tailwindcss-classnames";

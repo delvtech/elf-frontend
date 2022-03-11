@@ -1,4 +1,7 @@
-import { ERC20, ERC20__factory } from "@elementfi/core-typechain";
+import {
+  ERC20,
+  ERC20__factory,
+} from "@elementfi/core-typechain/dist/libraries";
 import {
   PrincipalPoolTokenInfo,
   TokenInfo,

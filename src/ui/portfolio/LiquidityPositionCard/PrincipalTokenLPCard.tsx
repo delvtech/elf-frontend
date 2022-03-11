@@ -8,7 +8,7 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { ConvergentCurvePool } from "@elementfi/core-typechain";
+import { ConvergentCurvePool } from "@elementfi/core-typechain/dist/v1";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";

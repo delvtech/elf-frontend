@@ -1,4 +1,4 @@
-import { TrancheFactory__factory } from "@elementfi/core-typechain";
+import { TrancheFactory__factory } from "@elementfi/core-typechain/dist/v1";
 import { AddressesJson } from "addresses/addresses";
 import { defaultProvider } from "elf/providers/providers";
 

@@ -3,7 +3,7 @@ import {
   ERC20Permit__factory,
   ERC20__factory,
   WETH__factory,
-} from "@elementfi/core-typechain";
+} from "@elementfi/core-typechain/dist/libraries";
 import { AddressesJson } from "addresses/addresses";
 import { defaultProvider } from "elf/providers/providers";
 

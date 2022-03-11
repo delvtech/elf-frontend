@@ -1,4 +1,4 @@
-import { ERC20, ERC20Permit } from "@elementfi/core-typechain";
+import { ERC20, ERC20Permit } from "@elementfi/core-typechain/dist/libraries";
 import { assertNever } from "base/assertNever";
 
 export enum CryptoAssetType {
