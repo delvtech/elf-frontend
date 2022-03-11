@@ -1,4 +1,4 @@
-import { Vault } from "@elementfi/core-typechain";
+import { Vault } from "@elementfi/core-typechain/dist/v1";
 import { SwapKind } from "integrations/balancer/SwapKind";
 import { balancerVaultContract } from "elf/balancer/vault";
 import { makeQueryBatchSwapCallArgs } from "ui/balancer/useQueryBatchSwap/makeQueryBatchSwapCallArgs";

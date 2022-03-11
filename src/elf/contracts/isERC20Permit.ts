@@ -1,4 +1,4 @@
-import { ERC20Permit } from "@elementfi/core-typechain";
+import { ERC20Permit } from "@elementfi/core-typechain/dist/libraries";
 import { Contract } from "ethers";
 
 export function isERC20Permit(

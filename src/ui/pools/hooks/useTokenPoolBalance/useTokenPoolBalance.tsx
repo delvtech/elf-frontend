@@ -1,4 +1,4 @@
-import { ERC20 } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { usePoolTokens } from "ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { PoolContract } from "elf/pools/PoolContract";
 import { BigNumber } from "ethers";

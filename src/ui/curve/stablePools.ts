@@ -1,4 +1,3 @@
-import { CRVLUSD } from "@elementfi/core-typechain/dist/CRVLUSD";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
 import { AddressesJson } from "addresses/addresses";
@@ -9,6 +8,7 @@ import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { QueryObserverResult } from "react-query";
 import { Currencies, Money } from "ts-money";
+import { CRVLUSD } from "@elementfi/core-typechain/dist/libraries/CRVLUSD";
 
 // Goerli curve stable pools can be inferred to be $1
 const GOERLI_STUB_VIRTUAL_PRICE = {

@@ -1,4 +1,4 @@
-import { YVaultAssetProxy__factory } from "@elementfi/core-typechain";
+import { YVaultAssetProxy__factory } from "@elementfi/core-typechain/dist/v1";
 import {
   AssetProxyTokenInfo,
   PrincipalTokenInfo,

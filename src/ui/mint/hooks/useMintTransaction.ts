@@ -1,10 +1,9 @@
+import { ERC20, ERC20Permit } from "@elementfi/core-typechain/dist/libraries";
 import {
-  ERC20,
-  ERC20Permit,
   InterestToken,
   Tranche,
   UserProxy,
-} from "@elementfi/core-typechain";
+} from "@elementfi/core-typechain/dist/v1";
 import {
   PrincipalTokenInfo as TrancheInfo,
   YieldTokenInfo,

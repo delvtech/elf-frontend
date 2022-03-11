@@ -1,4 +1,4 @@
-import { TestYVault__factory } from "@elementfi/core-typechain";
+import { TestYVault__factory } from "@elementfi/core-typechain/dist/v1";
 import { TokenInfo, VaultTokenInfo } from "@elementfi/tokenlist";
 import { TokenTag } from "@elementfi/tokenlist/dist/tags";
 import { defaultProvider } from "elf/providers/providers";

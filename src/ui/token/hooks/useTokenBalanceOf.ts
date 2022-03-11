@@ -1,4 +1,4 @@
-import { ERC20 } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractReadCalls } from "ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { BigNumber } from "ethers";

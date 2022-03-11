@@ -1,5 +1,5 @@
 import { Button, Callout, Intent } from "@blueprintjs/core";
-import { ERC20 } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { TokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
 import { getTokenAddressForBalancer } from "elf/balancer/getTokenAddressForBalancer";

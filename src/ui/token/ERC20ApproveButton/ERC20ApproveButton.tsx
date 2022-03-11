@@ -1,6 +1,6 @@
 import { Button, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
-import { ERC20 } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useERC20Approve } from "ui/token/hooks/useERC20Approve";
 import { useTokenAllowance } from "ui/token/hooks/useTokenAllowance";

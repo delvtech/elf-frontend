@@ -1,4 +1,4 @@
-import { ERC20 } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { matchSmartContractReadCallQuery } from "ui/contracts/matchSmartContractReadCallQuery/matchSmartContractReadCallQuery";
 import { useSmartContractTransactionPersisted } from "ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import {

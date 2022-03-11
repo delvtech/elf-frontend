@@ -1,4 +1,4 @@
-import { InterestToken__factory } from "@elementfi/core-typechain";
+import { InterestToken__factory } from "@elementfi/core-typechain/dist/v1";
 import { TokenInfo, TokenTag, YieldTokenInfo } from "@elementfi/tokenlist";
 import { defaultProvider } from "elf/providers/providers";
 import { tokenListJson } from "tokenlists/tokenlists";

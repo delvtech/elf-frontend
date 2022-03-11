@@ -1,5 +1,5 @@
 import { Card, Classes } from "@blueprintjs/core";
-import { ERC20 } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";

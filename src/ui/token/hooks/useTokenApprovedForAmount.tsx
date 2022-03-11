@@ -1,9 +1,4 @@
-import {
-  ERC20,
-  ERC20Permit,
-  InterestToken,
-  Tranche,
-} from "@elementfi/core-typechain";
+import { InterestToken, Tranche } from "@elementfi/core-typechain/dist/v1";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useSmartContractReadCalls } from "ui/contracts/useSmartContractReadCalls/useSmartContractReadCalls";
 import { ContractMethodArgs } from "elf/contracts/types";
@@ -11,6 +6,7 @@ import { BigNumber } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 import zip from "lodash.zip";
 import { QueryObserverResult } from "react-query";
+import { ERC20, ERC20Permit } from "@elementfi/core-typechain/dist/libraries";
 
 export function useTokenAllowance(
   contract: ERC20 | ERC20Permit | undefined,

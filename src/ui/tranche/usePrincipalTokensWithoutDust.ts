@@ -1,4 +1,4 @@
-import { ERC20 } from "@elementfi/core-typechain";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { useTokensWithBalance } from "ui/token/hooks/useTokensWithBalance";
 import { isDust } from "elf/coins/isDust";

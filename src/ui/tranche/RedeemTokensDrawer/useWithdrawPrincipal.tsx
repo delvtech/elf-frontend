@@ -1,4 +1,4 @@
-import { Tranche } from "@elementfi/core-typechain";
+import { Tranche } from "@elementfi/core-typechain/dist/v1";
 import { useSmartContractTransactionPersisted } from "ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
 import { ContractMethodArgs } from "elf/contracts/types";
 import { BigNumber, Signer } from "ethers";

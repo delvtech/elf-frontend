@@ -1,5 +1,5 @@
 import { Card, Classes, Collapse, Elevation } from "@blueprintjs/core";
-import { ERC20, USDC, WETH } from "@elementfi/core-typechain";
+import { ERC20, USDC, WETH } from "@elementfi/core-typechain/dist/libraries";
 import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";

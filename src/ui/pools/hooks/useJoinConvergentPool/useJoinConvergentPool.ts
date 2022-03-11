@@ -1,4 +1,4 @@
-import { Vault } from "@elementfi/core-typechain";
+import { Vault } from "@elementfi/core-typechain/dist/v1";
 import { JoinRequest } from "integrations/balancer/JoinRequest";
 import { balancerVaultContract } from "elf/balancer/vault";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
