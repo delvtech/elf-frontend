@@ -5,6 +5,7 @@ import {
   CryptoAssetType,
   Erc20CryptoAsset,
   Erc20PermitCryptoAsset,
+  EthereumCryptoAsset,
   ETHEREUM_CRYPTO_ASSET,
 } from "elf/crypto/CryptoAsset";
 import {
@@ -191,6 +192,7 @@ const zappableAssetCryptoAssets: Record<string, CryptoAsset> =
         [MainnetExtraAddresses.threeCrvAddress]: THREECRV_CRYPTO_ASSET,
         [MainnetExtraAddresses.eursAddress]: EURS_CRYPTO_ASSET,
         [MainnetExtraAddresses.sEurAddress]: SEUR_CRYPTO_ASSET,
+        [MainnetExtraAddresses.ethAddress]: ETHEREUM_CRYPTO_ASSET,
       }
     : {};
 
