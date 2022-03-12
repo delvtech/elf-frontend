@@ -11,10 +11,8 @@ import { useWeb3React } from "@web3-react/core";
 import { formatBalance } from "base/formatBalance/formatBalance";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
-import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
 import { commify } from "ethers/lib/utils";
 import { SwapKind } from "integrations/balancer/SwapKind";
-import keyBy from "lodash.keyby";
 import { Fragment, ReactElement, useCallback, useMemo, useState } from "react";
 import { t } from "ttag";
 import { useNavigation } from "ui/app/navigation/hooks/useNavigation";
@@ -111,20 +109,23 @@ export function BuyFixedRatesViewWithZap({
   const height = isLargeScreen ? 40 : 30;
   const width = height;
 
-  const baseAssetBalanceOf = useCryptoBalanceOf(library, account, inputAsset);
-  const baseAssetDisplayBalance = formatBalance(
-    baseAssetBalanceOf,
+  const inputAssetBalanceOf = useCryptoBalanceOf(library, account, inputAsset);
+  const inputAssetDisplayBalance = formatBalance(
+    inputAssetBalanceOf,
     inputAssetDecimals
   );
 
   // Market price stuff
   const principalPrice = useMarketPrice(principalTokenInfo);
   const roundedPrincipalPrice = commify((+principalPrice)?.toFixed(4));
+
   const marketRateLabel = getMarketRateLabel(
     inputAssetSymbol,
     roundedPrincipalPrice,
     inputAssetSymbol
   );
+  const showMarketRateLabel =
+    marketRateLabel && buyFixedRatesKind === BuyFixedRatesKind.Swap;
 
   // Deposit Amount stuff
   const { stringValue: baseAssetInputValue, setValue: onBaseAssetInputChange } =
@@ -308,7 +309,7 @@ export function BuyFixedRatesViewWithZap({
                     Classes.TEXT_MUTED,
                     tw("text-right", "mb-2")
                   )}
-                >{t`Balance: ${baseAssetDisplayBalance} ${inputAssetSymbol}`}</span>
+                >{t`Balance: ${inputAssetDisplayBalance} ${inputAssetSymbol}`}</span>
               )}
               <div
                 style={{
@@ -326,7 +327,7 @@ export function BuyFixedRatesViewWithZap({
                   }}
                   intent={hasInputError ? Intent.DANGER : Intent.NONE}
                   value={baseAssetInputValue}
-                  maxAmount={baseAssetBalanceOf}
+                  maxAmount={inputAssetBalanceOf}
                   tokenDecimals={inputAssetDecimals}
                   onValueChange={onBaseAssetInputChange}
                 />
@@ -345,7 +346,7 @@ export function BuyFixedRatesViewWithZap({
                   {inputErrorMessage}
                 </span>
               )}
-              {marketRateLabel && (
+              {showMarketRateLabel && (
                 <span
                   className={classNames(
                     Classes.TEXT_MUTED,
