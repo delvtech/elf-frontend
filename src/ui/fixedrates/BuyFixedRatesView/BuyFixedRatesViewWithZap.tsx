@@ -31,6 +31,7 @@ import { useMarketPrice } from "ui/ccpools/useMarketPrice";
 import { findAssetIcon } from "ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useFixedRateInputTokens } from "ui/fixedrates/useFixedRateInputTokens";
+import { useFixedRateInputAssetInfo } from "ui/fixedrates/useFixedRateInputAssetInfo";
 import { useValidateBuyPrincipalTokenInput } from "ui/pools/hooks/useValidateBuyPrincipalTokenInput";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { SwapTokensTransactionConfirmationDrawer } from "ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
@@ -50,6 +51,8 @@ export interface BuyFixedRatesViewProps {
 }
 
 const TokenInfoSelect = Select.ofType<TokenInfo>();
+
+enum isZapPurchaseOrSwapPurchase {}
 
 export function BuyFixedRatesViewWithZap({
   availablePrincipalTokens,
@@ -85,6 +88,15 @@ export function BuyFixedRatesViewWithZap({
 
   const selectedInputAsset = getCryptoAssetForToken(selectedInputToken.address);
 
+  const {
+    inputAsset,
+    inputAssetAddress,
+    inputAssetDecimals,
+    inputAssetName,
+    inputAssetSymbol,
+  } = useFixedRateInputAssetInfo(selectedInputToken.address);
+
+  console.log(selectedInputAsset);
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetUnderlyingAddress = getTokenAddressForBalancer(baseAsset);
   const baseAssetName = getCryptoName(baseAsset);
