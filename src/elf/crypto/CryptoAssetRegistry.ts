@@ -180,11 +180,6 @@ const SEUR_CRYPTO_ASSET: Erc20CryptoAsset = {
   ] as ERC20,
 };
 
-const ETH_CRYPTO_ASSET: EthereumCryptoAsset = {
-  id: MainnetExtraAddresses.ethAddress,
-  type: CryptoAssetType.ETHEREUM,
-};
-
 const zappableAssetCryptoAssets: Record<string, CryptoAsset> =
   AddressesJson.chainId === 1 ||
   process.env.NEXT_PUBLIC_CHAIN_NAME === "mainnet_fork"
@@ -197,7 +192,7 @@ const zappableAssetCryptoAssets: Record<string, CryptoAsset> =
         [MainnetExtraAddresses.threeCrvAddress]: THREECRV_CRYPTO_ASSET,
         [MainnetExtraAddresses.eursAddress]: EURS_CRYPTO_ASSET,
         [MainnetExtraAddresses.sEurAddress]: SEUR_CRYPTO_ASSET,
-        [MainnetExtraAddresses.ethAddress]: ETH_CRYPTO_ASSET,
+        [MainnetExtraAddresses.ethAddress]: ETHEREUM_CRYPTO_ASSET,
       }
     : {};
 
