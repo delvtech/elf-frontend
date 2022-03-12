@@ -20,6 +20,7 @@ import {
 import ContractAddresses from "addresses/addresses";
 import { CryptoAsset, CryptoAssetType } from "elf/crypto/CryptoAsset";
 import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
 
 const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.usdcAddress]: UsdcIcon,
@@ -44,6 +45,10 @@ function makeTagIcon(cryptoAsset: CryptoAsset) {
       </Tag>
     );
   };
+}
+
+export function findAssetIconByAddress(address: string): TokenIcon {
+  return findAssetIcon(getCryptoAssetForToken(address));
 }
 
 export function findAssetIcon(cryptoAsset: CryptoAsset): TokenIcon {
