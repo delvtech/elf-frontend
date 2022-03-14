@@ -5,7 +5,6 @@ import {
   CryptoAssetType,
   Erc20CryptoAsset,
   Erc20PermitCryptoAsset,
-  EthereumCryptoAsset,
   ETHEREUM_CRYPTO_ASSET,
 } from "elf/crypto/CryptoAsset";
 import {
@@ -20,7 +19,6 @@ import { underlyingContractsByAddress } from "elf/underlying/underlying";
 import { MainnetExtraAddresses } from "elf/zaps/zapPurchase/addresses";
 import { MainnetZapContractsByAddress } from "elf/zaps/zapPurchase/contracts";
 import keyBy from "lodash.keyby";
-import { tokenListJson } from "tokenlists/tokenlists";
 
 const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
   id: AddressesJson.addresses.usdcAddress,
@@ -179,7 +177,6 @@ const SEUR_CRYPTO_ASSET: Erc20CryptoAsset = {
     MainnetExtraAddresses.sEurAddress
   ] as ERC20,
 };
-
 const zappableAssetCryptoAssets: Record<string, CryptoAsset> =
   AddressesJson.chainId === 1 ||
   process.env.NEXT_PUBLIC_CHAIN_NAME === "mainnet_fork"

@@ -11,14 +11,11 @@ import { useWeb3React } from "@web3-react/core";
 import { formatBalance } from "base/formatBalance/formatBalance";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
-import { getTokenAddressForBalancer } from "elf/balancer/getTokenAddressForBalancer";
 import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals } from "elf/crypto/getCryptoDecimals";
-import { getCryptoName } from "elf/crypto/getCryptoName/getCryptoName";
 import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
 import { commify } from "ethers/lib/utils";
 import { SwapKind } from "integrations/balancer/SwapKind";
-import { Fragment, ReactElement, useCallback, useState } from "react";
+import { Fragment, ReactElement, useCallback, useMemo, useState } from "react";
 import { t } from "ttag";
 import { useNavigation } from "ui/app/navigation/hooks/useNavigation";
 import { Navigation } from "ui/app/navigation/navigation";
@@ -28,8 +25,10 @@ import { useIsTailwindLargeScreen } from "ui/base/mediaBreakpoints";
 import { Title } from "ui/base/Title";
 import { useCalculatePrincipalTokenAmountOut } from "ui/ccpools/useCalculatePrincipalTokenAmountOut";
 import { useMarketPrice } from "ui/ccpools/useMarketPrice";
-import { findAssetIcon } from "ui/crypto/CryptoIcon";
+import { findAssetIcon, findAssetIconByAddress } from "ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
+import { BuyFixedRatesKind } from "ui/fixedrates/buyFixedRateKind";
+import { useFixedRateInputAssetInfo } from "ui/fixedrates/useFixedRateInputAssetInfo";
 import { useFixedRateInputTokens } from "ui/fixedrates/useFixedRateInputTokens";
 import { useValidateBuyPrincipalTokenInput } from "ui/pools/hooks/useValidateBuyPrincipalTokenInput";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
@@ -78,37 +77,59 @@ export function BuyFixedRatesViewWithZap({
     extensions: { underlying },
   } = principalTokenInfo;
 
+  const baseAssetSymbol = useMemo(
+    () => getCryptoSymbol(getCryptoAssetForToken(underlying)),
+    [underlying]
+  );
   const inputTokens = useFixedRateInputTokens(underlying);
+
+  const inputTokenIconsByAddress = useMemo(
+    () =>
+      Object.fromEntries(
+        inputTokens.map(({ address }) => [
+          address,
+          findAssetIconByAddress(address),
+        ])
+      ),
+    [inputTokens]
+  );
+
   const [selectedInputToken, setSelectedInputToken] = useState<TokenInfo>(
     inputTokens[0]
   );
 
-  const selectedInputAsset = getCryptoAssetForToken(selectedInputToken.address);
+  const buyFixedRatesKind =
+    selectedInputToken.address === underlying
+      ? BuyFixedRatesKind.Swap
+      : BuyFixedRatesKind.Zap;
 
-  const baseAsset = getCryptoAssetForToken(underlying);
-  const baseAssetUnderlyingAddress = getTokenAddressForBalancer(baseAsset);
-  const baseAssetName = getCryptoName(baseAsset);
-  const baseAssetSymbol = getCryptoSymbol(baseAsset);
+  const {
+    inputAsset,
+    inputAssetAddress,
+    inputAssetName,
+    inputAssetDecimals,
+    inputAssetSymbol,
+  } = useFixedRateInputAssetInfo(selectedInputToken.address, buyFixedRatesKind);
 
-  const AssetIcon = findAssetIcon(baseAsset);
+  const AssetIcon = findAssetIcon(inputAsset);
   const height = isLargeScreen ? 40 : 30;
   const width = height;
 
-  const baseAssetDecimals = getCryptoDecimals(baseAsset);
-
-  const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
-  const baseAssetDisplayBalance = formatBalance(
-    baseAssetBalanceOf,
-    baseAssetDecimals
+  const inputAssetBalanceOf = useCryptoBalanceOf(library, account, inputAsset);
+  const inputAssetDisplayBalance = formatBalance(
+    inputAssetBalanceOf,
+    inputAssetDecimals
   );
 
   // Market price stuff
   const principalPrice = useMarketPrice(principalTokenInfo);
   const roundedPrincipalPrice = commify((+principalPrice)?.toFixed(4));
+
+  // TODO Get market rate for all tokens
   const marketRateLabel = getMarketRateLabel(
     baseAssetSymbol,
     roundedPrincipalPrice,
-    baseAssetSymbol
+    inputAssetSymbol
   );
 
   // Deposit Amount stuff
@@ -174,7 +195,7 @@ export function BuyFixedRatesViewWithZap({
           <div style={{ width: 1 }} className={tw("h-full", "bg-white")} />
           <span
             className={tw("pl-2", "font-semibold")}
-          >{`${baseAssetSymbol}`}</span>
+          >{`${inputAssetSymbol}`}</span>
         </div>
         <div
           className={tw(
@@ -211,14 +232,20 @@ export function BuyFixedRatesViewWithZap({
                   itemPredicate={(_, s) =>
                     s.address !== selectedInputToken.address
                   }
-                  itemRenderer={({ name, symbol }, { handleClick }) => (
+                  itemRenderer={(
+                    { name, symbol, address },
+                    { handleClick }
+                  ) => (
                     <div
                       className={classNames(tw("p-1"))}
                       onClick={handleClick}
                     >
                       <LabeledText
                         containerClassName={tw("p-4")}
-                        icon={<AssetIcon height={height} width={width} />}
+                        icon={inputTokenIconsByAddress[address]({
+                          height,
+                          width,
+                        })}
                         iconClassName={tw("flex-shrink-0", "mr-4")}
                         large={isLargeScreen}
                         labelClassName={tw("text-xs", "text-left")}
@@ -238,9 +265,9 @@ export function BuyFixedRatesViewWithZap({
                     iconClassName={tw("flex-shrink-0", "mr-4")}
                     large={isLargeScreen}
                     labelClassName={tw("text-xs", "text-left")}
-                    label={selectedInputToken.symbol}
+                    label={inputAssetSymbol}
                     textClassName={tw("lg:text-base", "text-left")}
-                    text={selectedInputToken.name}
+                    text={inputAssetName}
                   />
                 </TokenInfoSelect>
               </div>
@@ -287,7 +314,7 @@ export function BuyFixedRatesViewWithZap({
                     Classes.TEXT_MUTED,
                     tw("text-right", "mb-2")
                   )}
-                >{t`Balance: ${baseAssetDisplayBalance} ${baseAssetSymbol}`}</span>
+                >{t`Balance: ${inputAssetDisplayBalance} ${inputAssetSymbol}`}</span>
               )}
               <div
                 style={{
@@ -305,8 +332,8 @@ export function BuyFixedRatesViewWithZap({
                   }}
                   intent={hasInputError ? Intent.DANGER : Intent.NONE}
                   value={baseAssetInputValue}
-                  maxAmount={baseAssetBalanceOf}
-                  tokenDecimals={baseAssetDecimals}
+                  maxAmount={inputAssetBalanceOf}
+                  tokenDecimals={inputAssetDecimals}
                   onValueChange={onBaseAssetInputChange}
                 />
               </div>
@@ -344,7 +371,7 @@ export function BuyFixedRatesViewWithZap({
               <FixedRatePreviewCallout
                 principalTokensOut={principalTokensOut}
                 baseAssetIn={baseAssetInputValue}
-                baseAssetDecimals={baseAssetDecimals}
+                baseAssetDecimals={inputAssetDecimals}
               />
             </div>
 
@@ -360,16 +387,17 @@ export function BuyFixedRatesViewWithZap({
           </Card>
         </div>
       </div>
+      {/* TODO should tokenOutDecimals correspond to inputAssetDecimals?*/}
       <SwapTokensTransactionConfirmationDrawer
         buttonLabel={t`Buy`}
-        tokenInAddress={baseAssetUnderlyingAddress}
-        tokenInSymbol={baseAssetSymbol}
-        tokenInDecimals={baseAssetDecimals}
-        tokenInAsset={baseAsset}
+        tokenInAddress={inputAssetAddress}
+        tokenInSymbol={inputAssetSymbol}
+        tokenInDecimals={inputAssetDecimals}
+        tokenInAsset={inputAsset}
         tokenInIcon={AssetIcon}
         tokenOutAddress={principalTokenAddress as string}
         tokenOutSymbol={principalTokenInfo.symbol}
-        tokenOutDecimals={baseAssetDecimals}
+        tokenOutDecimals={inputAssetDecimals}
         tokenOutIcon={undefined}
         account={account}
         library={library}

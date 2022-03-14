@@ -1,12 +1,12 @@
 import { t } from "ttag";
 
 export function getMarketRateLabel(
-  inputTokenSymbol: string | undefined,
+  baseAssetSymbol: string | undefined,
   roundedTranchePrice: string | undefined,
-  activeBaseAssetSymbol: string | undefined
+  inputAssetSymbol: string | undefined
 ): string | undefined {
-  if (!inputTokenSymbol || !roundedTranchePrice || !activeBaseAssetSymbol) {
+  if (!baseAssetSymbol || !roundedTranchePrice || !inputAssetSymbol) {
     return;
   }
-  return t`1 ${inputTokenSymbol} Principal Token ≈ ${roundedTranchePrice} ${activeBaseAssetSymbol}`;
+  return t`1 ${baseAssetSymbol} Principal Token ≈ ${roundedTranchePrice} ${inputAssetSymbol}`;
 }
