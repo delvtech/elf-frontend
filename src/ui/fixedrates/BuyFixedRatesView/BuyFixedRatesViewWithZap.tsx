@@ -122,10 +122,8 @@ export function BuyFixedRatesViewWithZap({
   );
 
   // Market price stuff
-  const principalPricePerBaseToken = useMarketPrice(principalTokenInfo);
-  const roundedPrincipalPrice = commify(
-    (+principalPricePerBaseToken)?.toFixed(4)
-  );
+  const principalPrice = useMarketPrice(principalTokenInfo);
+  const roundedPrincipalPrice = commify((+principalPrice)?.toFixed(4));
 
   // TODO Get market rate for all tokens
   const marketRateLabel = getMarketRateLabel(
