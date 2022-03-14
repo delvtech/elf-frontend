@@ -11,6 +11,8 @@ import { useWeb3React } from "@web3-react/core";
 import { formatBalance } from "base/formatBalance/formatBalance";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
 import { commify } from "ethers/lib/utils";
 import { SwapKind } from "integrations/balancer/SwapKind";
 import { Fragment, ReactElement, useCallback, useMemo, useState } from "react";
@@ -75,6 +77,10 @@ export function BuyFixedRatesViewWithZap({
     extensions: { underlying },
   } = principalTokenInfo;
 
+  const baseAssetSymbol = useMemo(
+    () => getCryptoSymbol(getCryptoAssetForToken(underlying)),
+    [underlying]
+  );
   const inputTokens = useFixedRateInputTokens(underlying);
 
   const inputTokenIconsByAddress = useMemo(
@@ -116,16 +122,17 @@ export function BuyFixedRatesViewWithZap({
   );
 
   // Market price stuff
-  const principalPrice = useMarketPrice(principalTokenInfo);
-  const roundedPrincipalPrice = commify((+principalPrice)?.toFixed(4));
+  const principalPricePerBaseToken = useMarketPrice(principalTokenInfo);
+  const roundedPrincipalPrice = commify(
+    (+principalPricePerBaseToken)?.toFixed(4)
+  );
 
+  // TODO Get market rate for all tokens
   const marketRateLabel = getMarketRateLabel(
-    inputAssetSymbol,
+    baseAssetSymbol,
     roundedPrincipalPrice,
     inputAssetSymbol
   );
-  const showMarketRateLabel =
-    marketRateLabel && buyFixedRatesKind === BuyFixedRatesKind.Swap;
 
   // Deposit Amount stuff
   const { stringValue: baseAssetInputValue, setValue: onBaseAssetInputChange } =
@@ -346,7 +353,7 @@ export function BuyFixedRatesViewWithZap({
                   {inputErrorMessage}
                 </span>
               )}
-              {showMarketRateLabel && (
+              {marketRateLabel && (
                 <span
                   className={classNames(
                     Classes.TEXT_MUTED,
