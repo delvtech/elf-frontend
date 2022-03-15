@@ -13,7 +13,7 @@ import { SwapKind } from "integrations/balancer/SwapKind";
 import { getPoolTokenInfoFromContract } from "elf/pools/getPoolInfo";
 import { getPoolTokens } from "elf/pools/getPoolTokens";
 import { PoolContract } from "elf/pools/PoolContract";
-import { PoolInfo } from "elf/pools/PoolInfo";
+import { TokenInfo } from "@elementfi/tokenlist";
 
 /**
  * Lazy spot price technique until we get a better method.  Right now just calculates how much out
@@ -24,13 +24,12 @@ import { PoolInfo } from "elf/pools/PoolInfo";
 const SPOT_PRICE_AMOUNT = "0.01";
 
 export function usePoolSpotPrice(
-  poolContract: PoolContract,
+  poolContract: PoolContract | undefined,
   tokenIn: string
 ): number | undefined {
   const { data } = usePoolTokens(poolContract);
   const [tokens, balances] = data ?? [[], []];
-  const poolInfo = getPoolTokenInfoFromContract(poolContract) as PoolInfo;
-  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
+  const poolInfo = getPoolTokenInfoFromContract(poolContract);
   const { data: totalSupplyBN } = useSmartContractReadCall(
     poolContract,
     "totalSupply"
@@ -40,24 +39,43 @@ export function usePoolSpotPrice(
     BALANCER_POOL_LP_TOKEN_DECIMALS
   );
 
-  const tokenInAddress =
-    baseAssetInfo.address === tokenIn
-      ? baseAssetInfo.address
-      : termAssetInfo.address;
-  const tokenOutAddress =
-    baseAssetInfo.address === tokenIn
-      ? termAssetInfo.address
-      : baseAssetInfo.address;
+  let baseAssetInfo: TokenInfo | undefined;
+  let termAssetInfo: TokenInfo | undefined;
+  if (poolInfo) {
+    ({ baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo));
+  }
 
-  const { tokenInReserves, tokenOutReserves } = getTokenReserves(
-    tokens,
-    balances,
-    tokenInAddress,
-    tokenOutAddress,
-    baseAssetInfo.decimals
-  );
+  const tokenInAddress =
+    baseAssetInfo?.address === tokenIn
+      ? baseAssetInfo.address
+      : termAssetInfo?.address;
+  const tokenOutAddress =
+    baseAssetInfo?.address === tokenIn
+      ? termAssetInfo?.address
+      : baseAssetInfo?.address;
+
+  let tokenInReserves: string | undefined;
+  let tokenOutReserves: string | undefined;
+  if (tokenInAddress && tokenOutAddress && baseAssetInfo) {
+    ({ tokenInReserves, tokenOutReserves } = getTokenReserves(
+      tokens,
+      balances,
+      tokenInAddress,
+      tokenOutAddress,
+      baseAssetInfo.decimals
+    ));
+  }
 
   const { result: [, amountOut = 0] = [] } = useMemo(() => {
+    if (
+      !poolInfo ||
+      !tokenInAddress ||
+      !tokenOutAddress ||
+      !tokenInReserves ||
+      !tokenOutReserves
+    ) {
+      return { result: undefined };
+    }
     const result = getCalcSwap(
       SPOT_PRICE_AMOUNT,
       SwapKind.GIVEN_IN,
