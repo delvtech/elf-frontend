@@ -20,8 +20,8 @@ import {
   PrincipalPoolTokenInfo,
   YieldPoolTokenInfo,
 } from "@elementfi/tokenlist";
-import { yieldPoolContractsByAddress } from "efi/pools/weightedPool";
-import { usePoolSpotPrice } from "efi-ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
+import { yieldPoolContractsByAddress } from "elf/pools/weightedPool";
+import { usePoolSpotPrice } from "ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
 
 interface EarnSummaryCardProps {
   onToggleExpand: () => void;
