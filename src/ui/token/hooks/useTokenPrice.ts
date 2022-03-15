@@ -23,10 +23,14 @@ const {
 } = AddressesJson;
 
 export function useTokenPrice<TContract extends ERC20>(
-  contract: TContract,
+  contract: TContract | undefined,
   currency: Currency
 ): QueryObserverResult<Money> {
-  const { symbol: tokenSymbol, decimals } = getTokenInfo(contract.address);
+  let tokenSymbol: string | undefined;
+  let decimals: number | undefined;
+  if (contract) {
+    ({ symbol: tokenSymbol, decimals } = getTokenInfo(contract.address));
+  }
 
   // Regular base assets
   const coinGeckoPriceResult = useCoinGeckoPrice(
@@ -35,7 +39,7 @@ export function useTokenPrice<TContract extends ERC20>(
   );
 
   // Curve stable pools, eg: crvLUSD
-  const isStablePool = isCurveStablePool(contract.address);
+  const isStablePool = !!contract && isCurveStablePool(contract.address);
   const curveStablePoolContract =
     isMainnet(chainId) && isStablePool
       ? curveVirtualPriceContractsByAddress[contract.address]
@@ -47,15 +51,15 @@ export function useTokenPrice<TContract extends ERC20>(
   );
 
   // Individual Curve non-stable pools, eg crvTricrypto or steCRV
-  const isCrvTricrypto = contract.address === crvtricryptoAddress;
+  const isCrvTricrypto = contract?.address === crvtricryptoAddress;
   const triCryptoPriceResult = useTriCryptoPrice({ enabled: isCrvTricrypto });
-  const isCrv3crypto = contract.address === crv3cryptoAddress;
+  const isCrv3crypto = contract?.address === crv3cryptoAddress;
   const crv3CryptoPriceResult = useCrv3CryptoPrice({ enabled: isCrv3crypto });
-  const isSteCrv = contract.address === stecrvAddress;
+  const isSteCrv = contract?.address === stecrvAddress;
   const steCrvPriceResult = useSteCrvPrice({ enabled: isSteCrv });
 
   // Because of the nature of hooks, we must return the correct token price here at the end.
-  if (isCurveStablePool(contract.address)) {
+  if (!!contract && isCurveStablePool(contract.address)) {
     return curveStablePoolPriceResult;
   }
 

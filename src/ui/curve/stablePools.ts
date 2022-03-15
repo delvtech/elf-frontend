@@ -22,7 +22,7 @@ const GOERLI_STUB_VIRTUAL_PRICE = {
 
 export function useCurveStablecoinPoolVirtualPrice(
   stablePoolContract: CRVLUSD | undefined,
-  decimals: number
+  decimals: number | undefined
 ): QueryObserverResult<Money> {
   const { currency } = useCurrencyPref();
 
@@ -32,7 +32,7 @@ export function useCurveStablecoinPoolVirtualPrice(
     {
       callArgs: [],
       staleTime: ONE_MINUTE_IN_MILLISECONDS,
-      enabled: !!stablePoolContract,
+      enabled: !!stablePoolContract && !!decimals,
       select: useCallback(
         (virtualPriceBigNumber: BigNumber): Money => {
           const price = +formatBalance(virtualPriceBigNumber, decimals);
