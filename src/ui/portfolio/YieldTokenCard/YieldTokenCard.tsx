@@ -1,3 +1,5 @@
+import React, { ReactElement, ReactNode } from "react";
+
 import {
   ButtonGroup,
   Callout,
@@ -8,12 +10,33 @@ import {
   Tag,
 } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
+import { InterestToken, WeightedPool } from "@elementfi/core-typechain/dist/v1";
 import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
 import { AbstractConnector } from "@web3-react/abstract-connector";
+import { calculateProgress } from "base/calculateProgress/calculateProgress";
+import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
+import { formatAbbreviatedDate } from "base/dates/dates";
+import { formatPercent } from "base/formatPercent/formatPercent";
 import classNames from "classnames";
+import { CryptoAsset } from "elf/crypto/CryptoAsset";
+import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getCryptoDecimals } from "elf/crypto/getCryptoDecimals";
+import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { formatYieldTokenShortSymbol } from "elf/interestToken/formatYieldTokenShortSymbol";
+import { formatMoney } from "elf/money/formatMoney";
+import { getPoolForYieldToken } from "elf/pools/weightedPool";
+import {
+  getVaultContractForTranche,
+  getVaultTokenInfoForTranche,
+} from "elf/tranche/tranches";
+import { formatUnits } from "ethers/lib/utils";
 import { getCoinGeckoId } from "integrations/coingecko";
-import tw from "efi-tailwindcss-classnames";
+import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";
+import Link from "next/link";
+import { getTokenInfo } from "tokenlists/tokenlists";
+import { jt, t } from "ttag";
 import { useNowMs } from "ui/base/hooks/useNowMs/useNowMs";
 import { LabeledText } from "ui/base/LabeledText/LabeledText";
 import { useCoinGeckoPrice } from "ui/coingecko/useCoinGeckoPrice";
@@ -27,29 +50,8 @@ import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { useTokenBalanceOf } from "ui/token/hooks/useTokenBalanceOf";
 import { useYearnVault } from "ui/yearn/useYearnVault";
-import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";
-import { calculateProgress } from "base/calculateProgress/calculateProgress";
-import { convertEpochSecondsToDate } from "base/convertEpochSecondsToDate/convertEpochSecondsToDate";
-import { formatAbbreviatedDate } from "base/dates/dates";
-import { formatPercent } from "base/formatPercent/formatPercent";
-import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
-import { getCryptoDecimals } from "elf/crypto/getCryptoDecimals";
-import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
-import { formatYieldTokenShortSymbol } from "elf/interestToken/formatYieldTokenShortSymbol";
-import { formatMoney } from "elf/money/formatMoney";
-import { getPoolForYieldToken } from "elf/pools/weightedPool";
-import { getTokenInfo } from "tokenlists/tokenlists";
-import {
-  getVaultContractForTranche,
-  getVaultTokenInfoForTranche,
-} from "elf/tranche/tranches";
-import { formatUnits } from "ethers/lib/utils";
-import Link from "next/link";
-import React, { ReactElement, ReactNode } from "react";
-import { jt, t } from "ttag";
-import { InterestToken, WeightedPool } from "@elementfi/core-typechain/dist/v1";
-import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
-import { CryptoAsset } from "elf/crypto/CryptoAsset";
+
+import tw from "efi-tailwindcss-classnames";
 
 interface YieldTokenCardProps {
   library: Web3Provider | undefined;
@@ -283,7 +285,10 @@ function ExitValueCallout({
     getCoinGeckoId(baseAssetSymbol),
     currency
   );
-  const { data: yieldTokenBalanceOf } = useTokenBalanceOf(yieldToken, account);
+  const { data: yieldTokenBalanceOf } = useTokenBalanceOf(
+    yieldToken as unknown as ERC20,
+    account
+  );
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const spotPrice = usePoolSpotPrice(pool, yieldToken.address);
   const exitValue =
