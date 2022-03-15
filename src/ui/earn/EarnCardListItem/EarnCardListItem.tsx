@@ -87,7 +87,8 @@ export function EarnCardListItem(
   // get contracts
   const principalPoolContract =
     principalPoolContractsByAddress[principalPoolInfo.address];
-  const yieldPoolContract = yieldPoolContractsByAddress[yieldPoolInfo.address];
+  const yieldPoolContract =
+    yieldPoolInfo && yieldPoolContractsByAddress[yieldPoolInfo.address];
   const baseAssetContract = underlyingContractsByAddress[
     principalTokenInfo.extensions.underlying
   ] as WETH | USDC | ERC20;

@@ -17,7 +17,7 @@ import {
 } from "@elementfi/tokenlist";
 
 interface EarnExpandedSummaryProps {
-  yieldPoolInfo: YieldPoolTokenInfo;
+  yieldPoolInfo: YieldPoolTokenInfo | undefined;
   principalPoolInfo: PrincipalPoolTokenInfo;
   principalPrice: string | undefined;
   yieldPrice: string | undefined;
@@ -66,7 +66,7 @@ export function EarnExpandedSummary(
 }
 
 interface LiquiditySectionProps {
-  yieldPoolInfo: PoolInfo;
+  yieldPoolInfo: PoolInfo | undefined;
   principalPoolInfo: PoolInfo;
 }
 

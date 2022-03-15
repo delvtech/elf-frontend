@@ -5,7 +5,7 @@ import { ONE_WEEK_IN_SECONDS, ONE_YEAR_IN_SECONDS } from "base/time";
 import { PoolInfo } from "elf/pools/PoolInfo";
 
 export function useStakingAPY(
-  poolInfo: PoolInfo,
+  poolInfo: PoolInfo | undefined,
   fromTime: number = ONE_WEEK_IN_SECONDS,
   toTime?: number
 ): number {
@@ -16,6 +16,10 @@ export function useStakingAPY(
     fromTime,
     toTime
   );
+
+  if (!poolInfo) {
+    return 0;
+  }
 
   const nowInSeconds = nowMs / 1000;
   const { createdAtTimestamp } = poolInfo.extensions;

@@ -5,12 +5,21 @@ import {
 import { BigNumber } from "ethers";
 
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { isConvergentCurvePool, isWeightedPool } from "elf/pools/PoolContract";
+import {
+  isConvergentCurvePool,
+  isWeightedPool,
+  PoolContract,
+} from "elf/pools/PoolContract";
 import { PoolInfo } from "elf/pools/PoolInfo";
 import { getPoolContract } from "elf/pools/getPoolContract";
 
-export function usePoolSwapFee(poolInfo: PoolInfo): BigNumber | undefined {
-  const pool = getPoolContract(poolInfo.address);
+export function usePoolSwapFee(
+  poolInfo: PoolInfo | undefined
+): BigNumber | undefined {
+  let pool: PoolContract | undefined;
+  if (poolInfo) {
+    pool = getPoolContract(poolInfo.address);
+  }
   const { data: swapFee } = useSmartContractReadCall(
     pool as WeightedPool,
     "getSwapFeePercentage",

@@ -15,6 +15,7 @@ import { formatUnits } from "ethers/lib/utils";
 import { useMemo } from "react";
 import { Money } from "ts-money";
 import { BigNumber } from "ethers";
+import { PoolContract } from "elf/pools/PoolContract";
 
 export function useTotalValueLockedForTranche(
   trancheInfo: PrincipalTokenInfo,
@@ -83,7 +84,10 @@ export function useTotalValueLockedForTranche(
 function useBaseAssetReservesInPool(
   poolInfo: PoolInfo | undefined
 ): BigNumber | undefined {
-  const pool = getPoolContract(poolInfo?.address);
+  let pool: PoolContract | undefined;
+  if (poolInfo) {
+    pool = getPoolContract(poolInfo.address);
+  }
   const { data: [, balances] = [undefined, undefined] } = usePoolTokens(pool);
 
   if (!poolInfo) {

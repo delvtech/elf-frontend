@@ -9,6 +9,7 @@ import { getPrincipalTokenInfoForPool } from "elf/pools/getPrincipalTokenInfoFor
 import { PoolInfo } from "elf/pools/PoolInfo";
 import { TermAssetType } from "elf/tranche/TermAssetType";
 import { getVaultTokenInfoForTranche } from "elf/tranche/tranches";
+import { TokenInfo } from "@elementfi/tokenlist";
 
 /**
  * Returns the APY for either a principal token or a yield token
@@ -18,21 +19,33 @@ import { getVaultTokenInfoForTranche } from "elf/tranche/tranches";
  * @returns
  */
 export function useTokenYield(
-  poolInfo: PoolInfo,
+  poolInfo: PoolInfo | undefined,
   termAssetType: TermAssetType
 ): number {
   const nowMs = useNowMs();
-  const pool = getPoolContract(poolInfo.address);
-  const { termAssetInfo } = getPoolTokens(poolInfo);
+  const pool = poolInfo && getPoolContract(poolInfo.address);
+
+  let termAssetInfo: TokenInfo | undefined;
+  let trancheAddress: string | undefined;
+  let unlockTimestamp: number | undefined;
+  let vaultSymbol: string | undefined;
+  let vaultAddress: string | undefined;
+  if (poolInfo) {
+    ({ termAssetInfo } = getPoolTokens(poolInfo));
+    ({
+      address: trancheAddress,
+      extensions: { unlockTimestamp },
+    } = getPrincipalTokenInfoForPool(poolInfo));
+    // the yield token apy is the same as the underlying vault, so we pull from there.
+    ({ symbol: vaultSymbol, address: vaultAddress } =
+      getVaultTokenInfoForTranche(trancheAddress));
+  }
+
   // get fixed yield
-  const principalPrice = usePoolSpotPrice(pool, termAssetInfo.address);
-  const {
-    address: trancheAddress,
-    extensions: { unlockTimestamp },
-  } = getPrincipalTokenInfoForPool(poolInfo);
+  const principalPrice = usePoolSpotPrice(pool, termAssetInfo?.address);
 
   let fixedAPY = 0;
-  if (principalPrice) {
+  if (principalPrice && unlockTimestamp) {
     const timeLeftInSeconds = unlockTimestamp - Math.round(nowMs / 1000);
 
     // principalPrice is the price in terms of the base asset.  Since we know the principal will be
@@ -49,9 +62,6 @@ export function useTokenYield(
     }
   }
 
-  // the yield token apy is the same as the underlying vault, so we pull from there.
-  const { symbol: vaultSymbol, address: vaultAddress } =
-    getVaultTokenInfoForTranche(trancheAddress);
   const { data: vaultInfo } = useYearnVault(vaultSymbol, vaultAddress);
 
   const variableAPY = vaultInfo?.apy ? getYearnVaultAPY(vaultInfo?.apy) : 0;

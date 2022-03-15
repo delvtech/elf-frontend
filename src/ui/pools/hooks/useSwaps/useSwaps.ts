@@ -11,11 +11,11 @@ import { PoolInfo } from "elf/pools/PoolInfo";
 import { balancerVaultContract } from "elf/balancer/vault";
 
 export function useSwaps(
-  poolInfo: PoolInfo,
+  poolInfo: PoolInfo | undefined,
   fromTime: number = ONE_WEEK_IN_SECONDS,
   toTime?: number
 ): SwapEventWithTimeStamp[] | undefined {
-  const { poolId } = poolInfo.extensions;
+  const { poolId } = poolInfo?.extensions || {};
   const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime);
   const { data: toBlockNumber } = usePreviousBlockNumber(toTime);
   const { data: lastestBlockNumber } = useLatestBlockNumber();

@@ -17,7 +17,7 @@ import { getPoolInfoForYieldToken } from "elf/pools/weightedPool";
 import { StakePrincipalTokenForm } from "./StakePrincipalTokensForm";
 import Link from "next/link";
 import classNames from "classnames";
-import { PoolInfo } from "efi/pools/PoolInfo";
+import { PoolInfo } from "elf/pools/PoolInfo";
 
 interface EarnStakingFormsProps {
   className?: string;

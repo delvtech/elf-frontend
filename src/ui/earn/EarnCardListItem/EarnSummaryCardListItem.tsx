@@ -27,7 +27,7 @@ interface EarnSummaryCardListItemProps {
   termLength: number;
   vaultApy: number;
   tvl: Money | undefined;
-  yieldPoolInfo: YieldPoolTokenInfo;
+  yieldPoolInfo: YieldPoolTokenInfo | undefined;
   principalPoolInfo: PrincipalPoolTokenInfo;
   startTime: number;
   maturityTime: number;

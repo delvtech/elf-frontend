@@ -10,8 +10,13 @@ import { ONE_DAY_IN_SECONDS } from "base/time";
 import { convertNumberToFiatBalance } from "elf/money/convertToFiatBalance";
 import { getPoolContract } from "elf/pools/getPoolContract";
 import { getPoolTokens } from "elf/pools/getPoolTokens";
-import { isConvergentCurvePool, isWeightedPool } from "elf/pools/PoolContract";
+import {
+  isConvergentCurvePool,
+  isWeightedPool,
+  PoolContract,
+} from "elf/pools/PoolContract";
 import { PoolInfo } from "elf/pools/PoolInfo";
+import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
 
 /**
  * Returns the fiat volume for a pool in a given time range
@@ -23,15 +28,20 @@ import { PoolInfo } from "elf/pools/PoolInfo";
  * over the time period. values in ascending token address order.
  */
 export function useFeeVolumeForPool(
-  poolInfo: PoolInfo,
+  poolInfo: PoolInfo | undefined,
   fromTime: number = ONE_DAY_IN_SECONDS,
   toTime?: number
 ): number | undefined {
-  const {
-    baseAssetContract,
-    baseAssetInfo: { decimals: baseAssetDecimals },
-  } = getPoolTokens(poolInfo);
-  const pool = getPoolContract(poolInfo.address);
+  let baseAssetContract: ERC20 | undefined;
+  let baseAssetDecimals: number | undefined;
+  let pool: PoolContract | undefined;
+  if (poolInfo) {
+    ({
+      baseAssetInfo: { decimals: baseAssetDecimals },
+    } = getPoolTokens(poolInfo));
+
+    pool = getPoolContract(poolInfo.address);
+  }
 
   const swapEvents = useSwaps(poolInfo, fromTime, toTime);
 
@@ -47,7 +57,12 @@ export function useFeeVolumeForPool(
 
   const swapFee = +formatEther(swapFeeBN);
 
-  if (isWeightedPool(pool) && swapFee) {
+  if (
+    isWeightedPool(pool) &&
+    swapFee &&
+    baseAssetContract &&
+    baseAssetDecimals
+  ) {
     return calculateWeightedPoolFees(
       swapEvents,
       baseAssetContract.address,
@@ -56,7 +71,7 @@ export function useFeeVolumeForPool(
     );
   }
 
-  if (isConvergentCurvePool(pool) && swapFee) {
+  if (isConvergentCurvePool(pool) && swapFee && baseAssetDecimals) {
     return calculateConvergentCurvePoolFees(
       swapEvents,
       baseAssetDecimals,
@@ -68,11 +83,13 @@ export function useFeeVolumeForPool(
 }
 
 export function useFeeVolumeFiatForPool(
-  poolInfo: PoolInfo,
+  poolInfo: PoolInfo | undefined,
   fromTime: number = ONE_DAY_IN_SECONDS,
   toTime?: number
 ): Money {
-  const { baseAssetContract } = getPoolTokens(poolInfo);
+  const { baseAssetContract } = poolInfo
+    ? getPoolTokens(poolInfo)
+    : { baseAssetContract: undefined };
   const fees = useFeeVolumeForPool(poolInfo, fromTime, toTime);
   const { currency } = useCurrencyPref();
   const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
