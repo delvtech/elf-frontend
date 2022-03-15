@@ -10,7 +10,11 @@ export function useTotalFiatLiquidity(
   poolInfo: PoolInfo | undefined
 ): Money | undefined {
   const { currency } = useCurrencyPref();
-  const { baseAssetContract } = getPoolTokens(poolInfo);
+
+  const { baseAssetContract } = poolInfo
+    ? getPoolTokens(poolInfo)
+    : { baseAssetContract: undefined };
+
   const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
 
   const totalLiquidity = useTotalLiquidity(poolInfo);
@@ -20,7 +24,7 @@ export function useTotalFiatLiquidity(
   }
 
   const safeTotalLiquidity = Number.isFinite(totalLiquidity)
-    ? totalLiquidity
+    ? (totalLiquidity as number)
     : 0;
   const totalFiatLiquidity = baseAssetPrice.multiply(
     safeTotalLiquidity,

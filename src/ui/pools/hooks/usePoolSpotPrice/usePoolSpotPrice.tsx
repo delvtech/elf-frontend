@@ -25,7 +25,7 @@ const SPOT_PRICE_AMOUNT = "0.01";
 
 export function usePoolSpotPrice(
   poolContract: PoolContract | undefined,
-  tokenIn: string
+  tokenIn: string | undefined
 ): number | undefined {
   const { data } = usePoolTokens(poolContract);
   const [tokens, balances] = data ?? [[], []];
@@ -47,7 +47,7 @@ export function usePoolSpotPrice(
 
   const tokenInAddress =
     baseAssetInfo?.address === tokenIn
-      ? baseAssetInfo.address
+      ? baseAssetInfo?.address
       : termAssetInfo?.address;
   const tokenOutAddress =
     baseAssetInfo?.address === tokenIn
