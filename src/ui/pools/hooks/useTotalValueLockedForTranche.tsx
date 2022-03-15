@@ -1,5 +1,5 @@
 import { ERC20 } from "@elementfi/core-typechain/dist/libraries";
-import { PrincipalTokenInfo, YieldPoolTokenInfo } from "@elementfi/tokenlist";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 import { useAccumulatedInterestForTranche } from "ui/pools/hooks/useAccumulatedInterestForTranche";
 import { usePoolTokens } from "ui/pools/hooks/usePoolTokens/usePoolTokens";
@@ -9,12 +9,12 @@ import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import { getPoolContract } from "elf/pools/getPoolContract";
 import { getPoolTokens } from "elf/pools/getPoolTokens";
 import { PoolInfo } from "elf/pools/PoolInfo";
-import { getPoolForYieldToken } from "elf/pools/weightedPool";
-import { getTokenInfo } from "tokenlists/tokenlists";
+import { getPoolInfoForYieldToken } from "elf/pools/weightedPool";
 import { trancheContractsByAddress } from "elf/tranche/tranches";
 import { formatUnits } from "ethers/lib/utils";
 import { useMemo } from "react";
 import { Money } from "ts-money";
+import { BigNumber } from "ethers";
 
 export function useTotalValueLockedForTranche(
   trancheInfo: PrincipalTokenInfo,
@@ -23,10 +23,9 @@ export function useTotalValueLockedForTranche(
   const { address, decimals } = trancheInfo;
   const tranche = trancheContractsByAddress[address];
   const poolInfo = getPoolInfoForPrincipalToken(address);
-  const { address: yieldPoolAddress } = getPoolForYieldToken(
+  const yieldPoolInfo = getPoolInfoForYieldToken(
     trancheInfo.extensions.interestToken
   );
-  const yieldPoolInfo = getTokenInfo<YieldPoolTokenInfo>(yieldPoolAddress);
 
   // get all components of TVL: base asset in tranche, base asset in pool, accumulated interest for tranche
   const { data: baseAssetLockedBN } = useSmartContractReadCall(
@@ -82,9 +81,16 @@ export function useTotalValueLockedForTranche(
 
   return totalFiatValueLocked;
 }
-function useBaseAssetReservesInPool(poolInfo: PoolInfo) {
-  const pool = getPoolContract(poolInfo.address);
+function useBaseAssetReservesInPool(
+  poolInfo: PoolInfo | undefined
+): BigNumber | undefined {
+  const pool = getPoolContract(poolInfo?.address);
   const { data: [, balances] = [undefined, undefined] } = usePoolTokens(pool);
+
+  if (!poolInfo) {
+    return;
+  }
+
   const { baseAssetIndex } = getPoolTokens(poolInfo);
   return balances?.[baseAssetIndex];
 }
