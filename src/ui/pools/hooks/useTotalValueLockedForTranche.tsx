@@ -83,7 +83,7 @@ export function useTotalValueLockedForTranche(
 function useBaseAssetReservesInPool(
   poolInfo: PoolInfo | undefined
 ): BigNumber | undefined {
-  const pool = getPoolContract(poolInfo?.address);
+  const pool = poolInfo && getPoolContract(poolInfo.address);
   const { data: [, balances] = [undefined, undefined] } = usePoolTokens(pool);
 
   if (!poolInfo) {

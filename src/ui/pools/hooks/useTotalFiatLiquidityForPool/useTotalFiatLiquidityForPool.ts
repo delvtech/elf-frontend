@@ -6,9 +6,7 @@ import { useTokenPrice } from "ui/token/hooks/useTokenPrice";
 import { getPoolTokens } from "elf/pools/getPoolTokens";
 import { PoolInfo } from "elf/pools/PoolInfo";
 
-export function useTotalFiatLiquidity(
-  poolInfo: PoolInfo | undefined
-): Money | undefined {
+export function useTotalFiatLiquidity(poolInfo: PoolInfo): Money | undefined {
   const { currency } = useCurrencyPref();
   const { baseAssetContract } = getPoolTokens(poolInfo);
   const { data: baseAssetPrice } = useTokenPrice(baseAssetContract, currency);
