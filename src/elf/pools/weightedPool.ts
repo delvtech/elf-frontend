@@ -29,21 +29,35 @@ export const yieldPoolContractsByAddress = keyBy(
   (yieldPool) => yieldPool.address
 );
 
-export function getPoolForYieldToken(yieldTokenAddress: string): WeightedPool {
+export function getPoolForYieldToken(
+  yieldTokenAddress: string
+): WeightedPool | undefined {
   const yieldPool = yieldPools.find(
     ({ extensions: { interestToken } }) => interestToken === yieldTokenAddress
-  ) as YieldPoolTokenInfo;
+  );
 
+  // V1.1+ terms and don't have yield pools
+  if (!yieldPool) {
+    return undefined;
+  }
+
+  // V1 terms have yield pools
   return yieldPoolContractsByAddress[yieldPool.address];
 }
 
 export function getPoolInfoForYieldToken(
   yieldTokenAddress: string
-): YieldPoolTokenInfo {
+): YieldPoolTokenInfo | undefined {
   const yieldPoolInfo = yieldPools.find(
     ({ extensions: { interestToken } }) => interestToken === yieldTokenAddress
-  ) as YieldPoolTokenInfo;
+  );
 
+  // V1.1+ terms and don't have yield pools
+  if (!yieldPoolInfo) {
+    return undefined;
+  }
+
+  // V1 terms have yield pools
   return yieldPoolInfo;
 }
 
