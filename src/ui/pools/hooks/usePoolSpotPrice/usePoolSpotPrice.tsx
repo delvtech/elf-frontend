@@ -24,7 +24,7 @@ import { PoolInfo } from "elf/pools/PoolInfo";
 const SPOT_PRICE_AMOUNT = "0.01";
 
 export function usePoolSpotPrice(
-  poolContract: PoolContract,
+  poolContract: PoolContract | undefined,
   tokenIn: string
 ): number | undefined {
   const { data } = usePoolTokens(poolContract);

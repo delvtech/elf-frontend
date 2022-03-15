@@ -1,35 +1,31 @@
-import { Card, Classes, Collapse, Elevation } from "@blueprintjs/core";
-import { ERC20, USDC, WETH } from "@elementfi/core-typechain/dist/libraries";
-import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
+import { CSSProperties, ReactElement, useCallback, useState } from "react";
+
+import { Card, Collapse, Elevation } from "@blueprintjs/core";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
-import classNames from "classnames";
 import { differenceInDays } from "date-fns";
+import { Signer } from "ethers";
+
 import tw from "efi-tailwindcss-classnames";
-import { findAssetIcon } from "ui/crypto/CryptoIcon";
-import { EarnActionsCard } from "ui/earn/EarnActionsCard/EarnActionsCard";
-import { EarnActionsTabId } from "ui/earn/EarnActionsTabs/EarnActionsTabId";
-import { useFeeVolumeForPool } from "ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
-import { usePoolSpotPrice } from "ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
-import { useTokenYield } from "ui/pools/hooks/useTokenYield";
-import { useTotalValueLockedForTranche } from "ui/pools/hooks/useTotalValueLockedForTranche";
-import { useYearnVault } from "ui/yearn/useYearnVault";
-import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";
+
+import { EarnSummaryCard } from "./EarnSummaryCard";
+import { WETH, USDC, ERC20 } from "@elementfi/core-typechain/dist/libraries";
 import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
 import {
   getPoolInfoForPrincipalToken,
   principalPoolContractsByAddress,
 } from "elf/pools/ccpool";
-import {
-  getPoolInfoForYieldToken,
-  yieldPoolContractsByAddress,
-} from "elf/pools/weightedPool";
-import { getTokenInfo } from "tokenlists/tokenlists";
+import { getPoolInfoForYieldToken } from "elf/pools/weightedPool";
 import { getIsMature } from "elf/tranche/getIsMature";
 import { getVaultTokenInfoForTranche } from "elf/tranche/tranches";
 import { underlyingContractsByAddress } from "elf/underlying/underlying";
-import { Signer } from "ethers";
-import { CSSProperties, ReactElement, useCallback, useState } from "react";
-import { EarnSummaryCard } from "./EarnSummaryCard";
+import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";
+import { findAssetIcon } from "ui/crypto/CryptoIcon";
+import { EarnActionsCard } from "ui/earn/EarnActionsCard/EarnActionsCard";
+import { EarnActionsTabId } from "ui/earn/EarnActionsTabs/EarnActionsTabId";
+import { usePoolSpotPrice } from "ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
+import { useTotalValueLockedForTranche } from "ui/pools/hooks/useTotalValueLockedForTranche";
+import { useYearnVault } from "ui/yearn/useYearnVault";
 
 interface EarnCardProps {
   signer: Signer | undefined;
@@ -74,12 +70,10 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
     principalTokenInfo.address
   );
   const vaultTokenInfo = getVaultTokenInfoForTranche(principalTokenAddress);
-  const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(interestTokenAddress);
 
   // get contracts
   const principalPoolContract =
     principalPoolContractsByAddress[principalPoolInfo.address];
-  const yieldPoolContract = yieldPoolContractsByAddress[yieldPoolInfo.address];
   const baseAssetContract = underlyingContractsByAddress[
     principalTokenInfo.extensions.underlying
   ] as WETH | USDC | ERC20;
@@ -101,17 +95,11 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
     principalPoolContract,
     principalTokenInfo.address
   )?.toFixed(4);
-  const yieldPrice = usePoolSpotPrice(
-    yieldPoolContract,
-    yieldTokenInfo.address
-  )?.toFixed(4);
 
-  const fees = useFeeVolumeForPool(yieldPoolInfo) ?? 0;
   const tvl = useTotalValueLockedForTranche(
     principalTokenInfo,
     baseAssetContract as unknown as ERC20
   );
-  const variableYield = useTokenYield(yieldPoolInfo, "yield");
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
 
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
@@ -124,10 +112,6 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   const termLength =
     dayDifference > 10 ? Math.round(dayDifference / 10) * 10 : dayDifference;
 
-  // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
-  const dataToLoad = [tvl, vaultInfo, yieldPrice, fees, variableYield];
-  const allDataLoaded = dataToLoad.every((data) => data !== undefined);
-
   const onToggleExpand = useCallback(() => {
     if (isMature) {
       return;
@@ -138,21 +122,6 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
       onExpandOpen(id);
     }
   }, [id, isExpanded, isMature, onExpandClose, onExpandOpen]);
-
-  if (!allDataLoaded) {
-    return (
-      <Card
-        style={poolCardStyle}
-        interactive={false}
-        elevation={Elevation.ZERO}
-        className={classNames(tw("p-0", "w-full"))}
-      >
-        <div
-          className={classNames(tw("p-0", "w-full", "h-24"), Classes.SKELETON)}
-        />
-      </Card>
-    );
-  }
 
   return (
     <Card
@@ -172,7 +141,6 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
         yieldPoolInfo={yieldPoolInfo}
         principalPoolInfo={principalPoolInfo}
         principalPrice={principalPrice}
-        yieldPrice={yieldPrice}
         startTime={startTime}
         maturityTime={maturityTime}
         isExpanded={isExpanded}

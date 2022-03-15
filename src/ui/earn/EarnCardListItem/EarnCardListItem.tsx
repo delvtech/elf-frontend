@@ -1,3 +1,5 @@
+import { Fragment, ReactElement, useCallback, useState } from "react";
+
 import {
   Button,
   Card,
@@ -14,19 +16,6 @@ import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
 import classNames from "classnames";
 import { differenceInDays } from "date-fns";
-import tw from "efi-tailwindcss-classnames";
-import { findAssetIcon } from "ui/crypto/CryptoIcon";
-import { EarnActionsTabId } from "ui/earn/EarnActionsTabs/EarnActionsTabId";
-import { EarnExpandedSummary } from "ui/earn/EarnCardListItem/EarnExpandedSummary";
-import { EarnStakingForms } from "ui/earn/EarnStakingForm/EarnStakingForms";
-import { MintForm } from "ui/mint/MintCard/MintForm";
-import { useFeeVolumeForPool } from "ui/pools/hooks/useFeeVolumeForPool/useFeeVolumeForPool";
-import { usePoolSpotPrice } from "ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
-import { useTokenYield } from "ui/pools/hooks/useTokenYield";
-import { useTotalValueLockedForTranche } from "ui/pools/hooks/useTotalValueLockedForTranche";
-import { useSigner } from "ui/provider/useBlockFromTag/useSigner/useSigner";
-import { useYearnVault } from "ui/yearn/useYearnVault";
-import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";
 import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
 import {
   getPoolInfoForPrincipalToken,
@@ -36,13 +25,25 @@ import {
   getPoolInfoForYieldToken,
   yieldPoolContractsByAddress,
 } from "elf/pools/weightedPool";
-import { getTokenInfo } from "tokenlists/tokenlists";
 import { getIsMature } from "elf/tranche/getIsMature";
 import { getVaultTokenInfoForTranche } from "elf/tranche/tranches";
 import { underlyingContractsByAddress } from "elf/underlying/underlying";
 import { Signer } from "ethers";
-import { Fragment, ReactElement, useCallback, useState } from "react";
+import { getYearnVaultAPY } from "integrations/yearn/fetchYearnVaults";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { t } from "ttag";
+import { findAssetIcon } from "ui/crypto/CryptoIcon";
+import { EarnActionsTabId } from "ui/earn/EarnActionsTabs/EarnActionsTabId";
+import { EarnExpandedSummary } from "ui/earn/EarnCardListItem/EarnExpandedSummary";
+import { EarnStakingForms } from "ui/earn/EarnStakingForm/EarnStakingForms";
+import { MintForm } from "ui/mint/MintCard/MintForm";
+import { usePoolSpotPrice } from "ui/pools/hooks/usePoolSpotPrice/usePoolSpotPrice";
+import { useTotalValueLockedForTranche } from "ui/pools/hooks/useTotalValueLockedForTranche";
+import { useSigner } from "ui/provider/useBlockFromTag/useSigner/useSigner";
+import { useYearnVault } from "ui/yearn/useYearnVault";
+
+import tw from "efi-tailwindcss-classnames";
+
 import { EarnSummaryCardListItem } from "./EarnSummaryCardListItem";
 
 interface EarnCardListItemProps {
@@ -87,7 +88,8 @@ export function EarnCardListItem(
   // get contracts
   const principalPoolContract =
     principalPoolContractsByAddress[principalPoolInfo.address];
-  const yieldPoolContract = yieldPoolContractsByAddress[yieldPoolInfo.address];
+  const yieldPoolContract =
+    yieldPoolInfo && yieldPoolContractsByAddress[yieldPoolInfo.address];
   const baseAssetContract = underlyingContractsByAddress[
     principalTokenInfo.extensions.underlying
   ] as WETH | USDC | ERC20;
@@ -109,17 +111,16 @@ export function EarnCardListItem(
     principalPoolContract,
     principalTokenInfo.address
   )?.toFixed(4);
+
   const yieldPrice = usePoolSpotPrice(
     yieldPoolContract,
     yieldTokenInfo.address
   )?.toFixed(4);
 
-  const fees = useFeeVolumeForPool(yieldPoolInfo) ?? 0;
   const tvl = useTotalValueLockedForTranche(
     principalTokenInfo,
     baseAssetContract as unknown as ERC20
   );
-  const variableYield = useTokenYield(yieldPoolInfo, "yield");
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
 
   const startTime = trancheCreatedAt ? trancheCreatedAt * 1000 : 0;
@@ -133,7 +134,7 @@ export function EarnCardListItem(
     dayDifference > 10 ? Math.round(dayDifference / 10) * 10 : dayDifference;
 
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
-  const dataToLoad = [tvl, vaultInfo, yieldPrice, fees, variableYield];
+  const dataToLoad = [tvl, vaultInfo];
   const allDataLoaded = dataToLoad.every((data) => data !== undefined);
 
   const onToggleExpand = useCallback(() => {

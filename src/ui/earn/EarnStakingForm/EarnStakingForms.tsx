@@ -17,6 +17,7 @@ import { getPoolInfoForYieldToken } from "elf/pools/weightedPool";
 import { StakePrincipalTokenForm } from "./StakePrincipalTokensForm";
 import Link from "next/link";
 import classNames from "classnames";
+import { PoolInfo } from "elf/pools/PoolInfo";
 
 interface EarnStakingFormsProps {
   className?: string;
@@ -36,8 +37,6 @@ export function EarnStakingForms(props: EarnStakingFormsProps): ReactElement {
   const yieldPoolInfo = getPoolInfoForYieldToken(
     trancheInfo.extensions.interestToken
   );
-  const ptStakingAPY = useStakingAPY(principalPoolInfo);
-  const ytStakingAPY = useStakingAPY(yieldPoolInfo);
 
   const cardClassName = tw(
     "flex",
@@ -58,36 +57,52 @@ export function EarnStakingForms(props: EarnStakingFormsProps): ReactElement {
         <div
           className={tw("text-center", "font-semibold")}
         >{t`LP your Principal Tokens`}</div>
-        <div className={tw("text-center")}>{t`LP APY: ${formatPercent(
-          ptStakingAPY
-        )}`}</div>
+        <PoolStakingAPY poolInfo={principalPoolInfo} />
         <StakePrincipalTokenForm
           account={account}
           library={library}
           signer={signer}
           poolInfo={principalPoolInfo}
         />
-        <Link href={`/pools/${principalPoolInfo.address}`}>
-          <a className={tw("text-center", "font-semibold")}>{t`Go to pool`}</a>
-        </Link>
+        <PoolLink address={principalPoolInfo.address} />
       </Card>
-      <Card className={cardClassName}>
-        <div
-          className={tw("text-center", "font-semibold")}
-        >{t`LP your Yield Tokens`}</div>
-        <div className={tw("text-center")}>{t`LP APY: ${formatPercent(
-          ytStakingAPY
-        )}`}</div>
-        <StakeYieldTokensForm
-          account={account}
-          library={library}
-          signer={signer}
-          poolInfo={yieldPoolInfo}
-        />
-        <Link href={`/pools/${yieldPoolInfo.address}`}>
-          <a className={tw("text-center", "font-semibold")}>{t`Go to pool`}</a>
-        </Link>
-      </Card>
+      {yieldPoolInfo && (
+        <Card className={cardClassName}>
+          <div
+            className={tw("text-center", "font-semibold")}
+          >{t`LP your Yield Tokens`}</div>
+          <PoolStakingAPY poolInfo={yieldPoolInfo} />
+          <StakeYieldTokensForm
+            account={account}
+            library={library}
+            signer={signer}
+            poolInfo={yieldPoolInfo}
+          />
+          <PoolLink address={yieldPoolInfo.address} />
+        </Card>
+      )}
     </div>
+  );
+}
+interface PoolStakingAPYProps {
+  poolInfo: PoolInfo;
+}
+function PoolStakingAPY({ poolInfo }: PoolStakingAPYProps) {
+  const stakingAPY = useStakingAPY(poolInfo);
+  return (
+    <div className={tw("text-center")}>{t`LP APY: ${formatPercent(
+      stakingAPY
+    )}`}</div>
+  );
+}
+
+interface PoolLinkProps {
+  address: string;
+}
+function PoolLink({ address }: PoolLinkProps) {
+  return (
+    <Link href={`/pools/${address}`}>
+      <a className={tw("text-center", "font-semibold")}>{t`Go to pool`}</a>
+    </Link>
   );
 }
