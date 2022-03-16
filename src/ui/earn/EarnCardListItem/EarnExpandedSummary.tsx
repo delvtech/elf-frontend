@@ -49,8 +49,8 @@ export function EarnExpandedSummary(
           <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
             {t`Token price:`}
           </span>
-          <LabeledText text={t`${principalPrice}`} label={t`Principal token`} />
-          <LabeledText text={t`${yieldPrice}`} label={t`Yield token`} />
+          <LabeledText text={principalPrice} label={t`Principal token`} />
+          <LabeledText text={yieldPrice} label={t`Yield token`} />
         </div>
 
         {/* Fixed APR */}

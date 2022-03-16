@@ -13,7 +13,6 @@ import { SwapKind } from "integrations/balancer/SwapKind";
 import { getPoolTokenInfoFromContract } from "elf/pools/getPoolInfo";
 import { getPoolTokens } from "elf/pools/getPoolTokens";
 import { PoolContract } from "elf/pools/PoolContract";
-import { PoolInfo } from "elf/pools/PoolInfo";
 
 /**
  * Lazy spot price technique until we get a better method.  Right now just calculates how much out
@@ -29,8 +28,7 @@ export function usePoolSpotPrice(
 ): number | undefined {
   const { data } = usePoolTokens(poolContract);
   const [tokens, balances] = data ?? [[], []];
-  const poolInfo = getPoolTokenInfoFromContract(poolContract) as PoolInfo;
-  const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
+  const poolInfo = getPoolTokenInfoFromContract(poolContract);
   const { data: totalSupplyBN } = useSmartContractReadCall(
     poolContract,
     "totalSupply"
@@ -40,24 +38,27 @@ export function usePoolSpotPrice(
     BALANCER_POOL_LP_TOKEN_DECIMALS
   );
 
-  const tokenInAddress =
-    baseAssetInfo.address === tokenIn
-      ? baseAssetInfo.address
-      : termAssetInfo.address;
-  const tokenOutAddress =
-    baseAssetInfo.address === tokenIn
-      ? termAssetInfo.address
-      : baseAssetInfo.address;
-
-  const { tokenInReserves, tokenOutReserves } = getTokenReserves(
-    tokens,
-    balances,
-    tokenInAddress,
-    tokenOutAddress,
-    baseAssetInfo.decimals
-  );
-
   const { result: [, amountOut = 0] = [] } = useMemo(() => {
+    if (!poolInfo) {
+      return { result: undefined, status: "idle" };
+    }
+    const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
+    const tokenInAddress =
+      baseAssetInfo.address === tokenIn
+        ? baseAssetInfo.address
+        : termAssetInfo.address;
+    const tokenOutAddress =
+      baseAssetInfo.address === tokenIn
+        ? termAssetInfo.address
+        : baseAssetInfo.address;
+
+    const { tokenInReserves, tokenOutReserves } = getTokenReserves(
+      tokens,
+      balances,
+      tokenInAddress,
+      tokenOutAddress,
+      baseAssetInfo.decimals
+    );
     const result = getCalcSwap(
       SPOT_PRICE_AMOUNT,
       SwapKind.GIVEN_IN,
@@ -69,14 +70,7 @@ export function usePoolSpotPrice(
       totalSupply
     );
     return result;
-  }, [
-    poolInfo,
-    tokenInAddress,
-    tokenInReserves,
-    tokenOutAddress,
-    tokenOutReserves,
-    totalSupply,
-  ]);
+  }, [balances, poolInfo, tokenIn, tokens, totalSupply]);
 
   // can't give a meaningful spot price until we have the decimals.  The protects against NaN or
   // Infinity
