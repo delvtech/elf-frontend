@@ -1,6 +1,7 @@
+import { ConvergentCurvePool__factory as ConvergentCurvePool__factoryV1_1 } from "@elementfi/core-typechain/dist/v1.1";
 import {
   ConvergentCurvePool,
-  ConvergentCurvePool__factory,
+  ConvergentCurvePool__factory as ConvergentCurvePool__factoryV1,
 } from "@elementfi/core-typechain/dist/v1";
 import {
   PrincipalPoolTokenInfo,
@@ -10,6 +11,7 @@ import {
 import { defaultProvider } from "elf/providers/providers";
 import { tokenListJson } from "tokenlists/tokenlists";
 import keyBy from "lodash.keyby";
+import { AddressesJson } from "addresses/addresses";
 
 /**
  * The list of all principal token pools. This includes pools with mature
@@ -21,8 +23,16 @@ export const principalPools: PrincipalPoolTokenInfo[] =
       isPrincipalPool(tokenInfo)
   );
 
-export const principalPoolContracts = principalPools.map(({ address }) =>
-  ConvergentCurvePool__factory.connect(address, defaultProvider)
+export const principalPoolContracts = principalPools.map(
+  ({ address, extensions: { convergentPoolFactory } }) => {
+    if (
+      convergentPoolFactory ===
+      AddressesJson.addresses.convergentPoolFactoryAddress.v1
+    ) {
+      return ConvergentCurvePool__factoryV1.connect(address, defaultProvider);
+    }
+    return ConvergentCurvePool__factoryV1_1.connect(address, defaultProvider);
+  }
 );
 
 export const principalPoolContractsByAddress = keyBy(

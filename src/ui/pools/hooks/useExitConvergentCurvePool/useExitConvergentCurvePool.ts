@@ -4,7 +4,7 @@ import { ExitRequest } from "integrations/balancer/ExitRequest";
 import { BALANCER_POOL_LP_TOKEN_DECIMALS } from "integrations/balancer/pools";
 import { balancerVaultContract } from "elf/balancer/vault";
 import { useSmartContractTransactionPersisted } from "ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import ContractAddresses from "addresses/addresses";
+import ContractAddresses, { AddressesJson } from "addresses/addresses";
 import { BALANCER_ETH_SENTINEL } from "integrations/balancer/ethSentinel";
 import {
   clipFixNumberToStringDecimals,
@@ -62,6 +62,7 @@ export function useExitConvergentCurvePool(
 
     const exitPoolCallArgs = makeExitPoolCallArgs(
       poolId,
+      poolInfo.extensions.convergentPoolFactory,
       account,
       poolTokens,
       poolTokenReserves,
@@ -74,7 +75,14 @@ export function useExitConvergentCurvePool(
       return;
     }
     exitPool(exitPoolCallArgs);
-  }, [account, exitPool, lpIn, pool, poolId]);
+  }, [
+    account,
+    exitPool,
+    lpIn,
+    pool,
+    poolId,
+    poolInfo.extensions.convergentPoolFactory,
+  ]);
 
   return {
     onExitPool,
@@ -88,6 +96,7 @@ export function useExitConvergentCurvePool(
 
 function makeExitPoolCallArgs(
   poolId: string | undefined,
+  poolFactory: string,
   account: string | null | undefined,
   poolTokens: string[] | undefined,
   poolTokenReserves: BigNumber[] | undefined,
@@ -120,10 +129,14 @@ function makeExitPoolCallArgs(
     poolTokenDecimals
   ) as BigNumber[];
 
-  const userData = defaultAbiCoder.encode(
-    ["uint256[]"],
-    [poolTokenMinAmountsOut]
+  // default to v1.1 userData, but if it's a v1, then use that instead
+  let userData = defaultAbiCoder.encode(
+    ["uint256"],
+    [parseUnits(lpIn, BALANCER_POOL_LP_TOKEN_DECIMALS)]
   );
+  if (poolFactory === AddressesJson.addresses.convergentPoolFactoryAddress.v1) {
+    userData = defaultAbiCoder.encode(["uint256[]"], [poolTokenMinAmountsOut]);
+  }
 
   const exitRequest: ExitRequest = {
     toInternalBalance: false,
