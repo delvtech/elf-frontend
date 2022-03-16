@@ -212,6 +212,7 @@ export function useMintApprovals(
 const shittyGoerliAddresses: string[] = [
   "0xDCf80C068B7fFDF7273d8ADAE4B076BF384F711A",
   "0x419b57dE54F7F1E108C72d6E6b405A1E66Fc5895",
+  "0xbce711DfCD200b659f3f2715970207E719b8B273",
 ];
 async function getPermitCallData(
   signer: Signer | undefined,
