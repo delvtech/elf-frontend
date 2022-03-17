@@ -1,38 +1,58 @@
-import { CurveLpTokenInfo, TokenInfo, TokenTag } from "@elementfi/tokenlist";
+import {
+  CurveLpTokenInfo,
+  PrincipalTokenInfo,
+  TokenInfo,
+} from "@elementfi/tokenlist";
+import {
+  getCurvePoolTokensByCurveLpToken,
+  getCurvePoolTokensByPrincipalToken,
+  isCurveLpToken,
+  isTokenInCurvePoolOfCurveLpToken,
+  underlyingIsCurveLpToken,
+} from "elf/curve/tokens";
 import { getTokenInfo } from "tokenlists/tokenlists";
 
-export function isCurveLpTokenInfo(
-  tokenInfo: TokenInfo
-): tokenInfo is CurveLpTokenInfo {
-  return !!tokenInfo?.tags?.includes(TokenTag.CURVE);
+// token -> base -> principal
+// token -> meta -> base -> principal
+export interface ZapPurchaseTokenGraph {
+  token: TokenInfo;
+  principalToken: PrincipalTokenInfo;
+  baseToken: CurveLpTokenInfo;
+  metaToken?: CurveLpTokenInfo;
 }
 
-function getPoolAssetTokenInfosForCurveLpTokenInfo(
-  tokenInfo: CurveLpTokenInfo
-) {
-  return tokenInfo.extensions.poolAssets.map(getTokenInfo);
-}
+export function getZapPurchaseTokenGraph(
+  principalToken: PrincipalTokenInfo,
+  token: TokenInfo
+): ZapPurchaseTokenGraph | undefined {
+  if (!underlyingIsCurveLpToken(principalToken)) return;
 
-// Returns the constituent pool tokens if the underlying token is a curve lp
-// token. This also includes the tokens of a metapool should one of the pool
-// tokens for pool of underlying is also an lp token. e.g MIM-3-LP uses 3CRV
-export function getZappableTokenInfosForUnderlying(
-  underlyingAddress: string
-): TokenInfo[] {
-  const underlyingCurveTokenInfo = getTokenInfo(underlyingAddress);
+  const tokenIsValidInputToken = getCurvePoolTokensByPrincipalToken(
+    principalToken
+  )
+    .map(({ address }) => address)
+    .includes(token.address);
 
-  if (!isCurveLpTokenInfo(underlyingCurveTokenInfo)) return [];
+  if (!tokenIsValidInputToken) return;
 
-  const poolAssetTokenInfos = getPoolAssetTokenInfosForCurveLpTokenInfo(
-    underlyingCurveTokenInfo
+  const baseToken = getTokenInfo<CurveLpTokenInfo>(
+    principalToken.extensions.underlying
   );
 
-  const poolAssetCurveLpTokenInfos =
-    poolAssetTokenInfos.filter(isCurveLpTokenInfo);
+  const baseCurvePoolTokens = getCurvePoolTokensByCurveLpToken(baseToken);
 
-  const metaPoolAssetTokenInfo =
-    poolAssetCurveLpTokenInfos.length === 1
-      ? getPoolAssetTokenInfosForCurveLpTokenInfo(poolAssetCurveLpTokenInfos[0])
-      : [];
-  return [...poolAssetTokenInfos, ...metaPoolAssetTokenInfo];
+  const baseCurvePoolTokensContainsToken = baseCurvePoolTokens
+    .map(({ address }) => address)
+    .includes(token.address);
+
+  if (baseCurvePoolTokensContainsToken)
+    return { token, principalToken, baseToken };
+
+  const metaToken = baseCurvePoolTokens
+    .filter(isCurveLpToken)
+    .find((baseCurvePoolToken) =>
+      isTokenInCurvePoolOfCurveLpToken(baseCurvePoolToken, token)
+    );
+
+  return { token, principalToken, baseToken, metaToken };
 }

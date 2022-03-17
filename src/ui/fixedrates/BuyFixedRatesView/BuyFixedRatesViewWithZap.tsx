@@ -11,9 +11,6 @@ import { useWeb3React } from "@web3-react/core";
 import { formatBalance } from "base/formatBalance/formatBalance";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
-import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
-import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
-import { commify } from "ethers/lib/utils";
 import { SwapKind } from "integrations/balancer/SwapKind";
 import { Fragment, ReactElement, useCallback, useMemo, useState } from "react";
 import { t } from "ttag";
@@ -29,15 +26,14 @@ import { findAssetIcon, findAssetIconByAddress } from "ui/crypto/CryptoIcon";
 import { useCryptoBalanceOf } from "ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { BuyFixedRatesKind } from "ui/fixedrates/buyFixedRateKind";
 import { useFixedRateInputAssetInfo } from "ui/fixedrates/useFixedRateInputAssetInfo";
-import { useFixedRateInputTokens } from "ui/fixedrates/useFixedRateInputTokens";
 import { useValidateBuyPrincipalTokenInput } from "ui/pools/hooks/useValidateBuyPrincipalTokenInput";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { SwapTokensTransactionConfirmationDrawer } from "ui/swaps/SwapTokensTransactionConfirmationDrawer/SwapTokensTransactionConfirmationDrawer";
 import { TokenAmountInput2 } from "ui/token/TokenAmountInput/TokenAmountInput2";
-import { getMarketRateLabel } from "ui/tranche/getMarketRateLabel";
 import { PrincipalTokenTermButtonLabel2 } from "ui/tranche/TermPicker/PrincipalTokenTermButtonLabel2";
 import { TermPicker2 } from "ui/tranche/TermPicker/TermPicker2";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
+import { FixedRatePrice } from "./FixedRatePrice";
 
 export interface BuyFixedRatesViewProps {
   availablePrincipalTokens: PrincipalTokenInfo[];
@@ -46,6 +42,7 @@ export interface BuyFixedRatesViewProps {
   // principalTokenAddress comes from the url params whos type is
   // `parsedUrlQuery | undefined` so it must be optional.
   principalTokenAddress?: string;
+  inputTokenInfos: TokenInfo[];
 }
 
 const TokenInfoSelect = Select.ofType<TokenInfo>();
@@ -55,6 +52,7 @@ export function BuyFixedRatesViewWithZap({
   principalTokenInfo,
   principalTokenPoolInfo,
   principalTokenAddress,
+  inputTokenInfos,
 }: BuyFixedRatesViewProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
   const { isDarkMode } = useDarkMode();
@@ -77,25 +75,19 @@ export function BuyFixedRatesViewWithZap({
     extensions: { underlying },
   } = principalTokenInfo;
 
-  const baseAssetSymbol = useMemo(
-    () => getCryptoSymbol(getCryptoAssetForToken(underlying)),
-    [underlying]
-  );
-  const inputTokens = useFixedRateInputTokens(underlying);
-
   const inputTokenIconsByAddress = useMemo(
     () =>
       Object.fromEntries(
-        inputTokens.map(({ address }) => [
+        inputTokenInfos.map(({ address }) => [
           address,
           findAssetIconByAddress(address),
         ])
       ),
-    [inputTokens]
+    [inputTokenInfos]
   );
 
   const [selectedInputToken, setSelectedInputToken] = useState<TokenInfo>(
-    inputTokens[0]
+    inputTokenInfos[0]
   );
 
   const buyFixedRatesKind =
@@ -103,6 +95,7 @@ export function BuyFixedRatesViewWithZap({
       ? BuyFixedRatesKind.Swap
       : BuyFixedRatesKind.Zap;
 
+  const principalPrice = useMarketPrice(principalTokenInfo);
   const {
     inputAsset,
     inputAssetAddress,
@@ -119,17 +112,6 @@ export function BuyFixedRatesViewWithZap({
   const inputAssetDisplayBalance = formatBalance(
     inputAssetBalanceOf,
     inputAssetDecimals
-  );
-
-  // Market price stuff
-  const principalPrice = useMarketPrice(principalTokenInfo);
-  const roundedPrincipalPrice = commify((+principalPrice)?.toFixed(4));
-
-  // TODO Get market rate for all tokens
-  const marketRateLabel = getMarketRateLabel(
-    baseAssetSymbol,
-    roundedPrincipalPrice,
-    inputAssetSymbol
   );
 
   // Deposit Amount stuff
@@ -228,7 +210,7 @@ export function BuyFixedRatesViewWithZap({
                 )}
               >
                 <TokenInfoSelect
-                  items={inputTokens}
+                  items={inputTokenInfos}
                   itemPredicate={(_, s) =>
                     s.address !== selectedInputToken.address
                   }
@@ -255,7 +237,7 @@ export function BuyFixedRatesViewWithZap({
                       />
                     </div>
                   )}
-                  disabled={inputTokens.length === 1}
+                  disabled={inputTokenInfos.length === 1}
                   onItemSelect={setSelectedInputToken}
                   filterable={false}
                 >
@@ -351,18 +333,11 @@ export function BuyFixedRatesViewWithZap({
                   {inputErrorMessage}
                 </span>
               )}
-              {marketRateLabel && (
-                <span
-                  className={classNames(
-                    Classes.TEXT_MUTED,
-                    tw("text-xs", "text-right")
-                  )}
-                >
-                  {marketRateLabel}
-                </span>
-              )}
+              <FixedRatePrice
+                inputToken={selectedInputToken}
+                principalToken={principalTokenInfo}
+              />
             </div>
-
             <div className={tw("flex", "flex-col", "space-y-3")}>
               <span
                 className={tw("text-base", "text-left")}

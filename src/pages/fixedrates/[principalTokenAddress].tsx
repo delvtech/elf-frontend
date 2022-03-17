@@ -18,6 +18,7 @@ import {
   BuyFixedRatesViewProps,
 } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesView";
 import { BuyFixedRatesViewWithZap } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesViewWithZap";
+import { getFixedRateInputTokens } from "ui/fixedrates/getFixedRateInputTokens";
 
 export async function getStaticProps({
   params,
@@ -35,6 +36,8 @@ export async function getStaticProps({
   const principalTokenPoolInfo = getPoolInfoForPrincipalToken(
     params?.principalTokenAddress as string
   );
+
+  const inputTokenInfos = getFixedRateInputTokens(principalTokenInfo);
   return {
     props: {
       availablePrincipalTokens,
@@ -43,6 +46,7 @@ export async function getStaticProps({
       principalTokenAddress: params?.principalTokenAddress as
         | string
         | undefined,
+      inputTokenInfos,
     },
   };
 }

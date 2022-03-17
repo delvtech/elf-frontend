@@ -10,9 +10,8 @@ import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
 import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import { getIsMature } from "elf/tranche/getIsMature";
-import { getZappableTokenInfosForUnderlying } from "elf/zaps/zapPurchase/zapPurchase";
 import { useRouter } from "next/router";
-import { ReactElement, useCallback } from "react";
+import { ReactElement, useCallback, useMemo } from "react";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import { t } from "ttag";
 import { Navigation } from "ui/app/navigation/navigation";
@@ -21,6 +20,7 @@ import { useIsTailwindLargeScreen } from "ui/base/mediaBreakpoints";
 import { findAssetIcon } from "ui/crypto/CryptoIcon";
 import styles from "ui/fixedrates/grid.module.css";
 import { usePrincipalTokenYield } from "ui/pools/hooks/usePrincipalTokenYield";
+import { getFixedRateInputTokens } from "ui/fixedrates/getFixedRateInputTokens";
 
 interface FixedRateCardProps {
   principalToken: PrincipalTokenInfo;
@@ -51,7 +51,11 @@ export function FixedRateCardWithZap(
   const formattedUnlockDate = formatAbbreviatedDate(unlockDate);
   const isRedeemable = getIsMature(unlockTimestamp);
 
-  const zappableTokens = getZappableTokenInfosForUnderlying(underlying);
+  const inputTokens = useMemo(
+    () => getFixedRateInputTokens(props.principalToken),
+    [props.principalToken]
+  );
+
   const isLargeScreen = useIsTailwindLargeScreen();
 
   return (
@@ -83,7 +87,12 @@ export function FixedRateCardWithZap(
           textClassName={tw("text-base")}
           text={t`${baseAssetSymbol} Principal Token`}
         />
-        <span>{zappableTokens.map(({ symbol }) => symbol).join(", ")}</span>
+        <span>
+          {inputTokens
+            .slice(1)
+            .map(({ symbol }) => symbol)
+            .join(", ")}
+        </span>
       </div>
       <span>
         <Tag large fill intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
