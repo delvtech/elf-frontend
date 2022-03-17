@@ -66,10 +66,13 @@ export function useMintPreview(
   const vaultTotalAssets = +formatUnits(vaultTotalAssetsBN, vaultDecimals);
   const vaultTotalSupply = +formatUnits(vaultTotalSupplyBN, vaultDecimals);
 
-  const interestPerUnderlying =
+  // avoid rounding errors for UI, don't let interest be negative
+  const interestPerUnderlying = Math.max(
     ((balanceBefore * vaultTotalAssets) / vaultTotalSupply -
       trancheValueSupplied) /
-    trancheInterestSupply;
+      trancheInterestSupply,
+    0
+  );
 
   const adjustedAmount = +amountIn - +amountIn * interestPerUnderlying;
   return adjustedAmount;
