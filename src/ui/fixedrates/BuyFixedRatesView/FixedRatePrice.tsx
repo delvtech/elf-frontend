@@ -5,11 +5,10 @@ import tw from "efi-tailwindcss-classnames";
 import { commify } from "ethers/lib/utils";
 import { ReactElement } from "react";
 import { getTokenInfo } from "tokenlists/tokenlists";
-import { getMarketRateLabel } from "ui/tranche/getMarketRateLabel";
-import { useFixedRatePrice } from "ui/fixedrates/useFixedRatePrice";
-import { BuyFixedRatesKind } from "ui/fixedrates/buyFixedRateKind";
 import { useMarketPrice } from "ui/ccpools/useMarketPrice";
-import { principalTokenInfos } from "elf/tranche/tranches";
+import { BuyFixedRatesKind } from "ui/fixedrates/buyFixedRateKind";
+import { useFixedRatePrice } from "ui/fixedrates/useFixedRatePrice";
+import { getMarketRateLabel } from "ui/tranche/getMarketRateLabel";
 
 interface FixedRatePriceProps {
   kind: BuyFixedRatesKind;
