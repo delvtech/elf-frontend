@@ -336,6 +336,7 @@ export function BuyFixedRatesViewWithZap({
               <FixedRatePrice
                 inputToken={selectedInputToken}
                 principalToken={principalTokenInfo}
+                kind={buyFixedRatesKind}
               />
             </div>
             <div className={tw("flex", "flex-col", "space-y-3")}>

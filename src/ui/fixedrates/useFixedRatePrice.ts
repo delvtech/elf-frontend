@@ -4,25 +4,36 @@ import {
   TokenInfo,
 } from "@elementfi/tokenlist";
 import { getZapPurchaseTokenGraph } from "elf/zaps/zapPurchase/zapPurchase";
+import { useMemo } from "react";
 import { useMarketPrice } from "ui/ccpools/useMarketPrice";
 import { useCurveLpTokenPrice } from "ui/curve/prices";
-import { useZapPurchaseTokenGraph } from "ui/zaps/useZapPurchaseTokenGraph";
 
 export function useFixedRatePrice(
   principalTokenInfo: PrincipalTokenInfo,
   inputToken: TokenInfo
 ): string {
-  const principalPrice = useMarketPrice(principalTokenInfo);
-  const graph = getZapPurchaseTokenGraph(principalTokenInfo, inputToken);
-  console.log(graph);
-
-  const { data: price } = useCurveLpTokenPrice(
-    graph?.metaToken as CurveLpTokenInfo,
-    graph?.token as TokenInfo
+  const basePricePerUnitPrincipal = useMarketPrice(principalTokenInfo);
+  const graph = useMemo(
+    () => getZapPurchaseTokenGraph(principalTokenInfo, inputToken),
+    [principalTokenInfo, inputToken]
   );
 
-  console.log(graph?.baseToken.name, price);
-  if (!price) return principalPrice;
+  const isTwoHops = !!graph?.metaToken;
+  const { data: firstStepPrice } = useCurveLpTokenPrice(
+    (isTwoHops ? graph.metaToken : graph?.baseToken) as CurveLpTokenInfo,
+    graph?.token as TokenInfo,
+    "1"
+  );
 
-  return principalPrice;
+  const { data: secondStepPrice } = useCurveLpTokenPrice(
+    graph?.baseToken as CurveLpTokenInfo,
+    (isTwoHops ? graph.metaToken : graph?.token) as TokenInfo,
+    isTwoHops ? firstStepPrice : "1"
+  );
+
+  const basePricePerUnitInput = isTwoHops ? secondStepPrice : firstStepPrice;
+
+  if (basePricePerUnitInput === undefined) return "0";
+
+  return (+basePricePerUnitInput * +basePricePerUnitPrincipal).toString();
 }

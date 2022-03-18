@@ -18,14 +18,34 @@ interface FixedRatePriceProps {
 }
 
 function FixedRatePriceForCurvePoolToken(props: FixedRatePriceProps) {
-  const x = useFixedRatePrice(props.principalToken, props.inputToken);
+  const inputPricePerUnitPrincipal = useFixedRatePrice(
+    props.principalToken,
+    props.inputToken
+  );
+
+  const roundedPrincipalPrice = commify(
+    (+inputPricePerUnitPrincipal)?.toFixed(4)
+  );
+  const baseToken = getTokenInfo(props.principalToken.extensions.underlying);
+
+  // TODO Get market rate for all tokens
+  const marketRateLabel = getMarketRateLabel(
+    baseToken.symbol,
+    roundedPrincipalPrice,
+    props.inputToken.symbol
+  );
+
+  if (!marketRateLabel) return null;
+
   return (
-    <FixedRatePriceForBaseToken
-      {...{
-        ...props,
-        inputToken: getTokenInfo(props.principalToken.extensions.underlying),
-      }}
-    />
+    <>
+      <FixedRatePriceForBaseToken {...{ ...props, inputToken: baseToken }} />
+      <span
+        className={classNames(Classes.TEXT_MUTED, tw("text-xs", "text-right"))}
+      >
+        {marketRateLabel}
+      </span>
+    </>
   );
 }
 

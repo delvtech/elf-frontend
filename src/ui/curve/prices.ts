@@ -1,3 +1,7 @@
+import {
+  CurvePoolWith2Tokens,
+  CurvePoolWith3Tokens,
+} from "@elementfi/core-typechain/dist/libraries";
 import { CurveLpTokenInfo, TokenInfo } from "@elementfi/tokenlist";
 import { ONE_MINUTE_IN_MILLISECONDS } from "base/time";
 import {
@@ -5,15 +9,10 @@ import {
   getIdxOfTokenInCurvePool,
   isTokenInCurvePoolOfCurveLpToken,
 } from "elf/curve/tokens";
-import { BigNumberish } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
-import { useCallback } from "react";
+import { BigNumber, BigNumberish, ethers } from "ethers";
+import { parseUnits } from "ethers/lib/utils";
 import { QueryObserverResult } from "react-query";
-import { Money } from "ts-money";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
-
-const CURVE_POOL_TOKEN_AMOUNT = 100;
 
 type CurveAmountInput =
   | [BigNumberish, BigNumberish, BigNumberish]
@@ -22,34 +21,34 @@ type CurveAmountInput =
 function buildCurvePoolTokenAmountInput(
   curveLpToken: CurveLpTokenInfo,
   token: TokenInfo,
-  amount: BigNumberish
+  amount: string
 ): CurveAmountInput | undefined {
   const tokenIdxInCurvePool = getIdxOfTokenInCurvePool(curveLpToken, token);
-  if (!tokenIdxInCurvePool) return;
+  if (tokenIdxInCurvePool === undefined) return;
   const amountInputLength = curveLpToken.extensions.poolAssets.length as 2 | 3;
 
-  const amountInput: CurveAmountInput = new Array(amountInputLength).map(
-    () => 0
+  const amountInput: CurveAmountInput = new Array(amountInputLength).fill(
+    0
   ) as CurveAmountInput;
 
-  amountInput[tokenIdxInCurvePool] = amount;
+  amountInput[tokenIdxInCurvePool] = parseUnits(amount, token.decimals);
   return amountInput;
 }
 
 export function useCurveLpTokenPrice(
   curveLpToken: CurveLpTokenInfo,
-  token: TokenInfo
-): QueryObserverResult<Money> {
-  const { currency } = useCurrencyPref();
-  const curvePoolContract = getCurvePoolContractByCurveLpToken(curveLpToken);
+  token: TokenInfo,
+  amount: string | undefined
+): QueryObserverResult<string> {
   const isInPool = isTokenInCurvePoolOfCurveLpToken(curveLpToken, token);
+  const curvePoolContract = (isInPool &&
+    getCurvePoolContractByCurveLpToken(curveLpToken)) as
+    | CurvePoolWith2Tokens
+    | CurvePoolWith3Tokens;
   const amountInput =
-    isInPool &&
-    buildCurvePoolTokenAmountInput(
-      curveLpToken,
-      token,
-      CURVE_POOL_TOKEN_AMOUNT
-    );
+    isInPool && !!amount
+      ? buildCurvePoolTokenAmountInput(curveLpToken, token, amount)
+      : undefined;
 
   const price = useSmartContractReadCall(
     curvePoolContract,
@@ -58,15 +57,8 @@ export function useCurveLpTokenPrice(
       callArgs: [amountInput as never, true],
       staleTime: ONE_MINUTE_IN_MILLISECONDS,
       enabled: isInPool && !!amountInput,
-      select: useCallback(
-        (lpAmount) => {
-          const price =
-            +formatUnits(lpAmount, curveLpToken.decimals) /
-            CURVE_POOL_TOKEN_AMOUNT;
-          return Money.fromDecimal(price, currency.code, Math.round);
-        },
-        [currency, curveLpToken]
-      ),
+      select: (lpAmount) =>
+        ethers.utils.formatUnits(lpAmount, curveLpToken.decimals),
     }
   );
 
