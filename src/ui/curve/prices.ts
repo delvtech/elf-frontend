@@ -57,8 +57,10 @@ export function useCurveLpTokenPrice(
       callArgs: [amountInput as never, true],
       staleTime: ONE_MINUTE_IN_MILLISECONDS,
       enabled: isInPool && !!amountInput,
-      select: (lpAmount) =>
-        ethers.utils.formatUnits(lpAmount, curveLpToken.decimals),
+      select: (lpAmount) => {
+        console.log(lpAmount);
+        return ethers.utils.formatUnits(lpAmount, curveLpToken.decimals);
+      },
     }
   );
 

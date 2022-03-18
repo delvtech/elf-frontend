@@ -26,6 +26,7 @@ export function isCurveLpToken(
   return !!tokenInfo?.tags?.includes(TokenTag.CURVE);
 }
 
+// TODO Make this a switch case for each individual token
 export function getCurvePoolContractByCurveLpToken(
   tokenInfo: CurveLpTokenInfo
 ): CurvePoolWith2Tokens | CurvePoolWith3Tokens {
