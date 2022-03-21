@@ -17,7 +17,7 @@ import {
 } from "@elementfi/tokenlist";
 
 interface EarnExpandedSummaryProps {
-  yieldPoolInfo: YieldPoolTokenInfo;
+  yieldPoolInfo: YieldPoolTokenInfo | undefined;
   principalPoolInfo: PrincipalPoolTokenInfo;
   principalPrice: string | undefined;
   yieldPrice: string | undefined;
@@ -49,8 +49,8 @@ export function EarnExpandedSummary(
           <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
             {t`Token price:`}
           </span>
-          <LabeledText text={t`${principalPrice}`} label={t`Principal token`} />
-          <LabeledText text={t`${yieldPrice}`} label={t`Yield token`} />
+          <LabeledText text={principalPrice} label={t`Principal token`} />
+          <LabeledText text={yieldPrice} label={t`Yield token`} />
         </div>
 
         {/* Fixed APR */}
@@ -66,30 +66,42 @@ export function EarnExpandedSummary(
 }
 
 interface LiquiditySectionProps {
-  yieldPoolInfo: PoolInfo;
-  principalPoolInfo: PoolInfo;
+  yieldPoolInfo: PoolInfo | undefined;
+  principalPoolInfo: PoolInfo | undefined;
 }
 
 function LiquiditySection({
   yieldPoolInfo,
   principalPoolInfo,
 }: LiquiditySectionProps) {
-  const liquidity = useTotalFiatLiquidity(yieldPoolInfo);
-  const principalLiquidity = useTotalFiatLiquidity(principalPoolInfo);
   return (
     <div className={tw("flex", "flex-col", "space-y-3")}>
-      {principalLiquidity && (
-        <LabeledText
-          text={formatMoney(principalLiquidity, { wholeAmounts: true })}
-          label={`Principal Pool`}
-        />
+      {principalPoolInfo && (
+        <PrincipalLiquiditySection principalPoolInfo={principalPoolInfo} />
       )}
-      {liquidity && (
-        <LabeledText
-          text={formatMoney(liquidity, { wholeAmounts: true })}
-          label={`Yield Pool`}
-        />
-      )}
+      {yieldPoolInfo && <YieldLiquiditySection yieldPoolInfo={yieldPoolInfo} />}
     </div>
+  );
+}
+
+function YieldLiquiditySection(props: { yieldPoolInfo: PoolInfo }) {
+  const { yieldPoolInfo } = props;
+  const liquidity = useTotalFiatLiquidity(yieldPoolInfo);
+  return (
+    <LabeledText
+      text={formatMoney(liquidity, { wholeAmounts: true })}
+      label={`Yield Pool`}
+    />
+  );
+}
+
+function PrincipalLiquiditySection(props: { principalPoolInfo: PoolInfo }) {
+  const { principalPoolInfo } = props;
+  const liquidity = useTotalFiatLiquidity(principalPoolInfo);
+  return (
+    <LabeledText
+      text={formatMoney(liquidity, { wholeAmounts: true })}
+      label={`Yield Pool`}
+    />
   );
 }

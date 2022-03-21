@@ -31,6 +31,7 @@ import { Signer } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 import { useCallback, useMemo } from "react";
 import { UseMutationResult } from "react-query";
+import { getPoolForYieldToken } from "elf/pools/weightedPool";
 
 /**
  * Returns the number of Principal Tokens you'd get for minting into a tranche.
@@ -66,8 +67,10 @@ export function useMintTransaction(
   const baseAssetContract = underlyingContractsByAddress[
     trancheInfo.extensions.underlying
   ] as unknown as ERC20Permit;
+
   const yieldTokenContract =
     interestTokenContractsByAddress[yieldTokenInfo.address];
+
   const principalTokenContract = trancheContractsByAddress[trancheInfo.address];
   const { decimals: principalTokenDecimals } = trancheInfo;
   const { decimals: yieldTokenDecimals } = yieldTokenInfo;
@@ -209,6 +212,7 @@ export function useMintApprovals(
 const shittyGoerliAddresses: string[] = [
   "0xDCf80C068B7fFDF7273d8ADAE4B076BF384F711A",
   "0x419b57dE54F7F1E108C72d6E6b405A1E66Fc5895",
+  "0xbce711DfCD200b659f3f2715970207E719b8B273",
 ];
 async function getPermitCallData(
   signer: Signer | undefined,
@@ -282,7 +286,10 @@ async function getPermitCallData(
       nonces.push(nonceBN.toNumber());
     }
 
-    if (!balancerApprovedForYieldToken) {
+    // TODO: This can be remove after the last v1 tranche expires, as you cannot
+    // mint into an expired term
+    const yieldPool = getPoolForYieldToken(yieldTokenContract.address);
+    if (yieldPool && !balancerApprovedForYieldToken) {
       let tokenName = await yieldTokenContract.name();
       if (shittyGoerliAddresses.includes(yieldTokenContract.address)) {
         tokenName = "Element Yield Token ";

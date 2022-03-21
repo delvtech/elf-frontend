@@ -27,7 +27,7 @@ interface EarnSummaryCardListItemProps {
   termLength: number;
   vaultApy: number;
   tvl: Money | undefined;
-  yieldPoolInfo: YieldPoolTokenInfo;
+  yieldPoolInfo: YieldPoolTokenInfo | undefined;
   principalPoolInfo: PrincipalPoolTokenInfo;
   startTime: number;
   maturityTime: number;
@@ -53,7 +53,6 @@ export function EarnSummaryCardListItem(
 
   const { isDarkMode } = useDarkMode();
   const ptStakingAPY = useStakingAPY(principalPoolInfo);
-  const ytStakingAPY = useStakingAPY(yieldPoolInfo);
 
   return (
     <div className={tw("w-full", "space-y-2")}>
@@ -90,10 +89,7 @@ export function EarnSummaryCardListItem(
               {t`Principal Pool APY: `}
               {formatPercent(ptStakingAPY)}
             </span>
-            <span>
-              {t`Yield Pool APY: `}
-              {formatPercent(ytStakingAPY)}
-            </span>
+            {yieldPoolInfo && <YieldPoolAPY yieldPoolInfo={yieldPoolInfo} />}
           </div>
           {/* Vault APY */}
           <div className={tw("flex", "justify-end")}>
@@ -114,5 +110,16 @@ export function EarnSummaryCardListItem(
         />
       </div>
     </div>
+  );
+}
+
+function YieldPoolAPY(props: { yieldPoolInfo: YieldPoolTokenInfo }) {
+  const { yieldPoolInfo } = props;
+  const ytStakingAPY = useStakingAPY(yieldPoolInfo);
+  return (
+    <span>
+      {t`Yield Pool APY: `}
+      {formatPercent(ytStakingAPY)}
+    </span>
   );
 }

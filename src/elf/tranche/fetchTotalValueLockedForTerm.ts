@@ -4,10 +4,9 @@ import { Money } from "ts-money";
 import { fetchAccumulatedInterestForTranche } from "elf/tranche/fetchAccumulatedInterestForTranche";
 import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import { fetchBaseAssetReservesInPool } from "elf/pools/fetchBaseAssetReservesInPool";
-import { getPoolForYieldToken } from "elf/pools/weightedPool";
-import { getTokenInfo } from "tokenlists/tokenlists";
+import { getPoolInfoForYieldToken } from "elf/pools/weightedPool";
 import { trancheContractsByAddress } from "elf/tranche/tranches";
-import { PrincipalTokenInfo, YieldPoolTokenInfo } from "@elementfi/tokenlist";
+import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 export async function fetchTotalValueLockedForTerm(
   trancheInfo: PrincipalTokenInfo,
@@ -16,10 +15,9 @@ export async function fetchTotalValueLockedForTerm(
   const { address, decimals } = trancheInfo;
   const tranche = trancheContractsByAddress[address];
   const poolInfo = getPoolInfoForPrincipalToken(address);
-  const { address: yieldPoolAddress } = getPoolForYieldToken(
+  const yieldPoolInfo = getPoolInfoForYieldToken(
     trancheInfo.extensions.interestToken
   );
-  const yieldPoolInfo = getTokenInfo<YieldPoolTokenInfo>(yieldPoolAddress);
 
   // get all components of TVL: base asset in tranche, base asset in pool, accumulated interest for
   // tranche
@@ -28,20 +26,22 @@ export async function fetchTotalValueLockedForTerm(
     fetchAccumulatedInterestForTranche(poolInfo);
   const baseReservesInPrincipalPoolBNPromise =
     fetchBaseAssetReservesInPool(poolInfo);
-  const baseReservesInYieldPoolBNPromise =
-    fetchBaseAssetReservesInPool(yieldPoolInfo);
+  const promises = [
+    baseAssetLockedBNPromise,
+    accumulatedInterestBNPromise,
+    baseReservesInPrincipalPoolBNPromise,
+  ];
+  // yield pools exist for v1 terms, so include them where necessary
+  if (yieldPoolInfo) {
+    promises.push(fetchBaseAssetReservesInPool(yieldPoolInfo));
+  }
 
   const [
     baseAssetLockedBN,
     accumulatedInterestBN,
     baseReservesInPrincipalPoolBN,
     baseReservesInYieldPoolBN,
-  ] = await Promise.all([
-    baseAssetLockedBNPromise,
-    accumulatedInterestBNPromise,
-    baseReservesInPrincipalPoolBNPromise,
-    baseReservesInYieldPoolBNPromise,
-  ]);
+  ] = await Promise.all(promises);
 
   // convert to numbers
   const baseAssetLocked = +formatUnits(baseAssetLockedBN || 0, decimals);
