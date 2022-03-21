@@ -25,6 +25,7 @@ function FixedRatePriceForCurvePoolToken(props: FixedRatePriceProps) {
   const roundedPrincipalPrice = commify(
     (+inputPricePerUnitPrincipal)?.toFixed(4)
   );
+
   const baseToken = getTokenInfo(props.principalToken.extensions.underlying);
 
   // TODO Get market rate for all tokens

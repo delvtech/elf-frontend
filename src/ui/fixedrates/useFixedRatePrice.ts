@@ -31,9 +31,12 @@ export function useFixedRatePrice(
     isTwoHops ? firstStepPrice : "1"
   );
 
-  const basePricePerUnitInput = isTwoHops ? secondStepPrice : firstStepPrice;
+  const unitPricePerBaseUnit = isTwoHops ? secondStepPrice : firstStepPrice;
 
-  if (basePricePerUnitInput === undefined) return "0";
+  if (unitPricePerBaseUnit === undefined) return "0";
 
-  return (+basePricePerUnitInput * +basePricePerUnitPrincipal).toString();
+  return (
+    (+unitPricePerBaseUnit as number) ** -1 *
+    +basePricePerUnitPrincipal
+  ).toString();
 }

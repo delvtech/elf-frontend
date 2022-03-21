@@ -1,15 +1,12 @@
-import {
-  CurvePoolWith2Tokens,
-  CurvePoolWith3Tokens,
-} from "@elementfi/core-typechain/dist/libraries";
 import { CurveLpTokenInfo, TokenInfo } from "@elementfi/tokenlist";
 import { ONE_MINUTE_IN_MILLISECONDS } from "base/time";
 import {
+  CurvePool,
   getCurvePoolContractByCurveLpToken,
   getIdxOfTokenInCurvePool,
   isTokenInCurvePoolOfCurveLpToken,
 } from "elf/curve/tokens";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumberish, ethers } from "ethers";
 import { parseUnits } from "ethers/lib/utils";
 import { QueryObserverResult } from "react-query";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
@@ -42,9 +39,7 @@ export function useCurveLpTokenPrice(
 ): QueryObserverResult<string> {
   const isInPool = isTokenInCurvePoolOfCurveLpToken(curveLpToken, token);
   const curvePoolContract = (isInPool &&
-    getCurvePoolContractByCurveLpToken(curveLpToken)) as
-    | CurvePoolWith2Tokens
-    | CurvePoolWith3Tokens;
+    getCurvePoolContractByCurveLpToken(curveLpToken)) as CurvePool;
   const amountInput =
     isInPool && !!amount
       ? buildCurvePoolTokenAmountInput(curveLpToken, token, amount)
@@ -54,13 +49,12 @@ export function useCurveLpTokenPrice(
     curvePoolContract,
     "calc_token_amount",
     {
+      // never is required as we are generalising across the curve contract types
       callArgs: [amountInput as never, true],
       staleTime: ONE_MINUTE_IN_MILLISECONDS,
       enabled: isInPool && !!amountInput,
-      select: (lpAmount) => {
-        console.log(lpAmount);
-        return ethers.utils.formatUnits(lpAmount, curveLpToken.decimals);
-      },
+      select: (lpAmount) =>
+        ethers.utils.formatUnits(lpAmount, curveLpToken.decimals),
     }
   );
 
