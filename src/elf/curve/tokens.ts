@@ -28,14 +28,18 @@ export function isCurveLpToken(
   return !!tokenInfo?.tags?.includes(TokenTag.CURVE);
 }
 
-type CurvePool = CurvePool1 | CurvePool2 | CurvePool3;
-// TODO Make this a switch case for each individual token
+export type CurvePool = CurvePool1 | CurvePool2 | CurvePool3;
+
 export function getCurvePoolContractByCurveLpToken(
   tokenInfo: CurveLpTokenInfo
 ): CurvePool {
   const isCrv3Crypto = tokenInfo.symbol === "crv3crypto";
   const isCrvTriCrypto = tokenInfo.symbol === "crvTricrypto";
 
+  // The tri crypto pools are an edge case for these calculations because the
+  // pool indicated in the token extension is a wrapper contract which enables
+  // us to use ETH over WETH. However, that contract does not have the
+  // calc_token_amount function we need to get the correct price
   const CRVTRICRYPTO_POOL = "0x80466c64868E1ab14a1Ddf27A676C3fcBE638Fe5";
   if (isCrvTriCrypto)
     return CurvePool3__factory.connect(CRVTRICRYPTO_POOL, defaultProvider);
