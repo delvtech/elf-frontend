@@ -14,10 +14,10 @@ import { useNavigation } from "ui/app/navigation/hooks/useNavigation";
 import { Navigation } from "ui/app/navigation/navigation";
 import { Title } from "ui/base/Title";
 import { BuyFixedRatesKind } from "ui/fixedrates/buyFixedRateKind";
-import { BuyFixedRatesInputSelect } from "./BuyFixedRatesInputSelect";
-import { BuyFixedRatesSwap } from "./BuyFixedRatesSwap";
-import { BuyFixedRatesTermPicker } from "./BuyFixedRatesTermPicker";
-import { BuyFixedRatesZap } from "./BuyFixedRatesZap";
+import { BuyFixedRatesInputSelect } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesInputSelect";
+import { BuyFixedRatesSwap } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesSwap";
+import { BuyFixedRatesTermPicker } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesTermPicker";
+import { BuyFixedRatesZap } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesZap";
 
 export interface BuyFixedRatesViewProps {
   availablePrincipalTokens: PrincipalTokenInfo[];
@@ -26,14 +26,12 @@ export interface BuyFixedRatesViewProps {
   // principalTokenAddress comes from the url params whos type is
   // `parsedUrlQuery | undefined` so it must be optional.
   principalTokenAddress?: string;
-  inputTokenInfos: TokenInfo[];
 }
 
 export function BuyFixedRatesViewWithZap({
   availablePrincipalTokens,
   principalTokenInfo,
   principalTokenPoolInfo,
-  inputTokenInfos,
 }: BuyFixedRatesViewProps): ReactElement {
   const { account } = useWeb3React<Web3Provider>();
   const { changeTab } = useNavigation();
@@ -112,32 +110,24 @@ export function BuyFixedRatesViewWithZap({
         >
           <Card className={tw("flex", "flex-col", "w-400", "p-6", "space-y-8")}>
             <BuyFixedRatesInputSelect
-              {...{
-                inputTokens: inputTokenInfos,
-                selectedToken: selectedInputToken,
-                onTokenSelect: setSelectedInputToken,
-              }}
+              inputTokens={inputTokenInfos}
+              selectedToken={selectedInputToken}
+              onTokenSelect={setSelectedInputToken}
             />
             <BuyFixedRatesTermPicker
-              {...{
-                availablePrincipalTokens,
-                account,
-                activePrincipalToken: principalTokenInfo,
-              }}
+              availablePrincipalTokens={availablePrincipalTokens}
+              account={account}
+              activePrincipalToken={principalTokenInfo}
             />
             {buyFixedRatesKind === BuyFixedRatesKind.Swap ? (
               <BuyFixedRatesSwap
-                {...{
-                  principalToken: principalTokenInfo,
-                  principalTokenPoolInfo,
-                }}
+                principalToken={principalTokenInfo}
+                principalTokenPoolInfo={principalTokenPoolInfo}
               />
             ) : (
               <BuyFixedRatesZap
-                {...{
-                  principalToken: principalTokenInfo,
-                  inputToken: selectedInputToken,
-                }}
+                principalToken={principalTokenInfo}
+                inputToken={selectedInputToken}
               />
             )}
           </Card>
