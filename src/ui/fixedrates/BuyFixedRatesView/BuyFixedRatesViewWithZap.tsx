@@ -18,6 +18,7 @@ import { BuyFixedRatesInputSelect } from "ui/fixedrates/BuyFixedRatesView/BuyFix
 import { BuyFixedRatesSwap } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesSwap";
 import { BuyFixedRatesTermPicker } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesTermPicker";
 import { BuyFixedRatesZap } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesZap";
+import { getFixedRateInputTokens } from "ui/fixedrates/getFixedRateInputTokens";
 
 export interface BuyFixedRatesViewProps {
   availablePrincipalTokens: PrincipalTokenInfo[];
@@ -42,6 +43,8 @@ export function BuyFixedRatesViewWithZap({
   const {
     extensions: { underlying },
   } = principalTokenInfo;
+
+  const inputTokenInfos = getFixedRateInputTokens(principalTokenInfo);
 
   const [selectedInputToken, setSelectedInputToken] = useState<TokenInfo>(
     inputTokenInfos[0]
