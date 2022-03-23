@@ -15,6 +15,12 @@ export function isCurveLpToken(
   return !!tokenInfo?.tags?.includes(TokenTag.CURVE);
 }
 
+export function getCurvePoolTokensByCurveLpToken(
+  tokenInfo: CurveLpTokenInfo
+): TokenInfo[] {
+  return tokenInfo.extensions.poolAssets.map(getTokenInfo);
+}
+
 // Returns the constituent tokenInfos of the tokens which are members of curve
 // pools related to the underlying principal token address.
 //
@@ -31,11 +37,11 @@ export function getCurvePoolTokensByPrincipalToken(
   if (!isCurveLpToken(underlyingTokenInfo)) return [];
 
   const baseCurvePoolTokens =
-    underlyingTokenInfo.extensions.poolAssets.map(getTokenInfo);
+    getCurvePoolTokensByCurveLpToken(underlyingTokenInfo);
 
   const metaCurvePoolTokens = baseCurvePoolTokens
     .filter(isCurveLpToken)
-    .map((token) => token.extensions.poolAssets.map(getTokenInfo))
+    .map(getCurvePoolTokensByCurveLpToken)
     .flat();
 
   return [...baseCurvePoolTokens, ...metaCurvePoolTokens];
