@@ -1,14 +1,15 @@
 import { useCallback } from "react";
 import { QueryObserverResult } from "react-query";
 
-import { BigNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils";
+import { BigNumber, BigNumberish, ethers } from "ethers";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { Currencies, Money } from "ts-money";
 
 import { getCoinGeckoId } from "integrations/coingecko";
 import {
   crv3CryptoPoolContract,
   crvTriCryptoPoolContract,
+  getCurvePoolContract,
   steCrvPoolContract,
 } from "elf/curve/pools";
 import { useCoinGeckoPrice } from "ui/coingecko/useCoinGeckoPrice";
@@ -22,6 +23,7 @@ import {
   NUM_ETH_DECIMALS,
   ONE_ETHER,
 } from "base/ethereum/ethereum";
+import { CurveLpTokenInfo, TokenInfo } from "@elementfi/tokenlist";
 
 interface HookPriceOptions {
   enabled: boolean;
@@ -135,4 +137,50 @@ export function useSteCrvPrice({
   }
 
   return calcWithdrawOneCoinResult;
+}
+
+type CurveAmountArrayParam =
+  | [BigNumberish, BigNumberish, BigNumberish]
+  | [BigNumberish, BigNumberish];
+
+function buildCurveAmountArrayParam(
+  curveLpToken: CurveLpTokenInfo,
+  token: TokenInfo,
+  amount: string
+): CurveAmountArrayParam {
+  const tokenIdxInPool = curveLpToken.extensions.poolAssets.findIndex(
+    (address) => address === token.address
+  );
+  const amountInputLength = curveLpToken.extensions.poolAssets.length as 2 | 3;
+  const amountInput = new Array(amountInputLength).fill(
+    0
+  ) as CurveAmountArrayParam;
+  amountInput[tokenIdxInPool] = parseUnits(amount, token.decimals);
+  return amountInput;
+}
+
+export function useCurveLpTokenPrice(
+  curveLpToken: CurveLpTokenInfo,
+  token: TokenInfo,
+  amount: string | undefined
+): QueryObserverResult<string> {
+  const curvePoolContract = getCurvePoolContract(curveLpToken);
+  const amountInput = !!amount
+    ? buildCurveAmountArrayParam(curveLpToken, token, amount)
+    : undefined;
+
+  const price = useSmartContractReadCall(
+    curvePoolContract,
+    "calc_token_amount",
+    {
+      // see comment in elf/curve/pools
+      callArgs: [amountInput as never, true],
+      staleTime: ONE_MINUTE_IN_MILLISECONDS,
+      enabled: !!amountInput,
+      select: (lpAmount) =>
+        ethers.utils.formatUnits(lpAmount, curveLpToken.decimals),
+    }
+  );
+
+  return price;
 }

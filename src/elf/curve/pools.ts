@@ -1,7 +1,14 @@
 import {
   CurveContract__factory,
   CurveStethPool__factory,
+  CurvePool1,
+  CurvePool2,
+  CurvePool3,
+  CurvePool1__factory,
+  CurvePool2__factory,
+  CurvePool3__factory,
 } from "@elementfi/core-typechain/dist/libraries";
+import { CurveLpTokenInfo } from "@elementfi/tokenlist";
 import { defaultProvider } from "elf/providers/providers";
 
 /*
@@ -32,3 +39,74 @@ export const steCrvPoolContract = CurveStethPool__factory.connect(
   steCRVPoolAddress,
   defaultProvider
 );
+
+export type CurvePool = CurvePool1 | CurvePool2 | CurvePool3;
+
+/**
+ * The CurvePool type is an attempt to generalise across curve pool behaviour.
+ * Unfortunately there is a variance in contract implementation for many of the
+ * curve pools and so the getCurvePoolContract function is intended to abstract
+ * across the necessary pool implementations.
+ *
+ * We only need two functions on any given curve pool contract for estimating
+ * interactions on that pool
+ *
+ * - calc_token_amount        :: Amount of LP tokens for curve pool tokens
+ * - calc_withdraw_one_coin   :: Amount of curve pool tokens for LP tokens
+ *
+ * The CurvePool type is a union across CurvePool1, CurvePool2 and CurvePool3.
+ * The numbers of each have no significance and are only representative of the
+ * variation in signature implementation of calc_token_amount and
+ * calc_withdraw_one_coin. Here are the variations:
+ *
+ * CurvePool1:
+ *  - calc_token_amount(uint256[2],bool)
+ *  - calc_withdraw_one_coin(uint256,int128)
+ *
+ * CurvePool2:
+ *  - calc_token_amount(uint256[3],bool)
+ *  - calc_withdraw_one_coin(uint256,int128)
+ *
+ * CurvePool3:
+ *  - calc_token_amount(uint256[3],bool)
+ *  - calc_withdraw_one_coin(uint256,uint256)
+ *
+ * The getCurvePoolContract primarily will return a CurvePool1 or CurvePool2
+ * instance dependent on the size of the curve pool the input curveLpToken
+ * corresponds to. There are only two variations of length of poolAssets defined
+ * in the curveLpToken extension, 2 and 3.
+ *
+ * The other cases, the crv3Crypto and crvTriCrypto are explictly defined as the
+ * curve pool address in their respective "pool" extension targets custom zap
+ * contracts for using ETH over WETH. This is an important factor for the
+ * zapPurchase contract and so for the case of the "calc" functions we wish to
+ * call, we must target the original curve pool addresses which are statically
+ * defined above
+ *
+ * Also to note, as we are generalising across the CurvePool types, type
+ * conflicts will emerge on the calc_token_amount function as the array
+ * parameter will conflict. A suggestion is to type assert as never but to
+ * reference this comment why this is the case
+ *
+ * @param curveLpToken
+ * @returns CurvePool
+ * */
+export function getCurvePoolContract(
+  curveLpToken: CurveLpTokenInfo
+): CurvePool {
+  const isCrv3Crypto = curveLpToken.symbol === "crv3crypto";
+  const isCrvTriCrypto = curveLpToken.symbol === "crvTricrypto";
+
+  if (isCrv3Crypto)
+    return CurvePool3__factory.connect(CRV3CrytoPoolAddress, defaultProvider);
+
+  if (isCrvTriCrypto)
+    return CurvePool3__factory.connect(CRV3CrytoPoolAddress, defaultProvider);
+
+  return curveLpToken.extensions.poolAssets.length === 2
+    ? CurvePool1__factory.connect(curveLpToken.extensions.pool, defaultProvider)
+    : CurvePool2__factory.connect(
+        curveLpToken.extensions.pool,
+        defaultProvider
+      );
+}
