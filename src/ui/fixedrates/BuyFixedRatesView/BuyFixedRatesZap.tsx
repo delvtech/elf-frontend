@@ -109,12 +109,6 @@ export function BuyFixedRatesZap({
       </div>
       <div className={tw("flex", "flex-col", "space-y-3")}>
         <span className={tw("text-base", "text-left")}>{t`Review Order`}</span>
-
-        {/* <FixedRatePreviewCallout
-            principalTokensOut={principalTokensOut}
-            baseAssetIn={baseAssetInputValue}
-            baseAssetDecimals={baseAssetDecimals}
-            /> */}
         <div>Fixed Preview Callout</div>
       </div>
       <Button
