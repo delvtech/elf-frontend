@@ -1,0 +1,101 @@
+import {
+  ZapCurveLpInStruct,
+  ZapInInfoStruct,
+} from "@elementfi/core-typechain/dist/v1/ZapSwapCurve";
+import { PrincipalTokenInfo, TokenInfo } from "@elementfi/tokenlist";
+import { ONE_HOUR_IN_SECONDS } from "base/time";
+import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
+import {
+  getZapPurchasePath,
+  ZapPurchasePathKind,
+} from "elf/zaps/zapPurchase/path";
+import { BigNumberish, ethers } from "ethers";
+
+const emptyZapCurveIn: ZapCurveLpInStruct = {
+  curvePool: ethers.constants.AddressZero,
+  lpToken: ethers.constants.AddressZero,
+  amounts: [0, 0],
+  roots: [ethers.constants.AddressZero, ethers.constants.AddressZero],
+  parentIdx: 0,
+  minLpAmount: 0,
+};
+
+interface ZapPurchaseInputs {
+  info: ZapInInfoStruct;
+  baseZap: ZapCurveLpInStruct;
+  metaZap: ZapCurveLpInStruct;
+}
+
+export function createZapPurchaseInputs(
+  principalToken: PrincipalTokenInfo,
+  inputToken: TokenInfo,
+  amountIn: BigNumberish,
+  recipient: string,
+  minAmountOut: BigNumberish | undefined
+): ZapPurchaseInputs {
+  const principalPool = getPoolInfoForPrincipalToken(principalToken.address);
+
+  const path = getZapPurchasePath(principalToken, inputToken);
+
+  const needsChildZap = path.kind === ZapPurchasePathKind.DoubleStep;
+
+  const info: ZapInInfoStruct = {
+    balancerPoolId: principalPool.extensions.poolId,
+    recipient,
+    principalToken: principalToken.address,
+    minPtAmount: minAmountOut ?? 0,
+    deadline: Math.round(Date.now() / 1000) + ONE_HOUR_IN_SECONDS,
+    needsChildZap,
+  };
+
+  const baseZapAmounts = new Array<BigNumberish>(
+    path.baseToken.extensions.poolAssets.length
+  ).fill(0);
+
+  const idxOfInputInBasePool = path.baseToken.extensions.poolAssets.findIndex(
+    (address) => address === inputToken.address
+  );
+
+  if (idxOfInputInBasePool !== -1) {
+    baseZapAmounts[idxOfInputInBasePool] = amountIn;
+  }
+
+  const baseZap: ZapCurveLpInStruct = {
+    curvePool: path.baseToken.extensions.pool,
+    lpToken: path.baseToken.address,
+    amounts: baseZapAmounts,
+    roots: path.baseToken.extensions.poolAssets,
+    parentIdx: 0, // irrelevant for baseZap
+    minLpAmount: 0, // covered by minPtAmount in info
+  };
+
+  if (path.kind === ZapPurchasePathKind.SingleStep) {
+    return { info, baseZap, metaZap: emptyZapCurveIn };
+  } else {
+    const metaZapAmounts = new Array<BigNumberish>(
+      path.metaToken.extensions.poolAssets.length
+    ).fill(0);
+
+    const idxOfInputInMetaPool = path.metaToken.extensions.poolAssets.findIndex(
+      (address) => address === inputToken.address
+    );
+
+    if (idxOfInputInMetaPool !== -1) {
+      metaZapAmounts[idxOfInputInMetaPool] = amountIn;
+    }
+
+    const parentIdx = path.baseToken.extensions.poolAssets.findIndex(
+      (address) => address === path.metaToken.address
+    );
+    const metaZap: ZapCurveLpInStruct = {
+      curvePool: path.metaToken.extensions.pool,
+      lpToken: path.metaToken.address,
+      amounts: metaZapAmounts,
+      roots: path.metaToken.extensions.poolAssets,
+      parentIdx,
+      minLpAmount: 0, // covered by minPtAmount in info
+    };
+
+    return { metaZap, baseZap, info };
+  }
+}

@@ -15,6 +15,7 @@ import { useCryptoBalanceOf } from "ui/crypto/hooks/useCryptoBalance/useCryptoBa
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { TokenAmountInput2 } from "ui/token/TokenAmountInput/TokenAmountInput2";
 import { getMarketRateLabel } from "ui/tranche/getMarketRateLabel";
+import { useCalculatePrincipalTokensAmountOutByZap } from "ui/zaps/zapPurchase/useCalculatePrincipalTokensAmountOutByZap";
 import { usePrincipalTokenZapPrice } from "ui/zaps/zapPurchase/usePrincipalTokenZapPrice";
 
 interface BuyFixedRatesSwapProps {
@@ -62,6 +63,13 @@ export function BuyFixedRatesZap({
     roundedPrincipalPriceZap,
     inputToken.symbol
   );
+
+  const { amountOut: principalTokensOut, error: previewError } =
+    useCalculatePrincipalTokensAmountOutByZap(
+      principalToken,
+      inputToken,
+      inputTokenValue
+    );
 
   const buyButtonIntent = hasInputError ? Intent.DANGER : Intent.PRIMARY;
   return (
