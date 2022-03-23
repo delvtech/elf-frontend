@@ -44,8 +44,10 @@ export function BuyFixedRatesViewWithZap({
     extensions: { underlying },
   } = principalTokenInfo;
 
+  // inputTokenInfos will always give an array of either [underlyingTokenInfo]
+  // in the case when principalTokenis not curve based and otherwise will give
+  // the underlyingTokenInfo + other input tokens
   const inputTokenInfos = getFixedRateInputTokens(principalTokenInfo);
-
   const [selectedInputToken, setSelectedInputToken] = useState<TokenInfo>(
     inputTokenInfos[0]
   );
