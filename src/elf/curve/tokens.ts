@@ -21,31 +21,35 @@ export function getCurvePoolTokensByCurveLpToken(
   return tokenInfo.extensions.poolAssets.map(getTokenInfo);
 }
 
-// Returns the constituent tokenInfos of the tokens which are members of curve
-// pools related to the underlying principal token address.
-//
-// e.g The MIM-3LP principal token uses an underying token of the same name, its
-// corresponding pool has token members, MIM and 3CRV. As 3CRV is also a curve lp
-// token, we also find the members of its pool, DAI, USDC, and USDT
-//
-// Visually the hierarchy follows three cases:
-//
-// 1) CurveLpTokenA :: STECRV
-//      - CurvePoolTokenA :: ETH
-//      - CurvePoolTokenB :: STETH
-//
-// 2) CurveLpTokenA :: CRVTRICRYPTO
-//      - CurvePoolTokenA :: USDT
-//      - CurvePoolTokenB :: WBTC
-//      - CurvePoolTokenC :: ETH
-//
-// 3) CurveLpTokenA :: MIM-3LP
-//      - CurvePoolTokenA :: MIM
-//      - CurveLpTokenB   :: 3CRV
-//          - CurvePoolTokenB :: DAI
-//          - CurvePoolTokenC :: USDC
-//          - CurvePoolTokenD :: USDT
-//
+/**
+ *
+ * Returns the constituent tokenInfos of the tokens which are members of curve
+ * pools related to the underlying principal token address.
+ *
+ * Visually the hierarchy of principalToken - curvePoolToken relationship
+ * follows three general cases:
+ *
+ *
+ *
+ * 1) CurveLpTokenA :: STECRV
+ *      - CurvePoolTokenA :: ETH
+ *      - CurvePoolTokenB :: STETH
+ *
+ * 2) CurveLpTokenA :: CRVTRICRYPTO
+ *      - CurvePoolTokenA :: USDT
+ *      - CurvePoolTokenB :: WBTC
+ *      - CurvePoolTokenC :: ETH
+ *
+ * 3) CurveLpTokenA :: MIM-3LP
+ *      - CurvePoolTokenA :: MIM
+ *      - CurveLpTokenB   :: 3CRV
+ *          - CurvePoolTokenB :: DAI
+ *          - CurvePoolTokenC :: USDC
+ *          - CurvePoolTokenD :: USDT
+ *
+ * @param principalTokenInfo - The principal token
+ * @returns array of tokenInfos
+ * */
 export function getCurvePoolTokensByPrincipalToken(
   principalTokenInfo: PrincipalTokenInfo
 ): TokenInfo[] {
