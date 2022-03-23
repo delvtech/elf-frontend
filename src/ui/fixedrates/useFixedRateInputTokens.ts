@@ -1,15 +1,17 @@
-import { TokenInfo } from "@elementfi/tokenlist";
-import { getZappableTokenInfosForUnderlying } from "elf/zaps/zapPurchase/zapPurchase";
+import { PrincipalTokenInfo, TokenInfo } from "@elementfi/tokenlist";
+import { getCurvePoolTokensByPrincipalToken } from "elf/curve/tokens";
 import { useMemo } from "react";
 import { getTokenInfo } from "tokenlists/tokenlists";
 
 export function useFixedRateInputTokens(
-  underlyingAddress: string
+  principalTokenInfo: PrincipalTokenInfo
 ): TokenInfo[] {
-  const underlyingTokenInfo = getTokenInfo(underlyingAddress);
-  const zappableTokenInfos = useMemo(
-    () => getZappableTokenInfosForUnderlying(underlyingAddress),
-    [underlyingAddress]
+  const underlyingTokenInfo = getTokenInfo(
+    principalTokenInfo.extensions.underlying
   );
-  return [underlyingTokenInfo, ...zappableTokenInfos];
+  const curvePoolTokenInfos = useMemo(
+    () => getCurvePoolTokensByPrincipalToken(principalTokenInfo),
+    [principalTokenInfo]
+  );
+  return [underlyingTokenInfo, ...curvePoolTokenInfos];
 }

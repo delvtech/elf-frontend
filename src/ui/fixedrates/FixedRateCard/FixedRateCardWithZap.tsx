@@ -8,9 +8,9 @@ import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
+import { getCurvePoolTokensByPrincipalToken } from "elf/curve/tokens";
 import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import { getIsMature } from "elf/tranche/getIsMature";
-import { getZappableTokenInfosForUnderlying } from "elf/zaps/zapPurchase/zapPurchase";
 import { useRouter } from "next/router";
 import { ReactElement, useCallback } from "react";
 import { getTokenInfo } from "tokenlists/tokenlists";
@@ -51,7 +51,9 @@ export function FixedRateCardWithZap(
   const formattedUnlockDate = formatAbbreviatedDate(unlockDate);
   const isRedeemable = getIsMature(unlockTimestamp);
 
-  const zappableTokens = getZappableTokenInfosForUnderlying(underlying);
+  const curvePoolTokens = getCurvePoolTokensByPrincipalToken(
+    props.principalToken
+  );
   const isLargeScreen = useIsTailwindLargeScreen();
 
   return (
@@ -83,7 +85,7 @@ export function FixedRateCardWithZap(
           textClassName={tw("text-base")}
           text={t`${baseAssetSymbol} Principal Token`}
         />
-        <span>{zappableTokens.map(({ symbol }) => symbol).join(", ")}</span>
+        <span>{curvePoolTokens.map(({ symbol }) => symbol).join(", ")}</span>
       </div>
       <span>
         <Tag large fill intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>

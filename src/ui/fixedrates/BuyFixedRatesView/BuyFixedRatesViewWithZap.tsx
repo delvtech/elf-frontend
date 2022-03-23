@@ -8,20 +8,17 @@ import {
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import tw from "efi-tailwindcss-classnames";
-import { commify } from "ethers/lib/utils";
 import { Fragment, ReactElement, useCallback, useState } from "react";
 import { t } from "ttag";
 import { useNavigation } from "ui/app/navigation/hooks/useNavigation";
 import { Navigation } from "ui/app/navigation/navigation";
 import { Title } from "ui/base/Title";
-import { useMarketPrice } from "ui/ccpools/useMarketPrice";
 import { BuyFixedRatesKind } from "ui/fixedrates/buyFixedRateKind";
 import { BuyFixedRatesInputSelect } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesInputSelect";
 import { BuyFixedRatesSwap } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesSwap";
 import { BuyFixedRatesTermPicker } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesTermPicker";
 import { BuyFixedRatesZap } from "ui/fixedrates/BuyFixedRatesView/BuyFixedRatesZap";
 import { getFixedRateInputTokens } from "ui/fixedrates/getFixedRateInputTokens";
-import { getMarketRateLabel } from "ui/tranche/getMarketRateLabel";
 
 export interface BuyFixedRatesViewProps {
   availablePrincipalTokens: PrincipalTokenInfo[];
