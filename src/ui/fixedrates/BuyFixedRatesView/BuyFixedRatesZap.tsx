@@ -15,6 +15,7 @@ import { useCryptoBalanceOf } from "ui/crypto/hooks/useCryptoBalance/useCryptoBa
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { TokenAmountInput2 } from "ui/token/TokenAmountInput/TokenAmountInput2";
 import { getMarketRateLabel } from "ui/tranche/getMarketRateLabel";
+import { usePrincipalTokenZapPrice } from "ui/zaps/zapPurchase/usePrincipalTokenZapPrice";
 
 interface BuyFixedRatesSwapProps {
   principalToken: PrincipalTokenInfo;
@@ -43,12 +44,23 @@ export function BuyFixedRatesZap({
   const hasInputError = false; // replace
   const inputErrorMessage = "";
 
-  const principalPrice = useMarketPrice(principalToken);
-  const roundedPrincipalPrice = commify((+principalPrice)?.toFixed(4));
-  const marketRateLabel = getMarketRateLabel(
+  const principalPriceSwap = useMarketPrice(principalToken);
+  const roundedPrincipalPriceSwap = commify((+principalPriceSwap)?.toFixed(4));
+  const marketRateLabelSwap = getMarketRateLabel(
     inputTokens[0].symbol,
-    roundedPrincipalPrice,
+    roundedPrincipalPriceSwap,
     inputTokens[0].symbol
+  );
+
+  const principalPriceZap = usePrincipalTokenZapPrice(
+    principalToken,
+    inputToken
+  );
+  const roundedPrincipalPriceZap = commify((+principalPriceZap)?.toFixed(4));
+  const marketRateLabelZap = getMarketRateLabel(
+    inputTokens[0].symbol,
+    roundedPrincipalPriceZap,
+    inputToken.symbol
   );
 
   const buyButtonIntent = hasInputError ? Intent.DANGER : Intent.PRIMARY;
@@ -96,14 +108,24 @@ export function BuyFixedRatesZap({
             {inputErrorMessage}
           </span>
         )}
-        {marketRateLabel && (
+        {marketRateLabelSwap && (
           <span
             className={classNames(
               Classes.TEXT_MUTED,
               tw("text-xs", "text-right")
             )}
           >
-            {marketRateLabel}
+            {marketRateLabelSwap}
+          </span>
+        )}
+        {marketRateLabelZap && (
+          <span
+            className={classNames(
+              Classes.TEXT_MUTED,
+              tw("text-xs", "text-right")
+            )}
+          >
+            {marketRateLabelZap}
           </span>
         )}
       </div>
