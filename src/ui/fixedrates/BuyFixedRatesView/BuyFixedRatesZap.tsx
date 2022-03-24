@@ -6,6 +6,7 @@ import { formatBalance } from "base/formatBalance/formatBalance";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { createZapPurchaseInputs } from "elf/zaps/zapPurchase/createZapPurchaseInputs";
 import { commify } from "ethers/lib/utils";
 import { ReactElement } from "react";
 import { t } from "ttag";
@@ -40,6 +41,12 @@ export function BuyFixedRatesZap({
   const { stringValue: inputTokenValue, setValue: onInputChange } =
     useNumericInput();
 
+  const zapInputs = createZapPurchaseInputs(
+    principalToken,
+    inputToken,
+    inputTokenValue,
+    account
+  );
   const { isDarkMode } = useDarkMode();
 
   const hasInputError = false; // replace
@@ -68,6 +75,7 @@ export function BuyFixedRatesZap({
     useCalculatePrincipalTokensAmountOutByZap(
       principalToken,
       inputToken,
+      account,
       inputTokenValue
     );
 

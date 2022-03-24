@@ -20,7 +20,7 @@ const emptyZapCurveIn: ZapCurveLpInStruct = {
   minLpAmount: 0,
 };
 
-interface ZapPurchaseInputs {
+export interface ZapPurchaseInputs {
   info: ZapInInfoStruct;
   baseZap: ZapCurveLpInStruct;
   metaZap: ZapCurveLpInStruct;
@@ -29,9 +29,9 @@ interface ZapPurchaseInputs {
 export function createZapPurchaseInputs(
   principalToken: PrincipalTokenInfo,
   inputToken: TokenInfo,
-  amountIn: BigNumberish,
-  recipient: string,
-  minAmountOut: BigNumberish | undefined
+  amountIn: string,
+  recipient: string | null | undefined,
+  minAmountOut?: BigNumberish | undefined
 ): ZapPurchaseInputs {
   const principalPool = getPoolInfoForPrincipalToken(principalToken.address);
 
@@ -41,12 +41,17 @@ export function createZapPurchaseInputs(
 
   const info: ZapInInfoStruct = {
     balancerPoolId: principalPool.extensions.poolId,
-    recipient,
+    recipient: recipient ?? ethers.constants.AddressZero,
     principalToken: principalToken.address,
     minPtAmount: minAmountOut ?? 0,
     deadline: Math.round(Date.now() / 1000) + ONE_HOUR_IN_SECONDS,
     needsChildZap,
   };
+
+  if (amountIn === "")
+    return { info, baseZap: emptyZapCurveIn, metaZap: emptyZapCurveIn };
+
+  const amountInBn = ethers.utils.parseUnits(amountIn, inputToken.decimals);
 
   const baseZapAmounts = new Array<BigNumberish>(
     path.baseToken.extensions.poolAssets.length
@@ -57,7 +62,7 @@ export function createZapPurchaseInputs(
   );
 
   if (idxOfInputInBasePool !== -1) {
-    baseZapAmounts[idxOfInputInBasePool] = amountIn;
+    baseZapAmounts[idxOfInputInBasePool] = amountInBn;
   }
 
   const baseZap: ZapCurveLpInStruct = {
@@ -81,7 +86,7 @@ export function createZapPurchaseInputs(
     );
 
     if (idxOfInputInMetaPool !== -1) {
-      metaZapAmounts[idxOfInputInMetaPool] = amountIn;
+      metaZapAmounts[idxOfInputInMetaPool] = amountInBn;
     }
 
     const parentIdx = path.baseToken.extensions.poolAssets.findIndex(
