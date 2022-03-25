@@ -28,12 +28,12 @@ export default function IneligibleWalletDialog({
       isOpen={isOpen}
       // onClose={onClose}
       title={
-        <span className="text-center text-base py-6">{t`Ineligible Wallet`}</span>
+        <span className="text-center text-base py-6">{t`Ineligible Account`}</span>
       }
     >
       <div className="p-5">
         <Callout intent="danger">
-          This wallet is not eligible to use this website.
+          This account is not eligible to use this website.
         </Callout>
       </div>
     </Dialog>
