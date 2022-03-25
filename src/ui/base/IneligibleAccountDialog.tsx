@@ -15,7 +15,7 @@ interface IneligibleWalletDialogProps {
   isOpen: boolean;
 }
 
-export default function IneligibleWalletDialog({
+export default function IneligibleAccountDialog({
   isOpen,
 }: IneligibleWalletDialogProps): ReactElement {
   const { darkModeClassName } = useDarkMode();

@@ -16,7 +16,7 @@ import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { useToastWrongChain } from "ui/provider/useBlockFromTag/useToastWrongChain";
 import { useTransactionToasts } from "ui/transactions/useTransactionToasts";
 import useAddressScreening from "ui/wallets/hooks/useAddressScreening";
-import IneligibleWalletDialog from "ui/wallets/IneligibleWalletDialog";
+import IneligibleAccountDialog from "ui/base/IneligibleAccountDialog";
 import { ConnectWalletButton } from "ui/wallets/ConnectWalletButton/ConnectWalletButton";
 import { useEagerConnect } from "ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "ui/wallets/hooks/useSyncWithInjectedEthereum";
@@ -57,7 +57,7 @@ const App: FC<AppProps> = ({ children }) => {
   return (
     <Fragment>
       <Title />
-      <IneligibleWalletDialog isOpen={!!account && pass === false} />
+      <IneligibleAccountDialog isOpen={!!account && pass === false} />
       <div
         className={classNames(
           styles.appBackground,
