@@ -53,21 +53,21 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
   const termAssetBalanceBN = balances?.[termAssetIndex];
   const baseAssetBalance = +formatUnits(
     baseAssetBalanceBN || 0,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
   const termAssetBalance = +formatUnits(
     termAssetBalanceBN || 0,
-    termAssetDecimals
+    termAssetDecimals,
   );
   const baseAssetBalanceLabel = commify(
     baseAssetBalance > 10
       ? baseAssetBalance.toFixed()
-      : baseAssetBalance.toFixed(2)
+      : baseAssetBalance.toFixed(2),
   );
   const termAssetBalanceLabel = commify(
     termAssetBalance > 10
       ? termAssetBalance.toFixed()
-      : termAssetBalance.toFixed(2)
+      : termAssetBalance.toFixed(2),
   );
 
   const quantityLabel = isConvergentCurvePool(pool) ? "PT" : "YT";
@@ -102,7 +102,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
             "h-full",
             "space-y-4",
             "justify-between",
-            "lg:truncate"
+            "lg:truncate",
           )}
         >
           <div className={tw("flex", "space-x-4", "justify-between")}>
@@ -131,7 +131,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
               <span
                 className={classNames(
                   Classes.TEXT_MUTED,
-                  tw("text-sm", "lg:truncate")
+                  tw("text-sm", "lg:truncate"),
                 )}
               >{t`Quantity ${baseAssetSymbol}`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>
@@ -147,7 +147,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
             "flex-col",
             "h-full",
             "justify-between",
-            "overflow-hidden"
+            "overflow-hidden",
           )}
         >
           {/* LP APY (7d) */}
@@ -178,7 +178,7 @@ export function PoolSummary(props: PoolSummaryProps): ReactElement {
               <span
                 className={classNames(
                   Classes.TEXT_MUTED,
-                  tw("text-sm", "lg:truncate")
+                  tw("text-sm", "lg:truncate"),
                 )}
               >{t`Quantity (${quantityLabel})`}</span>
               <div className={classNames("h5", tw("space-x-4"))}>

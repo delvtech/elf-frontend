@@ -52,7 +52,7 @@ const App: FC<AppProps> = ({ children }) => {
           styles.appBackground,
           { [styles.appBackgroundDark]: isDarkMode },
           darkModeClassName,
-          tw("w-full", "h-screen", "overflow-auto")
+          tw("w-full", "h-screen", "overflow-auto"),
         )}
       >
         <AppHeader
@@ -80,9 +80,9 @@ const App: FC<AppProps> = ({ children }) => {
             "justify-between",
             "block",
             "z-10",
-            "lg:hidden"
+            "lg:hidden",
           ),
-          { [styles.appBackgroundDark]: isDarkMode }
+          { [styles.appBackgroundDark]: isDarkMode },
         )}
       >
         <Button
@@ -104,7 +104,7 @@ const App: FC<AppProps> = ({ children }) => {
             "justify-center",
             "items-center",
             "w-full",
-            "h-full"
+            "h-full",
           )}
         >
           <H1

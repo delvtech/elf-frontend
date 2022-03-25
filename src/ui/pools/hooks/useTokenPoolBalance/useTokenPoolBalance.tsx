@@ -5,7 +5,7 @@ import { BigNumber } from "ethers";
 
 export function useTokenPoolBalance(
   pool: PoolContract | undefined,
-  tokenContract: ERC20 | undefined
+  tokenContract: ERC20 | undefined,
 ): BigNumber | undefined {
   const { data: [tokens, balances] = [] } = usePoolTokens(pool);
   const index =

@@ -17,7 +17,7 @@ import { PoolInfo } from "elf/pools/PoolInfo";
  */
 export function useTotalLiquidityTrend(
   poolInfo: PoolInfo,
-  fromTime: number = ONE_DAY_IN_SECONDS
+  fromTime: number = ONE_DAY_IN_SECONDS,
 ): number | undefined {
   const {
     baseAssetContract,
@@ -47,20 +47,20 @@ export function useTotalLiquidityTrend(
 
   const baseAssetBalance = +formatUnits(
     tokenBalances[baseAssetIndex],
-    baseAssetInfo.decimals
+    baseAssetInfo.decimals,
   );
   const baseAssetDelta = +formatUnits(
     tokenDeltas[baseAssetIndex],
-    baseAssetInfo.decimals
+    baseAssetInfo.decimals,
   );
 
   const termAssetBalance = +formatUnits(
     tokenBalances[termAssetIndex],
-    termAssetInfo.decimals
+    termAssetInfo.decimals,
   );
   const termAssetDelta = +formatUnits(
     tokenDeltas[termAssetIndex],
-    termAssetInfo.decimals
+    termAssetInfo.decimals,
   );
 
   // balance of both tokens added up, normalized to base asset

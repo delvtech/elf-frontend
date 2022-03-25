@@ -7,13 +7,13 @@ import {
 import { getTokenInfo } from "tokenlists/tokenlists";
 
 export function isCurveLpToken(
-  tokenInfo: TokenInfo
+  tokenInfo: TokenInfo,
 ): tokenInfo is CurveLpTokenInfo {
   return !!tokenInfo?.tags?.includes(TokenTag.CURVE);
 }
 
 export function getCurvePoolTokensByPrincipalToken(
-  tokenInfo: PrincipalTokenInfo
+  tokenInfo: PrincipalTokenInfo,
 ): TokenInfo[] {
   const underlyingTokenInfo = getTokenInfo(tokenInfo.extensions.underlying);
 

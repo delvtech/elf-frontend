@@ -36,7 +36,7 @@ export function getPoolTokens(poolInfo: PoolInfo): PoolTokens {
   ] as ERC20;
   const termAssetContract = getSmartContractFromRegistry(
     termAssetAddress,
-    ERC20__factory.connect
+    ERC20__factory.connect,
   ) as ERC20;
 
   const sortedAddresses = sortAddresses([
@@ -45,10 +45,10 @@ export function getPoolTokens(poolInfo: PoolInfo): PoolTokens {
   ]) as [string, string];
 
   const baseAssetIndex = sortedAddresses.findIndex(
-    (address) => address === baseAssetAddress
+    (address) => address === baseAssetAddress,
   );
   const termAssetIndex = sortedAddresses.findIndex(
-    (address) => address === termAssetAddress
+    (address) => address === termAssetAddress,
   );
 
   return {

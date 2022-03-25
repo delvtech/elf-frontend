@@ -9,7 +9,7 @@ import { TokenMetadata } from "tokenlists/tokenlists";
 
 export function getCryptoDecimals(
   // TODO: Remove undefined from this signature, since undefined would mean there's a token we don't have static access to.
-  asset: CryptoAsset
+  asset: CryptoAsset,
 ): number {
   const assetType = asset.type;
   switch (assetType) {

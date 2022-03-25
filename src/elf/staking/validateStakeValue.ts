@@ -4,7 +4,7 @@ import { parseUnits } from "ethers/lib/utils";
 export function validateStakingValue(
   amount: string | undefined,
   tokenBalanceOf: BigNumber | undefined,
-  tokenDecimals: number | undefined
+  tokenDecimals: number | undefined,
 ): boolean {
   const isValidTokenValue =
     amount && tokenBalanceOf

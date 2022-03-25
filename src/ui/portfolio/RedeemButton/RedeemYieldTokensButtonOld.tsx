@@ -38,7 +38,7 @@ export function RedeemYieldTokensButtonOld({
   const nowMs = useNowMs();
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const trancheInfo = getTokenInfo<TrancheInfo>(
-    yieldTokenInfo.extensions.tranche
+    yieldTokenInfo.extensions.tranche,
   );
   const {
     address,
@@ -47,7 +47,7 @@ export function RedeemYieldTokensButtonOld({
 
   const canPerformWithdrawInterest = useTrancheCanPerform(
     address,
-    "withdrawInterest"
+    "withdrawInterest",
   );
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const buttonDisabled =
@@ -58,12 +58,12 @@ export function RedeemYieldTokensButtonOld({
   const { data: userProxyAllowanceBN } = useTokenAllowance(
     yieldTokenContract as unknown as ERC20,
     account,
-    userProxyContractAddress
+    userProxyContractAddress,
   );
 
   const userProxyAllowance = formatUnits(
     userProxyAllowanceBN ?? 1,
-    yieldTokenInfo.decimals
+    yieldTokenInfo.decimals,
   );
 
   const openDrawer = useCallback(() => {

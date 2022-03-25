@@ -15,14 +15,14 @@ interface PortfolioActionTabsProps {
   activeTabId: PrincipalTokenActionTabId;
   onSetActiveTab: (
     newTabId: PrincipalTokenActionTabId,
-    prevTabId: PrincipalTokenActionTabId
+    prevTabId: PrincipalTokenActionTabId,
   ) => void;
 
   principalToken: PrincipalTokenInfo;
 }
 
 export function PrincipalTokenActionTabs(
-  props: PortfolioActionTabsProps
+  props: PortfolioActionTabsProps,
 ): ReactElement {
   const {
     activeTabId,
@@ -40,7 +40,7 @@ export function PrincipalTokenActionTabs(
       selectedTabId={activeTabId}
       className={classNames(
         tw("text-left", "pb-4", "lg:pb-0", "justify-center"),
-        styles.actionTabs
+        styles.actionTabs,
       )}
       onChange={onSetActiveTab}
     >

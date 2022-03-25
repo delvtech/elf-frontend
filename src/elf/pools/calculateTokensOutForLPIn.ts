@@ -21,7 +21,7 @@ export function calculateTokensOutForLPInFixed(
   xReserves: string,
   yReserves: string,
   totalSupply: string,
-  tokenDecimals: number
+  tokenDecimals: number,
 ): { xNeeded: string | undefined; yNeeded: string | undefined } {
   if (
     !isFiniteNumber(Number(lpIn)) ||

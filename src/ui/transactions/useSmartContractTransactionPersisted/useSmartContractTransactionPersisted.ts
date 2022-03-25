@@ -15,7 +15,7 @@ import { ContractMethodArgs, ContractMethodName } from "elf/contracts/types";
 
 interface UseSmartContractTransactionPersistedOptions<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
 > extends UseSmartContractTransactionOptions<TContract, TMethodName> {}
 
 /**
@@ -28,7 +28,7 @@ interface UseSmartContractTransactionPersistedOptions<
  */
 export function useSmartContractTransactionPersisted<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
 >(
   contract: TContract | undefined,
   methodName: TMethodName,
@@ -36,7 +36,7 @@ export function useSmartContractTransactionPersisted<
   options: UseSmartContractTransactionPersistedOptions<
     TContract,
     TMethodName
-  > = {}
+  > = {},
 ): UseMutationResult<
   ContractReceipt | undefined,
   unknown,
@@ -49,14 +49,14 @@ export function useSmartContractTransactionPersisted<
   const onTxSubmitted = useCallback(
     (
       txReceipt: ContractTransaction,
-      callArgs: ContractMethodArgs<TContract, TMethodName>
+      callArgs: ContractMethodArgs<TContract, TMethodName>,
     ) => {
       setPendingTransactionPref(
         contract?.address,
         methodName as string,
         callArgs,
         txReceipt.hash,
-        TransactionStatus.SUBMITTED
+        TransactionStatus.SUBMITTED,
       );
       onTransactionSubmitted?.(txReceipt, callArgs);
     },
@@ -65,21 +65,21 @@ export function useSmartContractTransactionPersisted<
       methodName,
       onTransactionSubmitted,
       setPendingTransactionPref,
-    ]
+    ],
   );
 
   const onTxMined = useCallback(
     (
       txReceipt: ContractReceipt,
       callArgs: ContractMethodArgs<TContract, TMethodName>,
-      transactionStatus: TransactionStatus
+      transactionStatus: TransactionStatus,
     ) => {
       setPendingTransactionPref(
         contract?.address,
         methodName as string,
         callArgs,
         txReceipt.transactionHash,
-        transactionStatus
+        transactionStatus,
       );
       // This ensures that balances refresh when a tx completes. In general,
       // all txs should invalidate all balances.
@@ -95,14 +95,14 @@ export function useSmartContractTransactionPersisted<
       onTransactionMined,
       queryClient,
       setPendingTransactionPref,
-    ]
+    ],
   );
 
   const onTxError = useCallback(
     (error: TransactionError) => {
       onError?.(error);
     },
-    [onError]
+    [onError],
   );
 
   const finalOptions: UseSmartContractTransactionOptions<
@@ -119,6 +119,6 @@ export function useSmartContractTransactionPersisted<
     contract,
     methodName,
     signer,
-    finalOptions
+    finalOptions,
   );
 }

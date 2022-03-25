@@ -41,7 +41,7 @@ interface YieldPoolCardListItemProps {
   yieldPoolTokenInfo: YieldPoolTokenInfo;
 }
 export function YieldPoolCardListItem(
-  props: YieldPoolCardListItemProps
+  props: YieldPoolCardListItemProps,
 ): ReactElement {
   const {
     yieldPoolTokenInfo,
@@ -109,7 +109,7 @@ export function YieldPoolCardListItem(
       interactive
       onClick={goToTrade}
       className={classNames(
-        tw("max-w-md", "w-full", "flex", "flex-col", "p-4", "space-y-2")
+        tw("max-w-md", "w-full", "flex", "flex-col", "p-4", "space-y-2"),
       )}
     >
       {/* Logo */}
@@ -165,7 +165,7 @@ export function YieldPoolCardListItem(
 
           {/* Fixed APY */}
           <span className={tw("text-right")}>{t`LP APY: ${formatPercent(
-            stakingYield
+            stakingYield,
           )}`}</span>
 
           {/* Vault APY */}
@@ -185,7 +185,7 @@ export function YieldPoolCardListItem(
           stripes={false}
           value={calculateProgress(
             createdAtTimestamp * 1000,
-            unlockTimestamp * 1000
+            unlockTimestamp * 1000,
           )}
         />
       </div>

@@ -4,7 +4,7 @@ import { isIntegerNumber } from "base/numbers";
 
 export function calculateProgress(
   createdAtDate: Date | number | undefined,
-  unlockDate: Date | number | undefined
+  unlockDate: Date | number | undefined,
 ): number {
   if (!createdAtDate || !unlockDate) {
     return 0;

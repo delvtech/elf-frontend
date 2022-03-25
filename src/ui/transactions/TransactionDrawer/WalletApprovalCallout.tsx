@@ -48,7 +48,7 @@ export function WalletApprovalCallout({
   const { data: allowance, isLoading: isAllowanceLoading } = useTokenAllowance(
     tokenContract as ERC20Shim,
     ownerAddress,
-    spenderAddress
+    spenderAddress,
   );
   const {
     onApproveClick,
@@ -57,7 +57,7 @@ export function WalletApprovalCallout({
     tokenContract as ERC20Shim,
     signer,
     ownerAddress,
-    spenderAddress
+    spenderAddress,
   );
 
   // Ethereum does not need approvals

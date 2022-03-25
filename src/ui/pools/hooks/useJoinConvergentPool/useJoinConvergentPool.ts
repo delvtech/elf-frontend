@@ -19,7 +19,7 @@ export function useJoinConvergentPool(
   account: string | null | undefined,
   pool: PoolContract | undefined,
   poolTokenMaxAmounts: BigNumber[] | undefined,
-  onTransactionSubmitted?: () => void
+  onTransactionSubmitted?: () => void,
 ): {
   onJoinPool: () => void;
   mutationResult: UseMutationResult<
@@ -34,7 +34,7 @@ export function useJoinConvergentPool(
     balancerVaultContract,
     "joinPool",
     signer,
-    { onTransactionSubmitted: onTransactionSubmitted }
+    { onTransactionSubmitted: onTransactionSubmitted },
   );
 
   const { mutate: joinPool } = mutationResult;
@@ -42,7 +42,7 @@ export function useJoinConvergentPool(
     poolId,
     account,
     poolTokens,
-    poolTokenMaxAmounts
+    poolTokenMaxAmounts,
   );
   const onJoinPool = useCallback(() => {
     if (!joinPoolCallArgs) {
@@ -58,7 +58,7 @@ function makeJoinPoolCallArgs(
   poolId: string | undefined,
   account: string | null | undefined,
   poolTokens: string[] | undefined,
-  poolTokenMaxAmounts: BigNumber[] | undefined
+  poolTokenMaxAmounts: BigNumber[] | undefined,
 ): ContractMethodArgs<Vault, "joinPool"> | undefined {
   if (!poolId || !account || !poolTokens || !poolTokenMaxAmounts) {
     return;

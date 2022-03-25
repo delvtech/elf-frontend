@@ -6,7 +6,7 @@ import { getQueryCombinedLoadingState } from "ui/query/getQueryCombinedLoadingSt
 import { getQueryCombinedSuccessState } from "ui/query/getQueryCombinedSuccessState";
 
 export function getQueryCombinedStatus(
-  queryResults: QueryObserverResult<unknown>[]
+  queryResults: QueryObserverResult<unknown>[],
 ): QueryStatus {
   const allIdle = getQueryCombinedIdleState(queryResults);
   const anyLoading = getQueryCombinedLoadingState(queryResults);

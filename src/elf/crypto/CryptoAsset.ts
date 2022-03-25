@@ -36,7 +36,7 @@ export const ETHEREUM_CRYPTO_ASSET: EthereumCryptoAsset = {
 };
 
 export function findTokenContract(
-  cryptoAsset: CryptoAsset | undefined
+  cryptoAsset: CryptoAsset | undefined,
 ): ERC20 | ERC20Permit | undefined {
   if (!cryptoAsset) {
     return;
@@ -62,13 +62,13 @@ export function findTokenContract(
 }
 
 export function isERC20Asset(
-  cryptoAsset: CryptoAsset
+  cryptoAsset: CryptoAsset,
 ): cryptoAsset is Erc20CryptoAsset {
   return cryptoAsset.type === CryptoAssetType.ERC20;
 }
 
 export function isERC20PermitAsset(
-  cryptoAsset: CryptoAsset
+  cryptoAsset: CryptoAsset,
 ): cryptoAsset is Erc20PermitCryptoAsset {
   return cryptoAsset.type === CryptoAssetType.ERC20PERMIT;
 }

@@ -18,10 +18,10 @@ export function useTotalValueLockedForPlatform(): Money {
             underlyingContractsByAddress[tokenInfo.extensions.underlying];
           const baseAssetPrice = await fetchTokenPrice(
             baseAssetContract as ERC20,
-            currency
+            currency,
           );
           return fetchTotalValueLockedForTerm(tokenInfo, baseAssetPrice);
-        })
+        }),
       );
       return results;
     },
@@ -29,7 +29,7 @@ export function useTotalValueLockedForPlatform(): Money {
 
   let totalValueLocked = Money.fromDecimal(0, currency);
   results.forEach(
-    (result) => (totalValueLocked = totalValueLocked.add(result))
+    (result) => (totalValueLocked = totalValueLocked.add(result)),
   );
 
   return totalValueLocked;

@@ -24,14 +24,14 @@ export function YieldPoolCardList({
       [...yieldPoolsToShow]
         .sort((info) => info.extensions.createdAtTimestamp)
         .reverse(),
-    [yieldPoolsToShow]
+    [yieldPoolsToShow],
   );
 
   return (
     <div
       className={classNames(
         tw("flex-col", "items-center", "space-y-5", "w-full"),
-        className
+        className,
       )}
     >
       {sortedPools.map((poolInfo) => {

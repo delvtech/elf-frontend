@@ -16,7 +16,7 @@ type InterestTokenPool = WeightedPool;
 export type PoolContract = PrincipalTokenPool | InterestTokenPool;
 
 export function isConvergentCurvePool(
-  pool: PoolContract | undefined
+  pool: PoolContract | undefined,
 ): pool is ConvergentCurvePool {
   if (!pool) {
     return false;
@@ -28,7 +28,7 @@ export function isConvergentCurvePool(
 }
 
 export function isWeightedPool(
-  pool: PoolContract | undefined
+  pool: PoolContract | undefined,
 ): pool is WeightedPool {
   if (!pool) {
     return false;

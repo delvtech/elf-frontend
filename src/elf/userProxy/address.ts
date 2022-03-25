@@ -7,7 +7,7 @@ export const USER_PROXY_ETH_SENTINEL =
   "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
 export function getTokenAddressForUserProxy(
-  cryptoAsset: CryptoAsset | undefined
+  cryptoAsset: CryptoAsset | undefined,
 ): string | undefined {
   if (!cryptoAsset) {
     return;

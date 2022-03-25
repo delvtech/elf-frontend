@@ -21,7 +21,7 @@ import { TimeData } from "elf/charts/TimeData";
 export function useVolumeHistoryForPool(
   poolInfo: PoolInfo,
   fromTime: number = ONE_DAY_IN_SECONDS,
-  toTime?: number
+  toTime?: number,
 ): TimeData[] | undefined {
   const {
     baseAssetContract,
@@ -31,7 +31,7 @@ export function useVolumeHistoryForPool(
   const { currency } = useCurrencyPref();
   const { data: baseAssetFiatPrice } = useTokenPrice(
     baseAssetContract,
-    currency
+    currency,
   );
 
   if (swapEvents?.length && baseAssetContract && baseAssetFiatPrice) {

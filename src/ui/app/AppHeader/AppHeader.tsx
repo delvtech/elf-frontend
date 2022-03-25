@@ -52,7 +52,7 @@ export function AppHeader({
           "w-full",
           "p-2",
           "items-center",
-          "justify-between"
+          "justify-between",
         )}
       >
         <AppMenuButton />
@@ -120,9 +120,9 @@ export function AppHeader({
               "space-x-4",
               "items-center",
               "hidden",
-              "md:flex"
+              "md:flex",
             ),
-            { "bp3-dark": isDarkMode }
+            { "bp3-dark": isDarkMode },
           )}
         >
           <Button

@@ -12,7 +12,7 @@ type PoolBalanceChangedArguments = [
   sender: string,
   assets: string[],
   amounts: BigNumber[],
-  dueProtocolFeeAmounts: BigNumber[]
+  dueProtocolFeeAmounts: BigNumber[],
 ];
 
 /**
@@ -25,7 +25,7 @@ type PoolBalanceChangedArguments = [
  */
 export function useTokenDeltasForPool(
   pool: PoolContract | undefined,
-  fromTime: number = ONE_DAY_IN_SECONDS
+  fromTime: number = ONE_DAY_IN_SECONDS,
 ): BigNumber[] | undefined {
   const { data: poolId } = useSmartContractReadCall(pool, "getPoolId");
   const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime);
@@ -37,7 +37,7 @@ export function useTokenDeltasForPool(
       callArgs: [poolId as string, null, null, null, null],
       enabled: !!poolId && !fromBlockNumber,
       fromBlock: fromBlockNumber,
-    }
+    },
   );
 
   // [token0, token1]

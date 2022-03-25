@@ -8,7 +8,7 @@ import { CryptoAssets } from "elf/crypto/CryptoAssetRegistry";
  */
 export function getCryptoAssetForToken(
   // non-tokenlist token in the system, which should never happen.
-  tokenAddress: string
+  tokenAddress: string,
 ): CryptoAsset {
   // element tranches and interest tokens are known permits
 

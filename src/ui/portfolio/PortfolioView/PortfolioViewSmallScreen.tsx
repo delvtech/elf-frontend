@@ -45,7 +45,7 @@ export function PortfolioViewSmallScreen({
   const principalTokenInfosWithoutDust = usePrincipalTokensWithoutDust(account);
   const yieldTokensWithBalanceResults = useTokensWithBalance(
     account,
-    interestTokenContracts as unknown as ERC20[]
+    interestTokenContracts as unknown as ERC20[],
   );
 
   const interestTokenLPs = useWeightedPoolsWithLPBalance(account);
@@ -102,7 +102,7 @@ export function PortfolioViewSmallScreen({
                       "flex",
                       "items-center",
                       "text-base",
-                      "space-x-4"
+                      "space-x-4",
                     )}
                   >
                     <span>{t`Principal Tokens`} </span>
@@ -127,7 +127,7 @@ export function PortfolioViewSmallScreen({
                       "flex",
                       "items-center",
                       "text-base",
-                      "space-x-4"
+                      "space-x-4",
                     )}
                   >
                     <span>{t`Yield Tokens`} </span>
@@ -150,7 +150,7 @@ export function PortfolioViewSmallScreen({
                       "flex",
                       "items-center",
                       "text-base",
-                      "space-x-4"
+                      "space-x-4",
                     )}
                   >
                     <span>{t`LP Positions`} </span>
@@ -170,7 +170,7 @@ export function PortfolioViewSmallScreen({
             <span className={tw("text-center", "text-xl", "font-semibold")}>
               {t`Portfolio `}
               <span className={Classes.TEXT_MUTED}>{`(${formatWalletAddress(
-                account
+                account,
               )})`}</span>
             </span>
           </Button>
@@ -186,7 +186,7 @@ export function PortfolioViewSmallScreen({
           "space-y-10",
           "lg:flex-row",
           "lg:space-y-0",
-          "lg:space-x-10"
+          "lg:space-x-10",
         )}
       >
         <div className={tw("flex", "flex-col", "flex-1", "w-full")}>

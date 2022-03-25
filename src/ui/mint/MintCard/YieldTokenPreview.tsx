@@ -22,7 +22,7 @@ const calloutClassName = tw(
   "h-full",
   "p-8",
   "items-center",
-  "justify-center"
+  "justify-center",
 );
 
 export const YieldTokenPreview: FC<YieldTokenPreviewProps> = ({
@@ -38,7 +38,7 @@ export const YieldTokenPreview: FC<YieldTokenPreviewProps> = ({
           "flex",
           "justify-center",
           "flex-col-reverse",
-          "items-center"
+          "items-center",
         )}
         label={<span className={tw("text-base")}>{t`Yield Tokens`}</span>}
         textClassName={tw("text-lg")}

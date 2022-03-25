@@ -9,7 +9,7 @@ export function convertChartDatasToSeries(
   fromTimestamp: number,
   toTimeStamp: number,
   createdAtTimestamp: number,
-  totalLiquidity: number
+  totalLiquidity: number,
 ): Record<string, Serie[]> {
   // because we are estimating block timestamps, make sure we don't have any older than our time frame
   const filteredLiquidityData =
@@ -17,7 +17,7 @@ export function convertChartDatasToSeries(
       (datum) =>
         datum.value >= 0 &&
         datum.timeMs >= fromTimestamp &&
-        datum.timeMs <= toTimeStamp
+        datum.timeMs <= toTimeStamp,
     ) ?? [];
 
   if (createdAtTimestamp > fromTimestamp) {
@@ -28,7 +28,7 @@ export function convertChartDatasToSeries(
     filteredLiquidityData,
     fromTimestamp,
     toTimeStamp,
-    totalLiquidity
+    totalLiquidity,
   );
 
   // remove data that have the same timestamp
@@ -37,12 +37,12 @@ export function convertChartDatasToSeries(
   // because we are estimating block timestamps, make sure we don't have any older than our time frame
   const filteredVolumeData =
     volumeData?.filter(
-      (datum) => datum.timeMs >= fromTimestamp && datum.timeMs <= toTimeStamp
+      (datum) => datum.timeMs >= fromTimestamp && datum.timeMs <= toTimeStamp,
     ) ?? [];
 
   const liquiditySerie = convertTimeDataToSerie(
     dedupedLiquidityData,
-    "liquidity"
+    "liquidity",
   );
   const volumeSerie = convertTimeDataToSerie(filteredVolumeData, "volume");
   return { liquiditySerie, volumeSerie };
@@ -52,7 +52,7 @@ function padTimeData(
   data: TimeData[],
   startTimestamp: number,
   endTimestamp: number,
-  value: number
+  value: number,
 ) {
   if (data.length === 0) {
     return [

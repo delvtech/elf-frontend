@@ -30,7 +30,7 @@ export function EarnCardList({
         "items-center",
         "space-y-5",
         "w-full",
-        "px-4"
+        "px-4",
       )}
     >
       {[...openPrincipalTokenInfos]

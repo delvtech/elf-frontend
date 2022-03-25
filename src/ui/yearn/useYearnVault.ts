@@ -8,7 +8,7 @@ import {
 // TODO: use address when we go live on mainnet
 export function useYearnVault(
   vaultSymbol: string | undefined,
-  vaultAddress: string | undefined
+  vaultAddress: string | undefined,
 ): UseQueryResult<YearnVaultResult> {
   return useQuery<YearnVaultResult>({
     queryKey: makeYearnAPYQueryKey(vaultAddress, vaultSymbol),
@@ -17,7 +17,7 @@ export function useYearnVault(
 
       // try to match on the address exactly
       const addressResult = result.find(
-        (result) => result.address === vaultAddress
+        (result) => result.address === vaultAddress,
       ) as YearnVaultResult;
 
       // if we don't get a match on the exact address we're probably on goerli
@@ -43,7 +43,7 @@ interface YearnAPYVariables {
 
 function makeYearnAPYQueryKey(
   vaultAddress: string | undefined,
-  vaultSymbol: string | undefined
+  vaultSymbol: string | undefined,
 ): [string[], YearnAPYVariables] {
   return [["yearn", "/vaults/all"], { vaultSymbol, vaultAddress }];
 }

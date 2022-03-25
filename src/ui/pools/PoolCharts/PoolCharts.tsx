@@ -74,7 +74,7 @@ export function PoolCharts({ poolInfo }: PoolChartsProps): ReactElement {
     weekAgoTimestampMs,
     nowTimestampMs,
     createdAtMs,
-    totalLiquidity?.toDecimal() ?? 0
+    totalLiquidity?.toDecimal() ?? 0,
   );
 
   const labelElement = binVolumeData ? (
@@ -154,7 +154,7 @@ function usePoolCharts(poolInfo: PoolInfo) {
     ({ value, timeMs }) => ({
       value: fiatPrice * value,
       timeMs,
-    })
+    }),
   );
   const volumeFiatData: TimeData[] = volumeData.map(({ value, timeMs }) => ({
     value: fiatPrice * value,

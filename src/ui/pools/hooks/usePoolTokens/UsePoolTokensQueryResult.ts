@@ -9,7 +9,7 @@ export type UsePoolTokensQueryResult = QueryObserverResult<
     // balances
     BigNumber[],
     // lastChangeBlock
-    BigNumber
+    BigNumber,
   ],
   unknown
 >;

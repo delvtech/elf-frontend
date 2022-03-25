@@ -158,16 +158,16 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     tokenInPoolBalance,
     tokenOutPoolBalance,
     tokenInBalanceOf,
-    tokenInDecimals
+    tokenInDecimals,
   );
 
   const insufficientBalance = parseUnits(amountIn || "0", tokenInDecimals).gt(
-    tokenInBalanceOf ?? 0
+    tokenInBalanceOf ?? 0,
   );
 
   const insufficientPoolBalance = parseUnits(
     amountOut || "0",
-    tokenOutDecimals
+    tokenOutDecimals,
   ).gt(tokenOutPoolBalance ?? 0);
 
   const spotPrice = usePoolSpotPrice(pool, termAssetInfo.address);
@@ -175,7 +175,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     amountIn,
     amountOut,
     spotPrice,
-    baseAssetAddress === tokenInContractAddress
+    baseAssetAddress === tokenInContractAddress,
   );
 
   const priceImpactTooHigh =
@@ -201,7 +201,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     insufficientBalance,
     account,
     insufficientPoolBalance,
-    priceImpactTooHigh
+    priceImpactTooHigh,
   );
 
   const { data: totalSupplyBN } = useSmartContractReadCall(pool, "totalSupply");
@@ -222,7 +222,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     clearInputs,
     setSwapKind,
     setAmountIn,
-    setAmountOut
+    setAmountOut,
   );
 
   const onChangeOut = useOnChangeOut(
@@ -237,7 +237,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
     clearInputs,
     setSwapKind,
     setAmountIn,
-    setAmountOut
+    setAmountOut,
   );
 
   return (
@@ -248,7 +248,7 @@ export function TradePanel(props: TradePanelProps): ReactElement {
         "justify-between",
         "py-2",
         "space-y-2",
-        "h-full"
+        "h-full",
       )}
     >
       {/* Trade Asset */}
@@ -347,7 +347,7 @@ function useOnChangeOut(
   clearInputs: () => void,
   setSwapKind: (swapKind: SwapKind) => void,
   setAmountIn: (value: string) => void,
-  setAmountOut: (value: string) => void
+  setAmountOut: (value: string) => void,
 ) {
   return useCallback(
     (newAmountOut: string, swapKind: SwapKind) => {
@@ -358,11 +358,11 @@ function useOnChangeOut(
 
       const tokenInReserves = formatUnits(
         tokenInBalanceOf ?? 0,
-        tokenInDecimals
+        tokenInDecimals,
       );
       const tokenOutReserves = formatUnits(
         tokenOutBalanceOf ?? 0,
-        tokenOutDecimals
+        tokenOutDecimals,
       );
 
       const newAmountOutResult = getCalcSwap(
@@ -373,7 +373,7 @@ function useOnChangeOut(
         tokenOutAddress,
         tokenInReserves,
         tokenOutReserves,
-        totalSupply
+        totalSupply,
       );
 
       const { result: [newAmountIn] = ["", ""] } = newAmountOutResult;
@@ -394,7 +394,7 @@ function useOnChangeOut(
       tokenOutBalanceOf,
       tokenOutDecimals,
       totalSupply,
-    ]
+    ],
   );
 }
 
@@ -410,7 +410,7 @@ function useOnChangeIn(
   clearInputs: () => void,
   setSwapKind: (swapKind: SwapKind) => void,
   setAmountIn: (value: string) => void,
-  setAmountOut: (value: string) => void
+  setAmountOut: (value: string) => void,
 ) {
   return useCallback(
     (newAmountIn: string, swapKind: SwapKind) => {
@@ -420,11 +420,11 @@ function useOnChangeIn(
       }
       const tokenInReserves = formatUnits(
         tokenInBalanceOf ?? 0,
-        tokenInDecimals
+        tokenInDecimals,
       );
       const tokenOutReserves = formatUnits(
         tokenOutBalanceOf ?? 0,
-        tokenOutDecimals
+        tokenOutDecimals,
       );
 
       const newAmountOutResult = getCalcSwap(
@@ -435,7 +435,7 @@ function useOnChangeIn(
         tokenOutAddress,
         tokenInReserves,
         tokenOutReserves,
-        totalSupply
+        totalSupply,
       );
 
       const { result: [, newAmountOut] = ["", ""] } = newAmountOutResult;
@@ -457,7 +457,7 @@ function useOnChangeIn(
       tokenOutBalanceOf,
       tokenOutDecimals,
       totalSupply,
-    ]
+    ],
   );
 }
 
@@ -468,7 +468,7 @@ function getSubmitButtonLabel(
   insufficientBalance: boolean,
   account: string | null | undefined,
   insufficientPoolBalance: boolean,
-  priceIpactTooHigh: boolean
+  priceIpactTooHigh: boolean,
 ) {
   let submitButtonLabel = buttonLabel;
   let submitButtonError = false;
@@ -497,7 +497,7 @@ function useTokenInfoForTradeInput(
   pool: PoolContract,
   tokenInfo: TokenInfo,
   account: string | null | undefined,
-  library: Web3Provider | undefined
+  library: Web3Provider | undefined,
 ) {
   const { decimals } = tokenInfo;
 
@@ -519,7 +519,7 @@ function useTokenInfoForTradeInput(
   const displayBalance = formatBalance(balanceOf, decimals);
   const poolBalance = useTokenPoolBalance(
     pool,
-    tokenContract as unknown as ERC20
+    tokenContract as unknown as ERC20,
   );
   const poolIndex = useTokenPoolIndex(pool, tokenContract as unknown as ERC20);
 

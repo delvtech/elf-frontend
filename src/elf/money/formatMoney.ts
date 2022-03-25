@@ -18,7 +18,7 @@ const defaultOptions: FormatMoneyOptions = {
 
 export function formatMoney(
   money: Money | undefined,
-  options = defaultOptions
+  options = defaultOptions,
 ): string | undefined {
   const { defaultMoney, wholeAmounts } = options;
 

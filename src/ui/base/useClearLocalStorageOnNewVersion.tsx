@@ -20,7 +20,7 @@ export function useClearLocalStorageOnNewVersion(): void {
       // eslint-disable-next-line no-console
       console.log(
         "%c🤘 New app version detected, clearing local storage 🤘",
-        styles
+        styles,
       );
       elfLocalStorage.clear();
       elfLocalStorage.setItem("app-version", versionJson.version);

@@ -52,7 +52,7 @@ export function UnstakeCard({
   const { address: poolAddress } = poolInfo;
   const canPerformRemoveLiquidity = useCanPerformPool(
     poolAddress,
-    "removeLiquidity"
+    "removeLiquidity",
   );
   const isSmallScreen = useIsTailwindSmallScreen();
 
@@ -88,7 +88,7 @@ export function UnstakeCard({
     account,
     poolInfo,
     unstakeValue,
-    onTransactionSubmitted
+    onTransactionSubmitted,
   );
 
   const onCloseDrawer = useCallback(() => {
@@ -102,11 +102,11 @@ export function UnstakeCard({
   const poolSymbol = `ELF:${baseAssetInfo.symbol}-${termAssetInfo.symbol}`;
   const { data: lpBalanceOf } = useTokenBalanceOf(
     pool as unknown as ERC20,
-    account
+    account,
   );
   const lpDisplayBalance = formatBalance(
     lpBalanceOf,
-    BALANCER_POOL_LP_TOKEN_DECIMALS
+    BALANCER_POOL_LP_TOKEN_DECIMALS,
   );
 
   // drawer info
@@ -114,13 +114,13 @@ export function UnstakeCard({
     pool,
     unstakeValue,
     baseAssetInfo,
-    termAssetInfo
+    termAssetInfo,
   );
 
   // form validators
   const { balanceIsZero, isValidValue, disableUnstake } = getFormValidators(
     unstakeValue,
-    lpBalanceOf
+    lpBalanceOf,
   );
 
   return (
@@ -133,7 +133,7 @@ export function UnstakeCard({
         "items-center",
         "justify-between",
         "h-full",
-        "overflow-hidden"
+        "overflow-hidden",
       )}
     >
       <UnstakeInput
@@ -193,7 +193,7 @@ function useExitPool(
   account: string | null | undefined,
   poolInfo: PoolInfo,
   amount: string,
-  onTransactionSubmitted?: () => void
+  onTransactionSubmitted?: () => void,
 ) {
   const {
     onExitPool: exitPrincipalPool,
@@ -206,7 +206,7 @@ function useExitPool(
     account,
     poolInfo as PrincipalPoolTokenInfo,
     amount,
-    onTransactionSubmitted
+    onTransactionSubmitted,
   );
 
   const {
@@ -222,7 +222,7 @@ function useExitPool(
     account,
     poolInfo as YieldPoolTokenInfo,
     amount,
-    onTransactionSubmitted
+    onTransactionSubmitted,
   );
 
   if (isYieldPool(poolInfo)) {
@@ -248,7 +248,7 @@ function useCalculateAssetsOut(
   pool: PoolContract,
   unstakeValue: string,
   baseAssetInfo: TokenInfo,
-  termAssetInfo: TokenInfo
+  termAssetInfo: TokenInfo,
 ) {
   const { data: [addresses, poolBalances] = [] } = usePoolTokens(pool);
   const { decimals: baseAssetDecimals } = baseAssetInfo;
@@ -263,7 +263,7 @@ function useCalculateAssetsOut(
     addresses,
     poolBalances,
     baseAssetInfo.address,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
 
   const termAssetOutValue = calculatePoolShareLiquidity(
@@ -271,7 +271,7 @@ function useCalculateAssetsOut(
     addresses,
     poolBalances,
     termAssetInfo.address,
-    termAssetInfo.decimals
+    termAssetInfo.decimals,
   );
 
   const baseAssetOut = baseAssetOutValue
@@ -289,7 +289,7 @@ function calculatePoolShareLiquidity(
   poolTokenAddresses: string[] | undefined,
   poolTokenReserves: BigNumber[] | undefined,
   tokenAddress: string | undefined,
-  tokenDecimals: number | undefined
+  tokenDecimals: number | undefined,
 ): number | undefined {
   let baseAssetLiquidity: number | undefined;
   if (
@@ -309,11 +309,11 @@ function calculatePoolShareLiquidity(
 
 function getFormValidators(
   unstakeValue: string,
-  lpBalanceOf: BigNumber | undefined
+  lpBalanceOf: BigNumber | undefined,
 ) {
   const valueBN = parseUnits(
     unstakeValue || "0",
-    BALANCER_POOL_LP_TOKEN_DECIMALS
+    BALANCER_POOL_LP_TOKEN_DECIMALS,
   );
 
   const balanceIsZero = lpBalanceOf?.isZero() ?? true;

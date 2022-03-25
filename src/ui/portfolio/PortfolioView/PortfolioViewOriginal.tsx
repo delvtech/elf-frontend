@@ -31,7 +31,7 @@ export function PortfolioViewOriginal({
   walletConnectionActive,
 }: PortfolioViewOriginalProps): ReactElement {
   const [activePortfolioTabId, setActivePortfolioTab] = useState(
-    PortfolioTabId.PRINCIPAL_TOKENS
+    PortfolioTabId.PRINCIPAL_TOKENS,
   );
   return (
     <Fragment>
@@ -45,7 +45,7 @@ export function PortfolioViewOriginal({
             rel="noopener noreferrer"
           >
             <span className={Classes.TEXT_MUTED}>{`(${formatWalletAddress(
-              account
+              account,
             )})`}</span>
           </a>
         </H2>
@@ -67,7 +67,7 @@ export function PortfolioViewOriginal({
             "space-y-10",
             "lg:flex-row",
             "lg:space-y-0",
-            "lg:space-x-10"
+            "lg:space-x-10",
           )}
         >
           <div className={tw("flex", "flex-1", "w-full")}>

@@ -10,7 +10,7 @@ import {
 export function renderHookWithClient<P, R>(
   client: QueryClient,
   hook: (props: P) => R,
-  renderOptions?: Pick<RenderHookOptions<P>, "initialProps">
+  renderOptions?: Pick<RenderHookOptions<P>, "initialProps">,
 ): RenderHookResult<P, R> {
   const QueryClientWrapper: FC<P> = ({ children }) => (
     <QueryClientProvider client={client}>{children}</QueryClientProvider>

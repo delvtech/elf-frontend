@@ -39,9 +39,9 @@ export function ExperimentalBanner({
           "text-center",
           "justify-center",
           "items-center",
-          "space-x-4"
+          "space-x-4",
         ),
-        className
+        className,
       )}
       style={{
         borderRadius: 0,

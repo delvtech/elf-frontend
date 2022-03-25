@@ -21,7 +21,7 @@ interface TradeViewProps {}
 
 export function TradeView(unusedProps: TradeViewProps): ReactElement {
   const [activeTab, setActiveTab] = useState<TradeViewTab>(
-    TradeViewTab.PRINCIPAL
+    TradeViewTab.PRINCIPAL,
   );
 
   const isSmallScreenView = useIsTailwindSmallScreen();
@@ -43,7 +43,7 @@ export function TradeView(unusedProps: TradeViewProps): ReactElement {
           "space-y-12",
           "items-center",
           "lg:pb-12",
-          "pb-24"
+          "pb-24",
         )}
       >
         <Tabs
@@ -84,7 +84,7 @@ export function TradeView(unusedProps: TradeViewProps): ReactElement {
           className={classNames(
             Classes.RUNNING_TEXT,
             Classes.TEXT_MUTED,
-            tw("text-base", "hidden", "lg:inline")
+            tw("text-base", "hidden", "lg:inline"),
           )}
         >
           {subtitle}

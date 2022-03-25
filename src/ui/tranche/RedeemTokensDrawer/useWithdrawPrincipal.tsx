@@ -9,7 +9,7 @@ export function useWithdrawPrincipal(
   tranche: Tranche | undefined,
   account: string | null | undefined,
   amount: BigNumber | undefined,
-  onTransactionSubmitted?: () => void
+  onTransactionSubmitted?: () => void,
 ): {
   withdraw: () => void;
   reset: () => void;
@@ -18,7 +18,7 @@ export function useWithdrawPrincipal(
 } {
   const withdrawPrincipalCallArgs = makeWithdrawPrincipalCallArgs(
     account,
-    amount
+    amount,
   );
 
   const {
@@ -30,7 +30,7 @@ export function useWithdrawPrincipal(
     tranche,
     "withdrawPrincipal",
     signer,
-    { onTransactionSubmitted }
+    { onTransactionSubmitted },
   );
 
   const withdraw = useCallback(() => {
@@ -50,7 +50,7 @@ export function useWithdrawPrincipal(
 
 function makeWithdrawPrincipalCallArgs(
   account: string | null | undefined,
-  amount: BigNumber | undefined
+  amount: BigNumber | undefined,
 ): ContractMethodArgs<Tranche, "withdrawPrincipal"> | undefined {
   if (!amount?.gt(0) || !account) {
     return undefined;

@@ -25,7 +25,7 @@ import { PoolInfo } from "elf/pools/PoolInfo";
 export function useFeeVolumeForPool(
   poolInfo: PoolInfo,
   fromTime: number = ONE_DAY_IN_SECONDS,
-  toTime?: number
+  toTime?: number,
 ): number | undefined {
   const {
     baseAssetContract,
@@ -52,7 +52,7 @@ export function useFeeVolumeForPool(
       swapEvents,
       baseAssetContract.address,
       baseAssetDecimals,
-      swapFee
+      swapFee,
     );
   }
 
@@ -60,7 +60,7 @@ export function useFeeVolumeForPool(
     return calculateConvergentCurvePoolFees(
       swapEvents,
       baseAssetDecimals,
-      swapFee
+      swapFee,
     );
   }
 
@@ -70,7 +70,7 @@ export function useFeeVolumeForPool(
 export function useFeeVolumeFiatForPool(
   poolInfo: PoolInfo,
   fromTime: number = ONE_DAY_IN_SECONDS,
-  toTime?: number
+  toTime?: number,
 ): Money {
   const { baseAssetContract } = getPoolTokens(poolInfo);
   const fees = useFeeVolumeForPool(poolInfo, fromTime, toTime);
@@ -97,7 +97,7 @@ function calculateWeightedPoolFees(
   swapEvents: SwapEventWithTimeStamp[],
   baseAssetAddress: string,
   baseAssetDecimals: number,
-  swapFee: number
+  swapFee: number,
 ): number {
   if (!swapFee) {
     return 0;
@@ -130,7 +130,7 @@ function calculateWeightedPoolFees(
 function calculateConvergentCurvePoolFees(
   swapEvents: SwapEventWithTimeStamp[],
   tokenDecimals: number,
-  swapFee: number
+  swapFee: number,
 ): number {
   if (!swapFee) {
     return 0;

@@ -17,7 +17,7 @@ declare namespace _ {
       arrays3: List<T3 | undefined>,
       arrays4: List<T4 | undefined>,
       arrays5: List<T5 | undefined>,
-      arrays6: List<T6 | undefined>
+      arrays6: List<T6 | undefined>,
     ): Array<
       [
         T1 | undefined,
@@ -25,7 +25,7 @@ declare namespace _ {
         T3 | undefined,
         T4 | undefined,
         T5 | undefined,
-        T6 | undefined
+        T6 | undefined,
       ]
     >;
   }

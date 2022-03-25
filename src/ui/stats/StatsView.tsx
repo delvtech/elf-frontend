@@ -24,7 +24,7 @@ export function StatsView(unusedProps: StatsViewProps): ReactElement {
           "h-full",
           "flex-1",
           "items-center",
-          "justify-center"
+          "justify-center",
         )}
       >
         <Card>{t`Element TVL: ${formatMoney(tvl)}`}</Card>

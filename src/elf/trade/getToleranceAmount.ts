@@ -17,7 +17,7 @@ export function getToleranceAmount(
   swapKind: SwapKind,
   tolerance: number,
   tokenInDecimals: number,
-  tokenOutDecimals: number
+  tokenOutDecimals: number,
 ): BigNumber {
   // for GIVEN_IN, we calculate the minimum amount out we'll accept in the transaction.
   if (swapKind === SwapKind.GIVEN_IN) {
@@ -29,14 +29,14 @@ export function getToleranceAmount(
       formatUnits(expectedAmount || "1", tokenOutDecimals),
       {
         decimals: tokenOutDecimals,
-      }
+      },
     );
 
     const minAmountOutFN = limitTokenOutFN.mulUnsafe(toleranceOutFN);
 
     const minAmountOut = parseUnits(
       minAmountOutFN.toString(),
-      tokenOutDecimals
+      tokenOutDecimals,
     );
 
     return minAmountOut;
@@ -50,7 +50,7 @@ export function getToleranceAmount(
     formatUnits(expectedAmount || "1", tokenInDecimals),
     {
       decimals: tokenInDecimals,
-    }
+    },
   );
   const maxAmountInFN = limitTokenInFN.mulUnsafe(toleranceInFN);
   const maxAmountIn = parseUnits(maxAmountInFN.toString(), tokenInDecimals);

@@ -13,7 +13,7 @@ const CURRENCY_DEFAULT = Currencies.USD;
 export function useCurrencyPref(): CurrencyPref {
   const { pref: currency, setPref: setCurrency } = usePref(
     CURRENCY_PREF_ID,
-    CURRENCY_DEFAULT
+    CURRENCY_DEFAULT,
   );
 
   return {

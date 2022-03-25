@@ -29,9 +29,9 @@ export function BuyFixedRatesInputSelect({
         inputTokens.map(({ address }) => [
           address,
           findAssetIconByAddress(address),
-        ])
+        ]),
       ),
-    [inputTokens]
+    [inputTokens],
   );
 
   const isLargeScreen = useIsTailwindLargeScreen();
@@ -48,7 +48,7 @@ export function BuyFixedRatesInputSelect({
           background: isDarkMode ? "var(--bp3-dark-bg-color)" : "",
         }}
         className={classNames(
-          tw("flex", "p-1", "border", "rounded", "border-gray-500")
+          tw("flex", "p-1", "border", "rounded", "border-gray-500"),
         )}
       >
         <TokenInfoSelect

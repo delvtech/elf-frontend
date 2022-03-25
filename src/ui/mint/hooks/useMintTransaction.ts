@@ -48,7 +48,7 @@ export function useMintTransaction(
   amountIn: string,
   includePermits: boolean,
   onTransactionSubmitted: () => void,
-  onTransactionError: (error: TransactionError) => void
+  onTransactionError: (error: TransactionError) => void,
 ): {
   mint: () => void;
   mutationResult: UseMutationResult<
@@ -60,7 +60,7 @@ export function useMintTransaction(
   const { balancerVaultAddress, userProxyContractAddress } = ContractAddresses;
   const userProxy = useMemo(
     () => (signer ? userProxyContract.connect(signer) : userProxyContract),
-    [signer]
+    [signer],
   );
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const amountInBigNumber = parseUnits(amountIn || "0", baseAssetDecimals);
@@ -86,7 +86,7 @@ export function useMintTransaction(
       onError: (error: TransactionError) => {
         onTransactionError(error);
       },
-    }
+    },
   );
   const { mutate: mint } = mutationResult;
 
@@ -99,7 +99,7 @@ export function useMintTransaction(
     yieldTokenContract,
     baseAssetDecimals,
     principalTokenDecimals,
-    yieldTokenDecimals
+    yieldTokenDecimals,
   );
 
   const onMintTransaction = useCallback(async () => {
@@ -110,7 +110,7 @@ export function useMintTransaction(
       baseAssetContract,
       principalTokenContract,
       yieldTokenContract,
-      includePermits
+      includePermits,
     );
 
     const baseAssetAddress = getTokenAddressForUserProxy(baseAsset) as string;
@@ -121,7 +121,7 @@ export function useMintTransaction(
       baseAssetAddress,
       unlockTimestamp,
       position,
-      permitCallData
+      permitCallData,
     );
 
     if (mintCallArgs) {
@@ -163,14 +163,14 @@ export function useMintApprovals(
   yieldTokenContract: InterestToken,
   baseAssetDecimals: number,
   principalTokenDecimals: number,
-  yieldTokenDecimals: number
+  yieldTokenDecimals: number,
 ): MintApprovals {
   const userProxyApprovedForBaseAsset = useTokenApprovedForAmount(
     ownerAddress,
     userProxyAddress,
     baseAssetContract,
     baseAssetDecimals,
-    "1" // just check for any approval amount above zero
+    "1", // just check for any approval amount above zero
   );
 
   const balancerApprovedForBaseAsset = useTokenApprovedForAmount(
@@ -178,7 +178,7 @@ export function useMintApprovals(
     balancerVaultAddress,
     baseAssetContract,
     baseAssetDecimals,
-    "1" // just check for any approval amount above zero
+    "1", // just check for any approval amount above zero
   );
 
   const balancerApprovedForPrincipalToken = useTokenApprovedForAmount(
@@ -186,7 +186,7 @@ export function useMintApprovals(
     balancerVaultAddress,
     principalTokenContract,
     principalTokenDecimals,
-    "1" // just check for any approval amount above zero
+    "1", // just check for any approval amount above zero
   );
 
   const balancerApprovedForYieldToken = useTokenApprovedForAmount(
@@ -194,7 +194,7 @@ export function useMintApprovals(
     balancerVaultAddress,
     yieldTokenContract,
     yieldTokenDecimals,
-    "1" // just check for any approval amount above zero
+    "1", // just check for any approval amount above zero
   );
 
   return {
@@ -221,7 +221,7 @@ async function getPermitCallData(
   baseAssetContract: ERC20Permit,
   principalTokenContract: Tranche,
   yieldTokenContract: InterestToken,
-  includePermits: boolean
+  includePermits: boolean,
 ): Promise<PermitCallData[]> {
   const {
     userProxyApprovedForBaseAsset,
@@ -308,7 +308,7 @@ async function getPermitCallData(
     spenders,
     tokenContracts,
     tokenNames,
-    nonces
+    nonces,
   );
   return permitCallData;
 }
@@ -319,7 +319,7 @@ async function fetchPermitDataMulti(
   spenders: string[],
   tokenContracts: ERC20Permit[],
   tokenNames: string[],
-  nonces: number[]
+  nonces: number[],
 ): Promise<PermitCallData[]> {
   const promises = tokenContracts.map(async (tokenContract, i) => {
     const tokenName = tokenNames[i];
@@ -338,7 +338,7 @@ async function fetchPermitDataMulti(
         owner,
         spender,
         nonce,
-        version
+        version,
       );
       if (permitData) {
         return permitData;
@@ -349,7 +349,7 @@ async function fetchPermitDataMulti(
   const permitsOrUndefined = await Promise.all(promises);
 
   const permits = permitsOrUndefined.filter(
-    (permit): permit is PermitCallData => !!permit
+    (permit): permit is PermitCallData => !!permit,
   );
   return permits;
 }

@@ -34,7 +34,7 @@ export function PortfolioView(unusedProps: PortfolioViewProps): ReactElement {
           "w-full",
           "h-full",
           "space-y-6",
-          "items-center"
+          "items-center",
         )}
       >
         {isLargeScreen ? (

@@ -42,7 +42,7 @@ export function StakingPanel(props: StakingPanelProps): ReactElement {
         "justify-between",
         "py-2",
         "h-full",
-        "space-y-2"
+        "space-y-2",
       )}
     >
       <StakingForm

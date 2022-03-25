@@ -17,11 +17,11 @@ import zip from "lodash.zip";
  */
 export function useShareOfPool(
   pool: PoolContract | undefined,
-  account: string | null | undefined
+  account: string | null | undefined,
 ): number | undefined {
   const { data: lpBalanceOf } = useTokenBalanceOf(
     pool as unknown as ERC20,
-    account
+    account,
   );
   const { data: totalSupply } = useSmartContractReadCall(pool, "totalSupply");
 
@@ -37,17 +37,17 @@ export function useShareOfPool(
  */
 export function useShareOfPoolMulti(
   pools: (PoolContract | undefined)[],
-  account: string | null | undefined
+  account: string | null | undefined,
 ): (number | undefined)[] {
   const lpBalanceOfResults = useTokenBalanceOfMulti(
     pools as unknown as ERC20[],
-    account
+    account,
   );
   const totalSupplyResults = useSmartContractReadCalls(pools, "totalSupply");
 
   const shareOfPools = zip(
     getQueriesData(lpBalanceOfResults),
-    getQueriesData(totalSupplyResults)
+    getQueriesData(totalSupplyResults),
   ).map(([lpBalanceOf, totalSupply]) => {
     if (!lpBalanceOf || !totalSupply) {
       return undefined;
@@ -60,15 +60,15 @@ export function useShareOfPoolMulti(
 
 export function calculateShareOfPool(
   lpBalanceOf: BigNumber,
-  totalSupply: BigNumber
+  totalSupply: BigNumber,
 ): number {
   const balanceOfNumber = +formatUnits(
     lpBalanceOf,
-    BALANCER_POOL_LP_TOKEN_DECIMALS
+    BALANCER_POOL_LP_TOKEN_DECIMALS,
   );
   const totalSupplyNumber = +formatUnits(
     totalSupply,
-    BALANCER_POOL_LP_TOKEN_DECIMALS
+    BALANCER_POOL_LP_TOKEN_DECIMALS,
   );
   const shareOfPool = balanceOfNumber / totalSupplyNumber;
   return shareOfPool;

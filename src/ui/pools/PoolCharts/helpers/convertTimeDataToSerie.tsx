@@ -3,7 +3,7 @@ import { TimeData } from "elf/charts/TimeData";
 
 export function convertTimeDataToSerie(
   timeData: TimeData[],
-  id: string
+  id: string,
 ): Serie[] {
   const lineData =
     timeData?.map(({ value, timeMs }) => {

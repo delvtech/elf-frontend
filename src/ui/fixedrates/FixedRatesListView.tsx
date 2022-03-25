@@ -18,7 +18,7 @@ const fixedYieldLink = (
   >{t`Fixed Yield`}</a>
 );
 export function FixedRatesListView(
-  unusedProps: FixedRatesListViewProps
+  unusedProps: FixedRatesListViewProps,
 ): ReactElement {
   const openPrincipalTokenInfos = useOpenPrincipalTokenInfos();
 
@@ -49,7 +49,7 @@ export function FixedRatesListView(
             "px-6",
             "lg:pb-0",
             "lg:pt-10",
-            "lg:max-w-4xl"
+            "lg:max-w-4xl",
           )}
         >
           <ViewTitle
@@ -67,7 +67,7 @@ export function FixedRatesListView(
               "pb-20",
               // On large screens, we just need enough padding so the last card
               // isn't up against the bottom edge of the browser
-              "lg:pb-4"
+              "lg:pb-4",
             )}
           >
             <FixedRateCardList principalTokens={sortedPrincipalTokenInfos} />

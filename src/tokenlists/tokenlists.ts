@@ -53,7 +53,7 @@ export function getTokenInfo<T extends TokenInfo>(address: string): T {
 }
 export const TokenMetadata: Record<string, AnyTokenListInfo> = keyBy(
   tokenListJson.tokens,
-  "address"
+  "address",
 );
 
 function getTokenListJsonId() {

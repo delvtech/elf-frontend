@@ -34,7 +34,7 @@ export function PoolViewHeader({
   const baseAsset = getCryptoAssetForToken(baseAssetInfo.address);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
   const termAssetShortSymbol = formatTermAssetShortSymbol(
-    termAssetInfo as PrincipalTokenInfo | YieldTokenInfo
+    termAssetInfo as PrincipalTokenInfo | YieldTokenInfo,
   );
   const BaseAssetIcon = findAssetIcon(baseAsset);
 
@@ -69,7 +69,7 @@ export function PoolViewHeader({
           "justify-center",
           "ml-2",
           "md:ml-4",
-          "m-0"
+          "m-0",
         )}
       >
         <div className={classNames(isSmallScreen ? "h4" : "h2")}>

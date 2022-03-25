@@ -31,7 +31,7 @@ export function ChartMessages(props: ChartMessagesProps): ReactElement {
             "items-center",
             "justify-center",
             "h-full",
-            "w-full"
+            "w-full",
           )}
           intent={Intent.NONE}
         >

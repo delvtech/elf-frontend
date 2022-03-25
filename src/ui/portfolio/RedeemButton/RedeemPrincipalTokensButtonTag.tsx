@@ -43,7 +43,7 @@ export function RedeemPrincipalTokensButtonTag({
   const unlockDate = convertEpochSecondsToDate(unlockTimestamp);
   const canPerformWithdrawPrincipal = useTrancheCanPerform(
     address,
-    "withdrawPrincipal"
+    "withdrawPrincipal",
   );
 
   const buttonDisabled =
@@ -55,12 +55,12 @@ export function RedeemPrincipalTokensButtonTag({
   const { data: userProxyAllowanceBN } = useTokenAllowance(
     principalTokenContract as unknown as ERC20,
     account,
-    userProxyContractAddress
+    userProxyContractAddress,
   );
 
   const userProxyAllowance = formatUnits(
     userProxyAllowanceBN ?? 1,
-    principalTokenInfo.decimals
+    principalTokenInfo.decimals,
   );
   const openDrawer = useCallback(() => {
     setDrawerOpen(true);

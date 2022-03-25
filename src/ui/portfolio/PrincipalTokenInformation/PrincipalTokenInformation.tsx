@@ -23,7 +23,7 @@ interface PrincipalTokenInformationProps {
 }
 
 export function PrincipalTokenInformation(
-  props: PrincipalTokenInformationProps
+  props: PrincipalTokenInformationProps,
 ): ReactElement {
   const {
     principalToken,
@@ -54,7 +54,7 @@ export function PrincipalTokenInformation(
           icon={null}
           intent={Intent.PRIMARY}
         >{jt`Earn additional yield on your principal tokens by adding them as liquidity to the ${getElementPoolLink(
-          principalToken
+          principalToken,
         )}`}</Callout>
       </div>
     </div>
@@ -62,7 +62,7 @@ export function PrincipalTokenInformation(
 }
 
 function getElementPoolLink(
-  principalToken: PrincipalTokenInfo
+  principalToken: PrincipalTokenInfo,
 ): ReactElement | null {
   const { address } = principalToken;
   const { address: poolAddress } = getPoolInfoForPrincipalToken(address);
@@ -90,7 +90,7 @@ function getElementPoolLink(
   );
 }
 function getGoogleCalendarLink(
-  principalToken: PrincipalTokenInfo
+  principalToken: PrincipalTokenInfo,
 ): ReactElement | null {
   const {
     address,
@@ -125,7 +125,7 @@ function getGoogleCalendarLink(
 }
 
 function getPrincipalTokenLink(
-  principalTokenAddress: string
+  principalTokenAddress: string,
 ): ReactElement | null {
   return (
     <a
@@ -144,7 +144,7 @@ function getPrincipalTokenLink(
 
 function getVaultLink(
   vaultAddress: string,
-  vaultName: string
+  vaultName: string,
 ): ReactElement | null {
   return (
     <a

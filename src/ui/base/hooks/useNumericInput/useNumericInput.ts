@@ -50,7 +50,7 @@ const DEFAULT_NUMERIC_INPUT_OPTIONS: NumericInputOptions = {
  * @param options
  */
 export function useNumericInput(
-  options = DEFAULT_NUMERIC_INPUT_OPTIONS
+  options = DEFAULT_NUMERIC_INPUT_OPTIONS,
 ): UseNumericInput {
   const [stringValue, setStringValueState] = useState("");
   const { min, max, maxPrecision } = options;
@@ -74,7 +74,7 @@ export function useNumericInput(
         setStringValueState(inputString);
       }
     },
-    [max, maxPrecision, min]
+    [max, maxPrecision, min],
   );
 
   const onChange = useCallback(
@@ -84,7 +84,7 @@ export function useNumericInput(
       // clear the input
       setValue(inputString);
     },
-    [setValue]
+    [setValue],
   );
 
   return {
@@ -98,7 +98,7 @@ export function validateInput(
   inputString: string | undefined = "",
   min?: number,
   max?: number,
-  maxPrecision?: number
+  maxPrecision?: number,
 ): boolean {
   const inputValue = Number(inputString);
   if (!ANY_NUMBER_REGEX.test(inputString)) {

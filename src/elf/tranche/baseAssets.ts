@@ -21,7 +21,7 @@ export const tranchesByBaseAsset: Record<string, Tranche[]> = groupBy(
       extensions: { underlying: baseAssetAddress },
     } = getTokenInfo<PrincipalTokenInfo>(tranche.address);
     return CryptoAssets[baseAssetAddress].id;
-  }
+  },
 );
 
 export function getBaseAssetForTranche(trancheAddress: string): CryptoAsset {

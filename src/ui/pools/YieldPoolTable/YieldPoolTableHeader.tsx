@@ -20,7 +20,7 @@ export function YieldPoolTableHeader({
         tw("px-5"),
         styles.yieldPoolGridColumns,
         Classes.TEXT_MUTED,
-        className
+        className,
       )}
     >
       <div>{t`Pool`}</div>

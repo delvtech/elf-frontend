@@ -3,7 +3,7 @@ import { ONE_YEAR_IN_MILLISECONDS } from "base/time";
 export function calculateTrancheAPY(
   trancheSpotPrice: number,
   startTimestampMilliseconds: number,
-  endTimestampMilliseconds: number
+  endTimestampMilliseconds: number,
 ): number {
   // find out how long the tranche is open for to get the anualized multiplier, eg:
   // duration = 2 weeks, multiplier = 26

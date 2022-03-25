@@ -35,7 +35,7 @@ export function EarnStakingForms(props: EarnStakingFormsProps): ReactElement {
 
   const principalPoolInfo = getPoolInfoForPrincipalToken(trancheInfo.address);
   const yieldPoolInfo = getPoolInfoForYieldToken(
-    trancheInfo.extensions.interestToken
+    trancheInfo.extensions.interestToken,
   );
 
   const cardClassName = tw(
@@ -46,7 +46,7 @@ export function EarnStakingForms(props: EarnStakingFormsProps): ReactElement {
     "border",
     {
       "border-gray-600": isDarkMode,
-    }
+    },
   );
 
   return (
@@ -91,7 +91,7 @@ function PoolStakingAPY({ poolInfo }: PoolStakingAPYProps) {
   const stakingAPY = useStakingAPY(poolInfo);
   return (
     <div className={tw("text-center")}>{t`LP APY: ${formatPercent(
-      stakingAPY
+      stakingAPY,
     )}`}</div>
   );
 }

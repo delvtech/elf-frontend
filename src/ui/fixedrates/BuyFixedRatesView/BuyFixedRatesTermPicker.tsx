@@ -29,7 +29,7 @@ export function BuyFixedRatesTermPicker({
           background: isDarkMode ? "var(--bp3-dark-bg-color)" : "",
         }}
         className={classNames(
-          tw("flex", "p-1", "border", "rounded", "border-gray-500")
+          tw("flex", "p-1", "border", "rounded", "border-gray-500"),
         )}
       >
         {availablePrincipalTokens.length > 1 ? (

@@ -13,7 +13,7 @@ import { formatUnits } from "ethers/lib/utils";
  */
 export function useTokenBalanceUNSAFE(
   tokenContract: ERC20 | undefined,
-  account: string | null | undefined
+  account: string | null | undefined,
 ): number {
   const { data: tokenBalanceOf } = useSmartContractReadCall(
     tokenContract,
@@ -21,7 +21,7 @@ export function useTokenBalanceUNSAFE(
     {
       callArgs: [account as string], // safe to cast because `enabled` is set
       enabled: !!account,
-    }
+    },
   );
 
   if (!tokenBalanceOf || !tokenContract) {

@@ -88,7 +88,7 @@ const ConnectToBegin: FC<ConnectToBeginProps> = ({
       <button
         className={classNames(
           Classes.BUTTON_TEXT,
-          tw("flex-1", "justify-center", "items-center", "flex", "mr-5")
+          tw("flex-1", "justify-center", "items-center", "flex", "mr-5"),
         )}
         style={{ color: isDarkMode ? Colors.BLUE5 : Colors.BLUE2 }}
       >
@@ -107,7 +107,7 @@ const ConnectToBegin: FC<ConnectToBeginProps> = ({
 
 function getCardStyle(
   chainId: number | undefined,
-  isDarkMode: boolean
+  isDarkMode: boolean,
 ): React.CSSProperties {
   const mainnetDanger =
     chainId && isMainnet(chainId) && process.env.NODE_ENV !== "production";

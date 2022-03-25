@@ -48,7 +48,7 @@ const calloutClassName = tw(
   "h-full",
   "p-8",
   "items-center",
-  "justify-center"
+  "justify-center",
 );
 
 export function PrincipalTokenLPCard({
@@ -68,7 +68,7 @@ export function PrincipalTokenLPCard({
   // Principal token
   const { termAssetInfo } = getPoolTokens(poolInfo);
   const principalTokenInfo = getTokenInfo<PrincipalTokenInfo>(
-    termAssetInfo.address
+    termAssetInfo.address,
   );
 
   const { decimals: trancheDecimals } = principalTokenInfo;
@@ -90,14 +90,14 @@ export function PrincipalTokenLPCard({
     addresses,
     poolBalances,
     baseAssetInfo.address,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
   const principalTokenLiquidity = calculatePoolShareLiquidity(
     shareOfPool,
     addresses,
     poolBalances,
     principalTokenInfo.address,
-    trancheDecimals
+    trancheDecimals,
   );
 
   const baseAssetLiquidityLabel = `${baseAssetLiquidity?.toFixed(4)}`;
@@ -115,7 +115,7 @@ export function PrincipalTokenLPCard({
         tw("p-8", "flex", "flex-col", "m-4", "space-y-5", "text-base", {
           "text-gray-700": !isDarkMode,
           "text-white": isDarkMode,
-        })
+        }),
       )}
     >
       <div>
@@ -133,7 +133,7 @@ export function PrincipalTokenLPCard({
               "w-full",
               "flex-col",
               "space-y-2",
-              "overflow-hidden"
+              "overflow-hidden",
             )}
           >
             <span
@@ -228,7 +228,7 @@ function calculatePoolShareLiquidity(
   poolTokenAddresses: string[] | undefined,
   poolTokenReserves: BigNumber[] | undefined,
   tokenAddress: string | undefined,
-  tokenDecimals: number | undefined
+  tokenDecimals: number | undefined,
 ): number | undefined {
   let baseAssetLiquidity: number | undefined;
   if (

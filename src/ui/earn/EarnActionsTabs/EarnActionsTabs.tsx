@@ -11,7 +11,7 @@ interface EarnActionsTabsProps {
   activeTabId: EarnActionsTabId;
   onSetActiveTab: (
     newTabId: EarnActionsTabId,
-    prevTabId: EarnActionsTabId
+    prevTabId: EarnActionsTabId,
   ) => void;
 
   unlockTimestamp: number;

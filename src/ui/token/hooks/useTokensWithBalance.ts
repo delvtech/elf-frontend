@@ -13,14 +13,14 @@ interface TokenWithBalance<TContract> {
 
 export function useTokensWithBalance<TContract extends ERC20>(
   account: string | null | undefined,
-  tokens: (TContract | undefined)[]
+  tokens: (TContract | undefined)[],
 ): TokenWithBalance<TContract>[] {
   const tokenBalanceOfResults = useTokenBalanceOfMulti(tokens, account);
   const status = getQueryCombinedStatus(tokenBalanceOfResults);
 
   const loadedData = zip(tokens, getQueriesData(tokenBalanceOfResults)).filter(
     (values): values is [TContract, BigNumber] =>
-      values.every((value) => !!value)
+      values.every((value) => !!value),
   );
 
   if (status === "loading") {

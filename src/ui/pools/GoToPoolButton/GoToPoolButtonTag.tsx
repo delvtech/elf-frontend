@@ -34,7 +34,7 @@ export function GoToPoolButtonTag(props: GoToPoolButtonTagProps): ReactElement {
           Classes.INTENT_PRIMARY,
           Classes.FILL,
           tw("flex", "justify-between"),
-          className
+          className,
         )}
       >
         <div className={tw("p-2")}>{label}</div>

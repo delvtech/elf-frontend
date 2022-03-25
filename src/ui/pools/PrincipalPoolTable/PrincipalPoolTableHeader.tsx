@@ -15,10 +15,10 @@ export function PrincipalPoolTableHeader(): ReactElement {
           "grid",
           // padding to match Card default padding, keeps text alignment correct
           // with card content
-          "px-5"
+          "px-5",
         ),
         styles.principalPoolGridColumns,
-        Classes.TEXT_MUTED
+        Classes.TEXT_MUTED,
       )}
     >
       <div>{t`Pool`}</div>

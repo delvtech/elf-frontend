@@ -20,8 +20,8 @@ describe("tokenListJson", () => {
 
     expect(
       tokenListJson.tokens.every(
-        (tokenInfo) => tokenInfo.chainId === expectedChainId
-      )
+        (tokenInfo) => tokenInfo.chainId === expectedChainId,
+      ),
     ).toEqual(true);
   });
 });

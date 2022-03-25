@@ -10,13 +10,13 @@ import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 
 export async function fetchTotalValueLockedForTerm(
   trancheInfo: PrincipalTokenInfo,
-  baseAssetPrice: Money
+  baseAssetPrice: Money,
 ): Promise<Money> {
   const { address, decimals } = trancheInfo;
   const tranche = trancheContractsByAddress[address];
   const poolInfo = getPoolInfoForPrincipalToken(address);
   const yieldPoolInfo = getPoolInfoForYieldToken(
-    trancheInfo.extensions.interestToken
+    trancheInfo.extensions.interestToken,
   );
 
   // get all components of TVL: base asset in tranche, base asset in pool, accumulated interest for
@@ -47,15 +47,15 @@ export async function fetchTotalValueLockedForTerm(
   const baseAssetLocked = +formatUnits(baseAssetLockedBN || 0, decimals);
   const accumulatedInterest = +formatUnits(
     accumulatedInterestBN || 0,
-    decimals
+    decimals,
   );
   const baseReservesInPrincipalPool = +formatUnits(
     baseReservesInPrincipalPoolBN || 0,
-    decimals
+    decimals,
   );
   const baseReservesInYieldPool = +formatUnits(
     baseReservesInYieldPoolBN || 0,
-    decimals
+    decimals,
   );
 
   // get total, convert to fiat
@@ -64,7 +64,7 @@ export async function fetchTotalValueLockedForTerm(
       accumulatedInterest +
       baseReservesInPrincipalPool +
       baseReservesInYieldPool,
-    Math.round
+    Math.round,
   );
 
   return totalFiatValueLocked;

@@ -32,28 +32,28 @@ function AppMenu() {
 
   const onResourcesMenuClose = useCallback(
     () => setIsResourcesMenuOpen(false),
-    []
+    [],
   );
 
   const onFixedRatesClick = useCallback(
     () => changeTab(Navigation.FIXED_RATES),
-    [changeTab]
+    [changeTab],
   );
   const onMintClick = useCallback(
     () => changeTab(Navigation.MINT),
-    [changeTab]
+    [changeTab],
   );
   const onTradeClick = useCallback(
     () => changeTab(Navigation.POOLS),
-    [changeTab]
+    [changeTab],
   );
   const onPortfolioClick = useCallback(
     () => changeTab(Navigation.PORTFOLIO),
-    [changeTab]
+    [changeTab],
   );
   const onResourcesClick = useCallback(
     () => setIsResourcesMenuOpen((isOpen) => !isOpen),
-    []
+    [],
   );
 
   if (isResourcesMenuOpen) {

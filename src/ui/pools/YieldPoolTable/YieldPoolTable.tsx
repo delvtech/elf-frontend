@@ -29,14 +29,14 @@ export function YieldPoolTable({
       [...yieldPoolsToShow]
         .sort((info) => info.extensions.createdAtTimestamp)
         .reverse(),
-    [yieldPoolsToShow]
+    [yieldPoolsToShow],
   );
 
   return (
     <div
       className={classNames(
         tw("flex-col", "items-center", "space-y-5"),
-        className
+        className,
       )}
       style={yieldPoolTableStyle}
     >

@@ -12,6 +12,6 @@ export function useChangeTab(): ChangeTabFn {
     (tabId: Navigation) => {
       navigate(`/${tabId}`);
     },
-    [navigate]
+    [navigate],
   );
 }

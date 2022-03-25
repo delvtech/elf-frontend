@@ -6,7 +6,7 @@ import { TimeData } from "elf/charts/TimeData";
 export function binDataByDay(
   data: TimeData[],
   startTimestamp: number,
-  endTimestamp: number
+  endTimestamp: number,
 ): TimeData[] {
   const startDay = new Date(startTimestamp);
   const endDay = new Date(endTimestamp);

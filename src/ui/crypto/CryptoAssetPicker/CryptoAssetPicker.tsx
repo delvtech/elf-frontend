@@ -26,7 +26,7 @@ const popoverProps: IPopoverProps = {
 
 const itemRenderer: ItemRenderer<CryptoAsset> = (
   baseAsset: CryptoAsset,
-  { handleClick }
+  { handleClick },
 ) => (
   <CryptoAssetButton
     key={baseAsset.id}

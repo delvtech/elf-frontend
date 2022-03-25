@@ -33,7 +33,7 @@ export const AppToaster =
     : null;
 export function makeToast(
   message: string,
-  action?: ActionProps & LinkProps
+  action?: ActionProps & LinkProps,
 ): IToastProps {
   return {
     message,
@@ -44,7 +44,7 @@ export function makeToast(
 export function makeSuccessToast(
   message: string,
   action?: ActionProps & LinkProps,
-  timeoutMs?: number
+  timeoutMs?: number,
 ): IToastProps {
   return {
     message,
@@ -59,7 +59,7 @@ export function makeErrorToast(
   message: string,
   icon?: IconName,
   action?: ActionProps & LinkProps,
-  timeoutMs?: number
+  timeoutMs?: number,
 ): IToastProps {
   return {
     message,

@@ -15,7 +15,7 @@ export function useQueryBatchSwapMulti(
   pools: (PoolContract | undefined)[],
   tokenInAddresses: (string | undefined)[],
   tokenOutAddresses: (string | undefined)[],
-  amounts: (BigNumber | undefined)[]
+  amounts: (BigNumber | undefined)[],
 ): QueryObserverResult<BigNumber[]>[] {
   const poolIdResults = useSmartContractReadCalls(pools, "getPoolId");
   const poolIds = getQueriesData(poolIdResults);
@@ -30,7 +30,7 @@ export function useQueryBatchSwapMulti(
         poolId,
         tokenInAddress,
         amount,
-        tokenOutAddress
+        tokenOutAddress,
       );
       // must check undefined as `kind` is an enum of 0 or 1
       const enabled = !!callArgs?.every((v) => v !== undefined);
@@ -38,13 +38,13 @@ export function useQueryBatchSwapMulti(
         enabled,
         callArgs,
       };
-    }
+    },
   );
 
   const queryBatchSwapResults = useSmartContractReadCalls(
     pools.map(() => balancerVaultContract),
     "queryBatchSwap",
-    readCallOptions
+    readCallOptions,
   );
 
   return queryBatchSwapResults;

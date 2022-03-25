@@ -18,13 +18,13 @@ interface StakeYieldTokenFormsProps {
   submitDisabled?: boolean;
 }
 export function StakeYieldTokensForm(
-  props: StakeYieldTokenFormsProps
+  props: StakeYieldTokenFormsProps,
 ): ReactElement {
   const { library, signer, account, poolInfo, formDisabled, submitDisabled } =
     props;
   const canPerformAddLiquidity = useCanPerformPool(
     poolInfo.address,
-    "addLiquidity"
+    "addLiquidity",
   );
   return (
     <StakingForm

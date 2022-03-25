@@ -4,5 +4,5 @@ import { defaultProvider } from "elf/providers/providers";
 
 export const trancheFactoryContract = TrancheFactory__factory.connect(
   AddressesJson.addresses.trancheFactoryAddress,
-  defaultProvider
+  defaultProvider,
 );

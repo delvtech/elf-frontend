@@ -93,7 +93,7 @@ export const latticeConnector = new LatticeConnector({
 
 export function getConnectorName(
   connector?: AbstractConnector | undefined,
-  library?: Web3Provider | undefined
+  library?: Web3Provider | undefined,
 ): string | undefined {
   if (!connector) {
     return undefined;
@@ -115,13 +115,13 @@ export function getConnectorName(
 }
 
 export function isWalletConnectConnector(
-  connector: AbstractConnector
+  connector: AbstractConnector,
 ): connector is WalletConnectConnector {
   return !!(connector as WalletConnectConnector)?.walletConnectProvider;
 }
 
 export function isMetaMaskConnector(
-  library?: Web3Provider | undefined
+  library?: Web3Provider | undefined,
 ): boolean {
   return library?.connection?.url === "metamask";
 }

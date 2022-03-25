@@ -7,7 +7,7 @@ import { trancheContractsByAddress } from "elf/tranche/tranches";
 import { assetProxyContractsByAddress } from "elf/tranche/positions";
 
 export function useAccumulatedInterestForTranche(
-  poolInfo: PoolInfo
+  poolInfo: PoolInfo,
 ): BigNumber | undefined {
   const {
     address: trancheAddress,
@@ -19,7 +19,7 @@ export function useAccumulatedInterestForTranche(
   // this is the amount of underlying that has been deposited into the tranche.
   const { data: balanceOfUnderlying } = useSmartContractReadCall(
     trancheContract,
-    "valueSupplied"
+    "valueSupplied",
   );
 
   const yVaultAssetProxy = assetProxyContractsByAddress[vaultAssetProxyAddress];
@@ -31,7 +31,7 @@ export function useAccumulatedInterestForTranche(
     "balanceOfUnderlying",
     {
       callArgs: [trancheAddress],
-    }
+    },
   );
 
   if (!valueOfSharesInUnderlying || !balanceOfUnderlying) {

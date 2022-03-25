@@ -12,7 +12,7 @@ export function useOpenTrancheBaseAssets(): CryptoAsset[] {
 }
 
 function getBaseAssetsForTranches(
-  tranches: (Tranche | undefined)[]
+  tranches: (Tranche | undefined)[],
 ): (CryptoAsset | undefined)[] {
   const cryptoAssets = tranches.map((tranche) => {
     if (!tranche?.address) {
@@ -27,7 +27,7 @@ function getBaseAssetsForTranches(
   // De-dupe since multiple tranches can have the same base asset
   const uniqueCryptoAssets = uniqBy(
     cryptoAssets.filter((v) => !!v),
-    (v) => v?.id
+    (v) => v?.id,
   );
 
   return uniqueCryptoAssets;

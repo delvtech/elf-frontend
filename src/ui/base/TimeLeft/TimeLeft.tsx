@@ -51,7 +51,7 @@ export function TimeLeft(props: TimeLeftProps): ReactElement {
         "h-full",
         "w-full",
         "space-y-2",
-        "flex-shrink-0"
+        "flex-shrink-0",
       )}
     >
       <div className={tw("flex", "justify-between")}>

@@ -27,13 +27,13 @@ export async function getStaticProps({
   // Used for the Term picker, since base assets can have multiple terms (ie:
   // principal tokens) running at the same time.
   const availablePrincipalTokens = getOpenPrincipalTokensWithSameBaseAsset(
-    params?.principalTokenAddress as string
+    params?.principalTokenAddress as string,
   );
   const principalTokenInfo = getTokenInfo<PrincipalTokenInfo>(
-    params?.principalTokenAddress as string
+    params?.principalTokenAddress as string,
   );
   const principalTokenPoolInfo = getPoolInfoForPrincipalToken(
-    params?.principalTokenAddress as string
+    params?.principalTokenAddress as string,
   );
   return {
     props: {
@@ -48,7 +48,7 @@ export async function getStaticProps({
 }
 
 export default function BuyFixedRates(
-  props: BuyFixedRatesViewProps
+  props: BuyFixedRatesViewProps,
 ): ReactElement | null {
   const flagToggleZapPurchase = useFeatureFlag(FeatureFlag.ZAP_PURCHASE);
   return flagToggleZapPurchase

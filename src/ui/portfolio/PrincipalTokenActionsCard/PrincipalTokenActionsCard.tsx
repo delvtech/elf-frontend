@@ -21,7 +21,7 @@ interface PrincipalTokenActionsCardProps {
 }
 
 export function PrincipalTokenActionsCard(
-  props: PrincipalTokenActionsCardProps
+  props: PrincipalTokenActionsCardProps,
 ): ReactElement {
   const { library, account, activeTabId, setActiveTabId, principalToken } =
     props;

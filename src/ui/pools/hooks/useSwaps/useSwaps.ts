@@ -13,7 +13,7 @@ import { balancerVaultContract } from "elf/balancer/vault";
 export function useSwaps(
   poolInfo: PoolInfo,
   fromTime: number = ONE_WEEK_IN_SECONDS,
-  toTime?: number
+  toTime?: number,
 ): SwapEventWithTimeStamp[] | undefined {
   const { poolId } = poolInfo.extensions;
   const { data: fromBlockNumber } = usePreviousBlockNumber(fromTime);
@@ -29,7 +29,7 @@ export function useSwaps(
       fromBlock: fromBlockNumber,
       toBlock: toBlockNumber,
       refetchOnWindowFocus: false,
-    }
+    },
   );
   const swaps: SwapEventWithTimeStamp[] = useMemo(() => {
     if (!lastestBlockNumber) {

@@ -3,7 +3,7 @@ import { t } from "ttag";
 export function getMarketRateLabel(
   baseAssetSymbol: string | undefined,
   roundedTranchePrice: string | undefined,
-  inputAssetSymbol: string | undefined
+  inputAssetSymbol: string | undefined,
 ): string | undefined {
   if (!baseAssetSymbol || !roundedTranchePrice || !inputAssetSymbol) {
     return;

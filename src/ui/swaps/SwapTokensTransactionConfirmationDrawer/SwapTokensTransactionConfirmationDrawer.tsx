@@ -101,14 +101,14 @@ export function SwapTokensTransactionConfirmationDrawer({
     pool,
     tokenInAddress,
     tokenOutAddress,
-    amountInBN
+    amountInBN,
   );
 
   const priceImpact = getPriceImpact(
     amountIn,
     amountOut,
     spotPrice,
-    baseAssetIn
+    baseAssetIn,
   );
 
   const {
@@ -117,7 +117,7 @@ export function SwapTokensTransactionConfirmationDrawer({
   } = parseQueryBatchSwapResult(
     tokenInAddress,
     tokenOutAddress,
-    queryBatchSwapInResult
+    queryBatchSwapInResult,
   );
 
   const slippageTolerance = termAssetType === "principal" ? 0.003 : 0.01;
@@ -129,7 +129,7 @@ export function SwapTokensTransactionConfirmationDrawer({
     swapKind,
     slippageTolerance,
     tokenInDecimals,
-    tokenOutDecimals
+    tokenOutDecimals,
   );
 
   const { swap: onConfirmSwapTokens, mutationResult: swapResult } = useSwap(
@@ -141,7 +141,7 @@ export function SwapTokensTransactionConfirmationDrawer({
     amountInBN,
     limitBN,
     swapKind,
-    onClose
+    onClose,
   );
 
   const { isLoading, isError, isSuccess, reset, error } = swapResult;
@@ -163,7 +163,7 @@ export function SwapTokensTransactionConfirmationDrawer({
     tokenInAsset,
     account,
     amountIn,
-    AddressesJson.addresses.balancerVaultAddress
+    AddressesJson.addresses.balancerVaultAddress,
   );
 
   return (
@@ -204,7 +204,7 @@ export function getPriceImpact(
   amountIn: string,
   amountOut: string,
   spotPriceToken: number | undefined = 0,
-  baseAssetIn: boolean
+  baseAssetIn: boolean,
 ): number {
   // spotPriceToken is baseAssetIn / termAssetOut, so if we are trading termAssetIn, we need to flip
   // the spot price so that it is termAssetIn / baseAssetOut so that it lines up with the purchase
@@ -225,7 +225,7 @@ function useWalletApprovalInfos(
   tokenInAsset: CryptoAsset | undefined,
   account: string | null | undefined,
   amountIn: string,
-  balancerVaultAddress: string | undefined
+  balancerVaultAddress: string | undefined,
 ): WalletApprovalInfo[] | undefined {
   return useMemo(() => {
     if (!tokenInAsset || tokenInAsset.type === CryptoAssetType.ETHEREUM) {

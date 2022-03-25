@@ -17,7 +17,7 @@ interface FixedRateInputAssetInfo {
 
 function getFixedRateInputAssetInfo(
   inputTokenAddress: string,
-  kind: BuyFixedRatesKind
+  kind: BuyFixedRatesKind,
 ): FixedRateInputAssetInfo {
   const inputAsset = getCryptoAssetForToken(inputTokenAddress);
 
@@ -42,10 +42,10 @@ function getFixedRateInputAssetInfo(
 
 export function useFixedRateInputAssetInfo(
   inputTokenAddress: string,
-  kind: BuyFixedRatesKind
+  kind: BuyFixedRatesKind,
 ): FixedRateInputAssetInfo {
   return useMemo(
     () => getFixedRateInputAssetInfo(inputTokenAddress, kind),
-    [inputTokenAddress, kind]
+    [inputTokenAddress, kind],
   );
 }

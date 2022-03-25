@@ -37,7 +37,7 @@ interface PrincipalPoolTableRowProps {
 }
 const cardStyle = { height: 128 };
 export function PrincipalPoolTableRow(
-  props: PrincipalPoolTableRowProps
+  props: PrincipalPoolTableRowProps,
 ): ReactElement {
   const {
     className,
@@ -62,7 +62,7 @@ export function PrincipalPoolTableRow(
 
   // Principal Token
   const principalTokenInfo = getPrincipalTokenInfoForPool(
-    principalPoolTokenInfo
+    principalPoolTokenInfo,
   );
   const {
     address: principalTokenAddress,
@@ -87,7 +87,7 @@ export function PrincipalPoolTableRow(
     usePoolSpotPrice(poolContract, principalTokenAddress) ?? 0;
   const stakingYield = useStakingAPY(
     principalPoolTokenInfo,
-    ONE_WEEK_IN_SECONDS
+    ONE_WEEK_IN_SECONDS,
   );
 
   const dataToLoad = [liquidity, fees, fixedYield, stakingYield];

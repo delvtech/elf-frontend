@@ -67,7 +67,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   // get token infos
   const yieldPoolInfo = getPoolInfoForYieldToken(interestTokenAddress);
   const principalPoolInfo = getPoolInfoForPrincipalToken(
-    principalTokenInfo.address
+    principalTokenInfo.address,
   );
   const vaultTokenInfo = getVaultTokenInfoForTranche(principalTokenAddress);
 
@@ -93,12 +93,12 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
   // get dynamic pool information
   const principalPrice = usePoolSpotPrice(
     principalPoolContract,
-    principalTokenInfo.address
+    principalTokenInfo.address,
   )?.toFixed(4);
 
   const tvl = useTotalValueLockedForTranche(
     principalTokenInfo,
-    baseAssetContract as unknown as ERC20
+    baseAssetContract as unknown as ERC20,
   );
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
 
@@ -106,7 +106,7 @@ export function EarnCard(props: EarnCardProps): ReactElement | null {
 
   const dayDifference = differenceInDays(
     maturityTime as number,
-    startTime as number
+    startTime as number,
   );
 
   const termLength =

@@ -5,9 +5,9 @@ import { render, RenderResult } from "@testing-library/react";
 
 export function renderWithClient(
   client: QueryClient,
-  ui: ReactElement
+  ui: ReactElement,
 ): RenderResult {
   return render(
-    <QueryClientProvider client={client}>{ui}</QueryClientProvider>
+    <QueryClientProvider client={client}>{ui}</QueryClientProvider>,
   );
 }

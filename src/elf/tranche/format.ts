@@ -7,7 +7,7 @@ import { isYieldToken } from "elf/interestToken/interestToken";
 import { isPrincipalToken } from "elf/tranche/tranches";
 
 export function formatPrincipalTokenShortSymbol(
-  principalToken: PrincipalTokenInfo
+  principalToken: PrincipalTokenInfo,
 ): string {
   const { symbol } = principalToken;
   // symbols look like: ePyvCurveLUSD-12SEP21
@@ -19,7 +19,7 @@ export function formatPrincipalTokenShortSymbol(
 }
 
 export function formatTermAssetShortSymbol(
-  termTokenInfo: PrincipalTokenInfo | YieldTokenInfo
+  termTokenInfo: PrincipalTokenInfo | YieldTokenInfo,
 ): string {
   // note that the principal tokens are built into the same contract as the tranches
 
@@ -34,7 +34,7 @@ export function formatTermAssetShortSymbol(
   // shouldn't happen
   warning(
     true,
-    "tried to get the short symbol on a token that is not a principal or yield token."
+    "tried to get the short symbol on a token that is not a principal or yield token.",
   );
   return "";
 }

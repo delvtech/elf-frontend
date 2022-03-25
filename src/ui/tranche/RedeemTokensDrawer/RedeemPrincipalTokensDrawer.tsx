@@ -75,7 +75,7 @@ export function RedeemPrincipalTokensDrawer({
   useEffect(() => {
     if (
       parseUnits(userProxyAllowance || "0").lt(
-        parseUnits(principalTokenValue || "0")
+        parseUnits(principalTokenValue || "0"),
       )
     ) {
       setEnoughAllowance(false);
@@ -83,17 +83,17 @@ export function RedeemPrincipalTokensDrawer({
   }, [userProxyAllowance, principalTokenValue]);
   const { data: principalTokenBalanceOf } = useTokenBalanceOf(
     tranche as unknown as ERC20,
-    account
+    account,
   );
   const onSetMaxAmount = useCallback(() => {
     setPrincipalTokenValue(
-      formatUnits(principalTokenBalanceOf ?? 0, principalTokenDecimals)
+      formatUnits(principalTokenBalanceOf ?? 0, principalTokenDecimals),
     );
   }, [principalTokenBalanceOf, setPrincipalTokenValue, principalTokenDecimals]);
 
   const principalTokenValueBN = parseUnits(
     principalTokenValue || "0",
-    principalTokenDecimals
+    principalTokenDecimals,
   );
 
   const {
@@ -107,13 +107,13 @@ export function RedeemPrincipalTokensDrawer({
     account,
     principalTokenValueBN,
     baseAsset,
-    onClose
+    onClose,
   );
 
   const confirmButtonLabel = getConfirmButtonLabel(
     account,
     principalTokenValueBN,
-    principalTokenBalanceOf
+    principalTokenBalanceOf,
   );
 
   const confirmButtonDisabled = getConfirmButtonDisabled(
@@ -121,7 +121,7 @@ export function RedeemPrincipalTokensDrawer({
     principalTokenValueBN,
     principalTokenBalanceOf,
     enoughAllowance,
-    showApprovalCallout
+    showApprovalCallout,
   );
 
   let buttonIntent = isError ? Intent.DANGER : Intent.PRIMARY;
@@ -214,7 +214,7 @@ function useRedeemPrincipalTokens(
   account: string | null | undefined,
   trancheAmountBigNumber: BigNumber | undefined,
   baseAsset: CryptoAsset,
-  onTransactionSubmitted: () => void
+  onTransactionSubmitted: () => void,
 ): {
   withdraw: () => void;
   reset: () => void;
@@ -226,7 +226,7 @@ function useRedeemPrincipalTokens(
     tranche,
     account,
     trancheAmountBigNumber,
-    onTransactionSubmitted
+    onTransactionSubmitted,
   );
 
   const withdrawEth = useRedeemTermAssetsToEth(
@@ -235,7 +235,7 @@ function useRedeemPrincipalTokens(
     account,
     trancheAmountBigNumber || BigNumber.from(0),
     BigNumber.from(0),
-    onTransactionSubmitted
+    onTransactionSubmitted,
   );
 
   if (baseAsset.type === CryptoAssetType.ETHEREUM) {
@@ -248,7 +248,7 @@ function useRedeemPrincipalTokens(
 function getConfirmButtonLabel(
   account: string | null | undefined,
   amountIn: BigNumber | undefined,
-  balanceOf: BigNumber | undefined
+  balanceOf: BigNumber | undefined,
 ) {
   if (!account) {
     return t`Connect your wallet to continue`;
@@ -266,7 +266,7 @@ function getConfirmButtonDisabled(
   amountIn: BigNumber | undefined,
   balanceOf: BigNumber | undefined,
   enoughAllowance: boolean,
-  useApprovals: boolean
+  useApprovals: boolean,
 ) {
   // must be connected to click this button
   if (!account) {

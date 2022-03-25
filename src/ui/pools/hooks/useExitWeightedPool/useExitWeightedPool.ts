@@ -25,7 +25,7 @@ export function useExitWeightedPool(
   account: string | null | undefined,
   poolInfo: YieldPoolTokenInfo,
   lpIn: string,
-  onTransactionSubmitted?: () => void
+  onTransactionSubmitted?: () => void,
 ): {
   mutationResult: UseMutationResult<
     ContractReceipt | undefined,
@@ -43,7 +43,7 @@ export function useExitWeightedPool(
     signer,
     {
       onTransactionSubmitted,
-    }
+    },
   );
 
   const { mutate: exitPool } = mutationResult;
@@ -65,7 +65,7 @@ export function useExitWeightedPool(
       poolTokenReserves,
       poolTokenDecimals,
       totalSupply,
-      lpIn
+      lpIn,
     );
 
     if (!exitPoolCallArgs) {
@@ -87,7 +87,7 @@ function makeExitPoolCallArgs(
   poolTokenReserves: BigNumber[] | undefined,
   poolTokenDecimals: number[],
   totalSupply: BigNumber | undefined,
-  lpIn: string
+  lpIn: string,
 ): ContractMethodArgs<Vault, "exitPool"> | undefined {
   if (
     !poolId ||
@@ -112,7 +112,7 @@ function makeExitPoolCallArgs(
     lpIn,
     totalSupply,
     poolTokenReserves,
-    poolTokenDecimals
+    poolTokenDecimals,
   ) as BigNumber[];
 
   const lpInBN = parseUnits(lpIn || "0", BALANCER_POOL_LP_TOKEN_DECIMALS);
@@ -120,7 +120,7 @@ function makeExitPoolCallArgs(
   // weighted pools take a exit kind and amount of bpt token in the user data
   const userData = defaultAbiCoder.encode(
     ["uint8", "uint256"],
-    [WeightedPoolExitKind.EXACT_BPT_IN_FOR_TOKENS_OUT, lpInBN]
+    [WeightedPoolExitKind.EXACT_BPT_IN_FOR_TOKENS_OUT, lpInBN],
   );
 
   const exitRequest: ExitRequest = {
@@ -145,7 +145,7 @@ function getPoolTokenMinAmountsOut(
   lpIn: string,
   totalSupply: BigNumber,
   poolTokenReserves: BigNumber[],
-  poolTokenDecimals: number[]
+  poolTokenDecimals: number[],
 ) {
   if (!poolTokenReserves.length) {
     return undefined;
@@ -153,16 +153,16 @@ function getPoolTokenMinAmountsOut(
 
   const totalSupplyString = formatUnits(
     totalSupply,
-    BALANCER_POOL_LP_TOKEN_DECIMALS
+    BALANCER_POOL_LP_TOKEN_DECIMALS,
   );
 
   const xReservesString = formatUnits(
     poolTokenReserves[0],
-    poolTokenDecimals[0]
+    poolTokenDecimals[0],
   );
   const yReservesString = formatUnits(
     poolTokenReserves[1],
-    poolTokenDecimals[1]
+    poolTokenDecimals[1],
   );
 
   const { xNeeded, yNeeded } = calculateTokensOutForLPInFixed(
@@ -170,7 +170,7 @@ function getPoolTokenMinAmountsOut(
     xReservesString,
     yReservesString,
     totalSupplyString,
-    poolTokenDecimals[0]
+    poolTokenDecimals[0],
   );
 
   if (!xNeeded || !yNeeded) {
@@ -181,11 +181,11 @@ function getPoolTokenMinAmountsOut(
   // you'll receive at least 99.7% of what you try to withdraw.
   const xNeededPadded = clipFixNumberToStringDecimals(
     getSafeFixedNumber(xNeeded).mulUnsafe(getSafeFixedNumber("0.997")),
-    poolTokenDecimals[0]
+    poolTokenDecimals[0],
   );
   const yNeededPadded = clipFixNumberToStringDecimals(
     getSafeFixedNumber(yNeeded).mulUnsafe(getSafeFixedNumber("0.997")),
-    poolTokenDecimals[1]
+    poolTokenDecimals[1],
   );
 
   const poolTokenMinAmountsOut = [

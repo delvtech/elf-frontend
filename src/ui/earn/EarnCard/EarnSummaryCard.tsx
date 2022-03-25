@@ -140,7 +140,7 @@ function YieldTokenPrice({ yieldPoolInfo }: TokenPriceProps) {
   const yieldPoolContract = yieldPoolContractsByAddress[yieldPoolInfo.address];
   const yieldPrice = usePoolSpotPrice(
     yieldPoolContract,
-    yieldTokenAddress
+    yieldTokenAddress,
   )?.toFixed(4);
   return <LabeledText text={t`${yieldPrice}`} label={t`Yield token`} />;
 }

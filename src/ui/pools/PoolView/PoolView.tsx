@@ -39,7 +39,7 @@ export function PoolView({
           "space-y-8",
           "overflow-auto",
           "px-4",
-          "lg:px-12"
+          "lg:px-12",
         )}
       >
         <div className={tw("flex", "justify-between")}>

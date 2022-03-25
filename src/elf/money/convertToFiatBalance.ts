@@ -15,11 +15,11 @@ import { Money } from "ts-money";
 export function convertToFiatBalance(
   fiatValue: Money,
   cryptoFractionalValue: BigNumber,
-  cryptoDecimals: number
+  cryptoDecimals: number,
 ): Money {
   // formatUnits will always create a string that can be converted to a number without overflow problems
   const cryptoBalance = Number(
-    formatUnits(cryptoFractionalValue, cryptoDecimals)
+    formatUnits(cryptoFractionalValue, cryptoDecimals),
   );
 
   // Now we can safely multiply the crypto price by the balance to get the fiat balance
@@ -28,7 +28,7 @@ export function convertToFiatBalance(
 
 export function convertNumberToFiatBalance(
   fiatValue: Money,
-  cryptoNominalValue: number
+  cryptoNominalValue: number,
 ): Money {
   // Now we can safely multiply the crypto price by the balance to get the fiat balance
   return fiatValue.multiply(cryptoNominalValue, Math.round);

@@ -24,7 +24,7 @@ import { formatUnits } from "ethers/lib/utils";
  */
 export function useMintPreview(
   trancheInfo: TrancheInfo,
-  amountIn: string
+  amountIn: string,
 ): number | undefined {
   const trancheContract = trancheContractsByAddress[trancheInfo.address];
 
@@ -56,11 +56,11 @@ export function useMintPreview(
 
   const trancheValueSupplied = +formatUnits(
     trancheValueSuppliedBN,
-    trancheDecimals
+    trancheDecimals,
   );
   const trancheInterestSupply = +formatUnits(
     trancheInterestSupplyBN,
-    trancheDecimals
+    trancheDecimals,
   );
   const balanceBefore = +formatUnits(balanceBeforeBN, wrappedPositionDecimals);
   const vaultTotalAssets = +formatUnits(vaultTotalAssetsBN, vaultDecimals);
@@ -71,7 +71,7 @@ export function useMintPreview(
     ((balanceBefore * vaultTotalAssets) / vaultTotalSupply -
       trancheValueSupplied) /
       trancheInterestSupply,
-    0
+    0,
   );
 
   const adjustedAmount = +amountIn - +amountIn * interestPerUnderlying;
@@ -79,7 +79,7 @@ export function useMintPreview(
 }
 
 function getWrappedPositionForTranche(
-  trancheInfo: TrancheInfo
+  trancheInfo: TrancheInfo,
 ): YVaultAssetProxy {
   const { position: vaultAssetProxyAddress } = trancheInfo.extensions;
 
@@ -103,7 +103,7 @@ function getStaticInformation(trancheInfo: TrancheInfo) {
 function useSmartContractData(
   trancheContract: Tranche,
   wrappedPosition: YVaultAssetProxy,
-  vault: TestYVault
+  vault: TestYVault,
 ) {
   const { decimals: wrappedPositionDecimals } =
     getTokenInfo<AssetProxyTokenInfo>(wrappedPosition.address);
@@ -112,11 +112,11 @@ function useSmartContractData(
 
   const { data: trancheValueSuppliedBN } = useSmartContractReadCall(
     trancheContract,
-    "valueSupplied"
+    "valueSupplied",
   );
   const { data: trancheInterestSupplyBN } = useSmartContractReadCall(
     trancheContract,
-    "interestSupply"
+    "interestSupply",
   );
 
   const { data: balanceBeforeBN } = useSmartContractReadCall(
@@ -124,19 +124,19 @@ function useSmartContractData(
     "balanceOf",
     {
       callArgs: [trancheContract.address],
-    }
+    },
   );
 
   // our stub doesn't have this yet so don't make the call so we don't bork trying to call a method
   // that doesn't exist
   const { data: vaultTotalAssetsBN } = useSmartContractReadCall(
     vault,
-    "totalAssets"
+    "totalAssets",
   );
 
   const { data: vaultTotalSupplyBN } = useSmartContractReadCall(
     vault,
-    "totalSupply"
+    "totalSupply",
   );
 
   return {

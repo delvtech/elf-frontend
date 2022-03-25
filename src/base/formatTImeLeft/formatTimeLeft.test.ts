@@ -30,12 +30,12 @@ test("should return days, hours, and minutes when less than 2 days away", () => 
   expect(formatTimeLeft(0, inTwentyThreeHours)).toEqual("23 hours");
   expect(formatTimeLeft(0, inTwentyThreeHoursFiveSeconds)).toEqual("23 hours"); // never return seconds
   expect(formatTimeLeft(0, inTwentyThreeHoursTwelveMinutes)).toEqual(
-    "23 hours, 12 minutes"
+    "23 hours, 12 minutes",
   );
   expect(formatTimeLeft(0, ONE_DAY_IN_MILLISECONDS)).toEqual("1 day");
   expect(formatTimeLeft(0, inOneDayOneHour)).toEqual("1 day, 1 hour");
   expect(formatTimeLeft(0, inOneDayOneHourTwelveMinutes)).toEqual(
-    "1 day, 1 hour, 12 minutes"
+    "1 day, 1 hour, 12 minutes",
   );
 });
 
@@ -61,6 +61,6 @@ test("should return days and hours left when less than a month away", () => {
 
   // Don't include minutes when this much time left
   expect(formatTimeLeft(0, inNineDaysOneHourThreeMinutes)).toEqual(
-    "9 days, 1 hour"
+    "9 days, 1 hour",
   );
 });

@@ -20,7 +20,7 @@ import { AddressesJson } from "addresses/addresses";
 export const principalPools: PrincipalPoolTokenInfo[] =
   tokenListJson.tokens.filter(
     (tokenInfo): tokenInfo is PrincipalPoolTokenInfo =>
-      isPrincipalPool(tokenInfo)
+      isPrincipalPool(tokenInfo),
   );
 
 export const principalPoolContracts = principalPools.map(
@@ -32,29 +32,29 @@ export const principalPoolContracts = principalPools.map(
       return ConvergentCurvePool__factoryV1.connect(address, defaultProvider);
     }
     return ConvergentCurvePool__factoryV1_1.connect(address, defaultProvider);
-  }
+  },
 );
 
 export const principalPoolContractsByAddress = keyBy(
   principalPoolContracts,
-  (poolContract) => poolContract.address
+  (poolContract) => poolContract.address,
 );
 
 export function isPrincipalPool(
-  tokenInfo: TokenInfo
+  tokenInfo: TokenInfo,
 ): tokenInfo is PrincipalPoolTokenInfo {
   return !!tokenInfo.tags?.includes(TokenTag.CCPOOL);
 }
 export function getPoolInfoForPrincipalToken(
-  principalTokenAddress: string
+  principalTokenAddress: string,
 ): PrincipalPoolTokenInfo {
   return principalPools.find(
-    ({ extensions: { bond } }) => bond === principalTokenAddress
+    ({ extensions: { bond } }) => bond === principalTokenAddress,
   ) as PrincipalPoolTokenInfo;
 }
 
 export function getPrincipalPoolContractForTranche(
-  trancheAddress: string
+  trancheAddress: string,
 ): ConvergentCurvePool {
   const pool = getPoolInfoForPrincipalToken(trancheAddress);
   const poolContract = principalPoolContractsByAddress[pool.address];

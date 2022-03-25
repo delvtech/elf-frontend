@@ -13,7 +13,7 @@ import {
 export function useCryptoBalanceOf(
   library: Web3Provider | undefined,
   account: string | null | undefined,
-  asset: CryptoAsset | undefined
+  asset: CryptoAsset | undefined,
 ): BigNumber | undefined {
   const { data: ethBalance } = useEthBalance(library, account);
 
@@ -25,7 +25,7 @@ export function useCryptoBalanceOf(
     {
       callArgs: [account as string], // safe to cast because `enabled` is set
       enabled: !!account,
-    }
+    },
   );
 
   if (!asset) {

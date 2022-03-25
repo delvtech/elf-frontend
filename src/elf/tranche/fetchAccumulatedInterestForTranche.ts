@@ -5,7 +5,7 @@ import { assetProxyContractsByAddress } from "elf/tranche/positions";
 import { trancheContractsByAddress } from "elf/tranche/tranches";
 
 export async function fetchAccumulatedInterestForTranche(
-  poolInfo: PoolInfo
+  poolInfo: PoolInfo,
 ): Promise<BigNumber> {
   const {
     address: trancheAddress,
@@ -21,7 +21,7 @@ export async function fetchAccumulatedInterestForTranche(
   // the wrapped position has shares of a yearn vault.  this returns the base asset value of the
   // shares that this tranche has.  the method is poorly named.
   const valueOfSharesInUnderlying = await yVaultAssetProxy.balanceOfUnderlying(
-    trancheAddress
+    trancheAddress,
   );
 
   return valueOfSharesInUnderlying.sub(balanceOfUnderlying);

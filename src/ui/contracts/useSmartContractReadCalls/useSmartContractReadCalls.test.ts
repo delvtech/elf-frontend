@@ -10,7 +10,7 @@ test("returns undefined results when contracts don't exist", async () => {
 
   const undefinedContract = undefined;
   const { result } = renderHookWithClient(queryClient, () =>
-    useSmartContractReadCalls([undefinedContract], "name")
+    useSmartContractReadCalls([undefinedContract], "name"),
   );
 
   expect(result.current[0].data).toEqual(undefined);
@@ -38,7 +38,7 @@ test("provides data from smart contract read methods", async () => {
   const queryClient = createQueryClient();
   const { result, waitForNextUpdate, rerender } = renderHookWithClient(
     queryClient,
-    () => useSmartContractReadCalls([contract1, contract2], "name")
+    () => useSmartContractReadCalls([contract1, contract2], "name"),
   );
 
   // called but hasn't resolved yet
@@ -88,7 +88,7 @@ test("passes single arguments object to all smart contract read methods", async 
     () =>
       useSmartContractReadCalls([contract1, contract2], "balanceOf", {
         callArgs: [stubAddress],
-      })
+      }),
   );
 
   // called but hasn't resolved yet
@@ -144,7 +144,7 @@ test("passes arguments object list to smart contract read methods", async () => 
         {
           callArgs: [stubAddress],
         },
-      ])
+      ]),
   );
 
   // called but hasn't resolved yet
@@ -204,7 +204,7 @@ test("properly handles enabled option", async () => {
         },
         undefined,
       ]),
-    { initialProps: { enabled: false } }
+    { initialProps: { enabled: false } },
   );
 
   // not called because enabled is false

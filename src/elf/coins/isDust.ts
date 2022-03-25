@@ -20,7 +20,7 @@ export function isDust(balanceOf: BigNumber, decimals: number): boolean {
     clipStringValueToDecimals(
       lpBalanceString,
       // Only keep 4 values of precision when caring about dust
-      4
+      4,
     ) || 0
   );
 

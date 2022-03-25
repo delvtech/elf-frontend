@@ -20,25 +20,25 @@ const reviewOrderGridRowClassName = tw(
   "w-full",
   "grid",
   "grid-cols-3",
-  "text-left"
+  "text-left",
 );
 
 export function FixedRatePreviewCallout(
-  props: FixedRatePreviewCalloutProps
+  props: FixedRatePreviewCalloutProps,
 ): ReactElement {
   const { principalTokensOut, baseAssetDecimals, baseAssetIn } = props;
   const { isDarkMode } = useDarkMode();
   const totalTokensEarned = calculateTotalYield(
     principalTokensOut,
     baseAssetIn,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
   const roundedTotalTokensEarned = commify((+totalTokensEarned)?.toFixed(4));
 
   const percentYield = calculatePercentYield(
     baseAssetIn,
     totalTokensEarned,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
   const roundedPercentYield = commify((+percentYield)?.toFixed(2));
   const roundedPrincipalTokensOut = commify((+principalTokensOut)?.toFixed(4));
@@ -50,13 +50,13 @@ export function FixedRatePreviewCallout(
         "items-center",
         "px-8",
         "space-y-1",
-        "text-sm"
+        "text-sm",
       )}
     >
       <div
         className={classNames(
           reviewOrderGridRowClassName,
-          tw(isDarkMode ? "text-green-400" : "text-green-600")
+          tw(isDarkMode ? "text-green-400" : "text-green-600"),
         )}
       >
         <div className={tw("col-span-2")}>{t`Total Rate Earned`}</div>
@@ -82,7 +82,7 @@ export function FixedRatePreviewCallout(
 function calculateTotalYield(
   amountOut: string,
   amountIn: string,
-  decimals: number
+  decimals: number,
 ): string {
   // check for bad inputs, ie: 0 (including "0.0", et al) and empty strings
   if (!+amountOut || !+amountIn) {
@@ -104,7 +104,7 @@ function calculateTotalYield(
 function calculatePercentYield(
   amountIn: string,
   totalYield: string,
-  decimals: number
+  decimals: number,
 ): string {
   // check for bad inputs, ie: 0 (including "0.0", et al) and empty strings
   if (!+amountIn || !+totalYield) {

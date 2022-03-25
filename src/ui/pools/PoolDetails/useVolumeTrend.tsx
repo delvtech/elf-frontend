@@ -14,7 +14,7 @@ export function useVolumeTrend(poolInfo: PoolInfo): {
   const volumePrevious24hr = useVolumeForPool(
     poolInfo,
     ONE_DAY_IN_SECONDS * 2,
-    ONE_DAY_IN_SECONDS
+    ONE_DAY_IN_SECONDS,
   );
 
   const volumeTrend = getTrend(volumePrevious24hr, volume24hr);
@@ -29,7 +29,7 @@ export function useFeeVolumeTrend(poolInfo: PoolInfo): {
   const feeVolumePrevious24hr = useFeeVolumeFiatForPool(
     poolInfo,
     ONE_DAY_IN_SECONDS * 2,
-    ONE_DAY_IN_SECONDS
+    ONE_DAY_IN_SECONDS,
   );
 
   if (!feeVolume24hr) {
@@ -38,14 +38,14 @@ export function useFeeVolumeTrend(poolInfo: PoolInfo): {
 
   const feeVolumeTrend = getTrend(
     feeVolumePrevious24hr?.toDecimal(),
-    feeVolume24hr?.toDecimal()
+    feeVolume24hr?.toDecimal(),
   );
   return { feeVolume24hr, feeVolumeTrend };
 }
 
 function getTrend(
   oldValue: number | undefined,
-  newValue: number | undefined
+  newValue: number | undefined,
 ): number | undefined {
   if (oldValue === undefined || newValue === undefined) {
     return undefined;

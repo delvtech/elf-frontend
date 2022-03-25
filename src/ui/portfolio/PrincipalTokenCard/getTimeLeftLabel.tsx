@@ -24,7 +24,7 @@ export function TimeLeftLabel(props: TimeLeftLabelProps): ReactElement | null {
   if (isMature) {
     const timeSinceMaturity = getTimeSinceMaturityLabel(
       unlockTimestampDate,
-      nowMs
+      nowMs,
     );
     return (
       <span className={classNames(tw("text-base"))}>
@@ -44,7 +44,7 @@ export function TimeLeftLabel(props: TimeLeftLabelProps): ReactElement | null {
 
 function getTimeSinceMaturityLabel(
   maturationDate: Date,
-  nowMs: number
+  nowMs: number,
 ): string {
   return formatDistance(maturationDate, nowMs, { addSuffix: true });
 }

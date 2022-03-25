@@ -25,7 +25,7 @@ export async function fetchPermitData(
   spenderAddr: string,
   nonce: number,
   // '1' for every ERC20Permit.  Except USDC which is '2' ¯\_(ツ)_/¯
-  version: string
+  version: string,
 ): Promise<PermitCallData | undefined> {
   const typedSigner = signer as unknown as TypedDataSigner;
   // don't use metdata, must match exactly
@@ -87,7 +87,7 @@ export async function fetchPermitData(
   const sigString: string = await typedSigner._signTypedData(
     domain,
     types,
-    data
+    data,
   );
 
   const r = `0x${sigString.slice(2, 66)}`;

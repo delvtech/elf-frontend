@@ -17,23 +17,23 @@ export enum WeightedPoolExitKind {
 }
 
 export const yieldPools: YieldPoolTokenInfo[] = tokenListJson.tokens.filter(
-  (tokenInfo): tokenInfo is YieldPoolTokenInfo => isYieldPool(tokenInfo)
+  (tokenInfo): tokenInfo is YieldPoolTokenInfo => isYieldPool(tokenInfo),
 );
 
 export const yieldPoolContracts = yieldPools.map(({ address }) =>
-  WeightedPool__factory.connect(address, defaultProvider)
+  WeightedPool__factory.connect(address, defaultProvider),
 );
 
 export const yieldPoolContractsByAddress = keyBy(
   yieldPoolContracts,
-  (yieldPool) => yieldPool.address
+  (yieldPool) => yieldPool.address,
 );
 
 export function getPoolForYieldToken(
-  yieldTokenAddress: string
+  yieldTokenAddress: string,
 ): WeightedPool | undefined {
   const yieldPool = yieldPools.find(
-    ({ extensions: { interestToken } }) => interestToken === yieldTokenAddress
+    ({ extensions: { interestToken } }) => interestToken === yieldTokenAddress,
   );
 
   // V1.1+ terms and don't have yield pools
@@ -46,10 +46,10 @@ export function getPoolForYieldToken(
 }
 
 export function getPoolInfoForYieldToken(
-  yieldTokenAddress: string
+  yieldTokenAddress: string,
 ): YieldPoolTokenInfo | undefined {
   const yieldPoolInfo = yieldPools.find(
-    ({ extensions: { interestToken } }) => interestToken === yieldTokenAddress
+    ({ extensions: { interestToken } }) => interestToken === yieldTokenAddress,
   );
 
   // V1.1+ terms and don't have yield pools
@@ -62,7 +62,7 @@ export function getPoolInfoForYieldToken(
 }
 
 export function isYieldPool(
-  tokenInfo: TokenInfo
+  tokenInfo: TokenInfo,
 ): tokenInfo is YieldPoolTokenInfo {
   return !!tokenInfo.tags?.includes(TokenTag.WPOOL);
 }

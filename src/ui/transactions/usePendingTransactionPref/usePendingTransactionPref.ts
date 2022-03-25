@@ -17,7 +17,7 @@ interface UsePendingTransactionPref extends PendingTransactionPref {
     methodName: string | undefined,
     callArgs: unknown[],
     transactionHash: string | undefined,
-    transactionStatus: TransactionStatus | undefined
+    transactionStatus: TransactionStatus | undefined,
   ) => void;
   clearPendingTransactionPref: () => void;
 }
@@ -32,7 +32,7 @@ const PENDING_TRANSACTION_PREF_ID = "pending-transaction";
 export function usePendingTransactionPref(): UsePendingTransactionPref {
   const { pref, setPref } = usePref<PendingTransactionPref | undefined>(
     PENDING_TRANSACTION_PREF_ID,
-    undefined
+    undefined,
   );
   const clearPendingTransaction = useCallback(() => {
     setPref(undefined);
@@ -44,7 +44,7 @@ export function usePendingTransactionPref(): UsePendingTransactionPref {
       methodName: string | undefined,
       callArgs: unknown[] | undefined,
       transactionHash: string | undefined,
-      transactionStatus: TransactionStatus | undefined
+      transactionStatus: TransactionStatus | undefined,
     ) => {
       if (
         !contractAddress ||
@@ -63,7 +63,7 @@ export function usePendingTransactionPref(): UsePendingTransactionPref {
         transactionStatus,
       });
     },
-    [setPref]
+    [setPref],
   );
 
   return {

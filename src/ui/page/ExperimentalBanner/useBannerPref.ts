@@ -10,7 +10,7 @@ const EXPERIMENTAL_BANNER_PREF_ID = "showExperimentalBanner";
 export function useBannerPref(): ExperimentalBannerPref {
   const { pref: bannerIsVisible, setPref: setShowBanner } = usePref(
     EXPERIMENTAL_BANNER_PREF_ID,
-    true
+    true,
   );
 
   const hideBanner = useCallback(() => setShowBanner(false), [setShowBanner]);

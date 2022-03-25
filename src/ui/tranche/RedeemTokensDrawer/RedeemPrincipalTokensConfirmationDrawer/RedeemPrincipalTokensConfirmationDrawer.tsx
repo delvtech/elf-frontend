@@ -64,14 +64,14 @@ export function RedeemPrincipalTokensConfirmationDrawer({
   const confirmButtonLabel = getConfirmButtonLabel(account);
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
-    trancheAmountBigNumber
+    trancheAmountBigNumber,
   );
 
   const { withdraw: withdrawPrincipal } = useWithdrawPrincipal(
     signer,
     tranche,
     account,
-    trancheAmountBigNumber
+    trancheAmountBigNumber,
   );
 
   const { withdraw: withdrawToEth } = useRedeemTermAssetsToEth(
@@ -79,7 +79,7 @@ export function RedeemPrincipalTokensConfirmationDrawer({
     tranche,
     account,
     trancheAmountBigNumber || BigNumber.from(0),
-    BigNumber.from(0)
+    BigNumber.from(0),
   );
 
   const redeemPrincipalTokens = useCallback(() => {
@@ -142,7 +142,7 @@ function getConfirmButtonLabel(account: string | null | undefined) {
 
 function getConfirmButtonDisabled(
   account: string | null | undefined,
-  amountIn: BigNumber | undefined
+  amountIn: BigNumber | undefined,
 ) {
   // must be connected to click this button
   if (!account) {

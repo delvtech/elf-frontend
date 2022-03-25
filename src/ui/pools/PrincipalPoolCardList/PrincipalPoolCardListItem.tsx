@@ -41,7 +41,7 @@ interface PrincipalPoolCardListItemProps {
   principalPoolTokenInfo: PrincipalPoolTokenInfo;
 }
 export function PrincipalPoolCardListItem(
-  props: PrincipalPoolCardListItemProps
+  props: PrincipalPoolCardListItemProps,
 ): ReactElement {
   const {
     principalPoolTokenInfo,
@@ -64,7 +64,7 @@ export function PrincipalPoolCardListItem(
 
   // Principal Token
   const principalTokenInfo = getPrincipalTokenInfoForPool(
-    principalPoolTokenInfo
+    principalPoolTokenInfo,
   );
   const {
     address: principalTokenAddress,
@@ -89,7 +89,7 @@ export function PrincipalPoolCardListItem(
     usePoolSpotPrice(poolContract, principalTokenAddress) ?? 0;
   const stakingYield = useStakingAPY(
     principalPoolTokenInfo,
-    ONE_WEEK_IN_SECONDS
+    ONE_WEEK_IN_SECONDS,
   );
 
   const dataToLoad = [liquidity, fees, fixedYield, stakingYield];
@@ -112,7 +112,7 @@ export function PrincipalPoolCardListItem(
       interactive
       onClick={goToTrade}
       className={classNames(
-        tw("max-w-md", "w-full", "flex", "flex-col", "p-4", "space-y-2")
+        tw("max-w-md", "w-full", "flex", "flex-col", "p-4", "space-y-2"),
       )}
     >
       {/* Logo */}
@@ -168,7 +168,7 @@ export function PrincipalPoolCardListItem(
 
           {/* Fixed APY */}
           <span className={tw("text-right")}>{t`Fixed APR: ${formatPercent(
-            fixedYield
+            fixedYield,
           )}`}</span>
 
           {/* Vault APY */}
@@ -193,7 +193,7 @@ export function PrincipalPoolCardListItem(
           stripes={false}
           value={calculateProgress(
             createdAtTimestamp * 1000,
-            unlockTimestamp * 1000
+            unlockTimestamp * 1000,
           )}
         />
       </div>

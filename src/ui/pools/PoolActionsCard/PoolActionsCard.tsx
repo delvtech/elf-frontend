@@ -35,7 +35,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
     props;
 
   const principalTokenInfo = getTokenInfo<PrincipalTokenInfo>(
-    termTokenInfo.address
+    termTokenInfo.address,
   );
 
   const { unlockTimestamp } = principalTokenInfo.extensions;
@@ -65,7 +65,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
       navigate(
         `${currentPath}?action=${PoolAction.REMOVE_LIQUIDITY}`,
         undefined,
-        { shallow: true }
+        { shallow: true },
       );
     }
     if (!isRedeemable && activeTab === PoolAction.REDEEM) {
@@ -79,7 +79,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
     (newTab: PoolAction) => {
       navigate(`${currentPath}?action=${newTab}`, undefined, { shallow: true });
     },
-    [currentPath, navigate]
+    [currentPath, navigate],
   );
 
   const oppositePoolInfo = getOppositePoolInfo(poolInfo);
@@ -99,7 +99,7 @@ export function PoolActionsCard(props: PoolActionsCardProps): ReactElement {
             "flex",
             "flex-wrap-reverse",
             "justify-between",
-            "items-center"
+            "items-center",
           )}
         >
           <Tabs

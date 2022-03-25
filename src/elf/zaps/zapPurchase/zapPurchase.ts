@@ -2,13 +2,13 @@ import { CurveLpTokenInfo, TokenInfo, TokenTag } from "@elementfi/tokenlist";
 import { getTokenInfo } from "tokenlists/tokenlists";
 
 export function isCurveLpTokenInfo(
-  tokenInfo: TokenInfo
+  tokenInfo: TokenInfo,
 ): tokenInfo is CurveLpTokenInfo {
   return !!tokenInfo?.tags?.includes(TokenTag.CURVE);
 }
 
 function getPoolAssetTokenInfosForCurveLpTokenInfo(
-  tokenInfo: CurveLpTokenInfo
+  tokenInfo: CurveLpTokenInfo,
 ) {
   return tokenInfo.extensions.poolAssets.map(getTokenInfo);
 }
@@ -17,14 +17,14 @@ function getPoolAssetTokenInfosForCurveLpTokenInfo(
 // token. This also includes the tokens of a metapool should one of the pool
 // tokens for pool of underlying is also an lp token. e.g MIM-3-LP uses 3CRV
 export function getZappableTokenInfosForUnderlying(
-  underlyingAddress: string
+  underlyingAddress: string,
 ): TokenInfo[] {
   const underlyingCurveTokenInfo = getTokenInfo(underlyingAddress);
 
   if (!isCurveLpTokenInfo(underlyingCurveTokenInfo)) return [];
 
   const poolAssetTokenInfos = getPoolAssetTokenInfosForCurveLpTokenInfo(
-    underlyingCurveTokenInfo
+    underlyingCurveTokenInfo,
   );
 
   const poolAssetCurveLpTokenInfos =

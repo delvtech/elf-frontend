@@ -19,7 +19,7 @@ export function PoolViewTitle({ poolInfo }: PoolViewTitleProps): ReactElement {
   const baseAssetSymbol = getCryptoSymbol(baseCryptoAsset);
 
   const termAssetSymbol = formatTermAssetShortSymbol(
-    termAssetInfo as PrincipalTokenInfo | YieldTokenInfo
+    termAssetInfo as PrincipalTokenInfo | YieldTokenInfo,
   );
 
   return <Title text={t`${baseAssetSymbol} - ${termAssetSymbol} | Element`} />;

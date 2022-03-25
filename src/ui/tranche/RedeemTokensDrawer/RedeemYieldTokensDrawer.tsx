@@ -79,7 +79,7 @@ export function RedeemYieldTokensDrawer({
   useEffect(() => {
     if (
       parseUnits(userProxyAllowance || "0").lt(
-        parseUnits(yieldTokenValue || "0")
+        parseUnits(yieldTokenValue || "0"),
       )
     ) {
       setEnoughAllowance(false);
@@ -88,17 +88,17 @@ export function RedeemYieldTokensDrawer({
 
   const { data: yieldTokenBalanceOf } = useTokenBalanceOf(
     yieldTokenContract as unknown as ERC20,
-    account
+    account,
   );
   const onSetMaxAmount = useCallback(() => {
     setYieldTokenValue(
-      formatUnits(yieldTokenBalanceOf ?? 0, yieldTokenDecimals)
+      formatUnits(yieldTokenBalanceOf ?? 0, yieldTokenDecimals),
     );
   }, [yieldTokenBalanceOf, yieldTokenDecimals, setYieldTokenValue]);
 
   const yieldTokenValueBN = parseUnits(
     yieldTokenValue || "0",
-    yieldTokenDecimals
+    yieldTokenDecimals,
   );
 
   const {
@@ -112,20 +112,20 @@ export function RedeemYieldTokensDrawer({
     account,
     yieldTokenValueBN,
     baseAsset,
-    onClose
+    onClose,
   );
 
   const confirmButtonLabel = getConfirmButtonLabel(
     account,
     yieldTokenValueBN,
-    yieldTokenBalanceOf
+    yieldTokenBalanceOf,
   );
   const confirmButtonDisabled = getConfirmButtonDisabled(
     account,
     yieldTokenValueBN,
     yieldTokenBalanceOf,
     enoughAllowance,
-    showApprovalCallout
+    showApprovalCallout,
   );
 
   let buttonIntent = isError ? Intent.DANGER : Intent.PRIMARY;
@@ -212,7 +212,7 @@ function useRedeemYieldTokens(
   account: string | null | undefined,
   interestTokenAmountBigNumber: BigNumber,
   baseAsset: CryptoAsset,
-  onClose: () => void
+  onClose: () => void,
 ): {
   withdraw: () => void;
   reset: () => void;
@@ -224,7 +224,7 @@ function useRedeemYieldTokens(
     tranche,
     account,
     interestTokenAmountBigNumber,
-    onClose
+    onClose,
   );
 
   const redeemEth = useRedeemTermAssetsToEth(
@@ -233,7 +233,7 @@ function useRedeemYieldTokens(
     account,
     BigNumber.from(0),
     interestTokenAmountBigNumber,
-    onClose
+    onClose,
   );
 
   if (baseAsset.type === CryptoAssetType.ETHEREUM) {
@@ -245,7 +245,7 @@ function useRedeemYieldTokens(
 function getConfirmButtonLabel(
   account: string | null | undefined,
   amountIn: BigNumber | undefined,
-  balanceOf: BigNumber | undefined
+  balanceOf: BigNumber | undefined,
 ) {
   if (!account) {
     return t`Connect your wallet to continue`;
@@ -263,7 +263,7 @@ function getConfirmButtonDisabled(
   amountIn: BigNumber | undefined,
   balanceOf: BigNumber | undefined,
   enoughAllowance: boolean,
-  useApprovals: boolean
+  useApprovals: boolean,
 ) {
   // must be connected to click this button
   if (!account) {

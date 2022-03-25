@@ -9,7 +9,7 @@ import { getTokenInfo } from "tokenlists/tokenlists";
  */
 export function isPrincipalTokenSwapPendingTransaction(
   pendingTransaction: PendingTransactionPref,
-  principalTokenAddress?: string
+  principalTokenAddress?: string,
 ): boolean {
   const { contractAddress, methodName, callArgs } = pendingTransaction;
 

@@ -18,19 +18,19 @@ import { BigNumber } from "ethers";
 
 export function useTotalValueLockedForTranche(
   trancheInfo: PrincipalTokenInfo,
-  baseAssetContract: ERC20
+  baseAssetContract: ERC20,
 ): Money | undefined {
   const { address, decimals } = trancheInfo;
   const tranche = trancheContractsByAddress[address];
   const poolInfo = getPoolInfoForPrincipalToken(address);
   const yieldPoolInfo = getPoolInfoForYieldToken(
-    trancheInfo.extensions.interestToken
+    trancheInfo.extensions.interestToken,
   );
 
   // get all components of TVL: base asset in tranche, base asset in pool, accumulated interest for tranche
   const { data: baseAssetLockedBN } = useSmartContractReadCall(
     tranche,
-    "valueSupplied"
+    "valueSupplied",
   );
   const accumulatedInterestBN = useAccumulatedInterestForTranche(poolInfo);
   const baseReservesInPrincipalPoolBN = useBaseAssetReservesInPool(poolInfo);
@@ -43,15 +43,15 @@ export function useTotalValueLockedForTranche(
   const baseAssetLocked = +formatUnits(baseAssetLockedBN || 0, decimals);
   const accumulatedInterest = +formatUnits(
     accumulatedInterestBN || 0,
-    decimals
+    decimals,
   );
   const baseReservesInPrincipalPool = +formatUnits(
     baseReservesInPrincipalPoolBN || 0,
-    decimals
+    decimals,
   );
   const baseReservesInYieldPool = +formatUnits(
     baseReservesInYieldPoolBN || 0,
-    decimals
+    decimals,
   );
 
   // get total, convert to fiat
@@ -81,7 +81,7 @@ export function useTotalValueLockedForTranche(
   return totalFiatValueLocked;
 }
 function useBaseAssetReservesInPool(
-  poolInfo: PoolInfo | undefined
+  poolInfo: PoolInfo | undefined,
 ): BigNumber | undefined {
   const pool = poolInfo && getPoolContract(poolInfo.address);
   const { data: [, balances] = [undefined, undefined] } = usePoolTokens(pool);

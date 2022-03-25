@@ -63,7 +63,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     cryptoDecimals,
     tokenPoolReserves,
     otherTokenPoolReserves,
-    totalSupply
+    totalSupply,
   );
 
   const setMaxValue = useSetMaxValue(
@@ -73,7 +73,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
     totalSupply,
     cryptoDecimals,
     onChangeFromProps,
-    onPreviewUpdate
+    onPreviewUpdate,
   );
   return (
     <div className={tw("flex", "flex-col", "space-y-2", "overflow-hidden")}>
@@ -94,7 +94,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
               "flex-col",
               "items-center",
               "justify-center",
-              "relative"
+              "relative",
             )}
           >
             <Button disabled={disabled} onClick={setMaxValue} large>
@@ -110,7 +110,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
               "flex-col",
               "items-center",
               "justify-center",
-              "relative"
+              "relative",
             )}
           >
             <div
@@ -121,13 +121,13 @@ export function StakingInput(props: StakingInputProps): ReactElement {
                 "flex",
                 "w-auto",
                 "p-1",
-                "space-x-2"
+                "space-x-2",
               )}
             >
               <span
                 className={classNames(
                   Classes.TEXT_MUTED,
-                  tw("text-xs", "whitespace-no-wrap")
+                  tw("text-xs", "whitespace-no-wrap"),
                 )}
               >
                 {labelTopLeft}
@@ -135,7 +135,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
               <span
                 className={classNames(
                   Classes.TEXT_MUTED,
-                  tw("text-xs", "whitespace-no-wrap", "md:hidden")
+                  tw("text-xs", "whitespace-no-wrap", "md:hidden"),
                 )}
               >
                 {cryptoSymbol}
@@ -159,7 +159,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
                 "flex",
                 "w-auto",
                 "p-1",
-                "space-x-2"
+                "space-x-2",
               )}
             >
               <span
@@ -167,7 +167,7 @@ export function StakingInput(props: StakingInputProps): ReactElement {
                   tw("text-xs", "whitespace-no-wrap", {
                     "text-danger": !validValue,
                   }),
-                  { [Classes.TEXT_MUTED]: validValue }
+                  { [Classes.TEXT_MUTED]: validValue },
                 )}
               >
                 {t`Balance: ${cryptoDisplayBalance} ${cryptoSymbol}`}
@@ -186,7 +186,7 @@ function useOnInputChange(
   cryptoDecimals: number | undefined,
   tokenPoolReserves: string | undefined,
   otherTokenPoolReserves: string | undefined,
-  totalSupply: string | undefined
+  totalSupply: string | undefined,
 ) {
   return useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -202,7 +202,7 @@ function useOnInputChange(
       // try to get safe value by handling edge cases and clipping decimals
       const safeValue = clipStringValueToDecimals(
         userInputValue,
-        cryptoDecimals || 18
+        cryptoDecimals || 18,
       );
 
       // if value is not undefiend, then check if it is valid.  if not, we want to ignore the user's
@@ -229,7 +229,7 @@ function useOnInputChange(
         tokenPoolReserves,
         otherTokenPoolReserves,
         totalSupply,
-        cryptoDecimals
+        cryptoDecimals,
       );
 
       onPreviewUpdate(otherNeeded, lpOut);
@@ -241,7 +241,7 @@ function useOnInputChange(
       otherTokenPoolReserves,
       totalSupply,
       onPreviewUpdate,
-    ]
+    ],
   );
 }
 
@@ -252,7 +252,7 @@ function useSetMaxValue(
   totalSupply: string | undefined,
   tokenDecimals: number | undefined,
   onChange: (value: string) => void,
-  onPreviewUpdate: (value: string, lpOut: string | undefined) => void
+  onPreviewUpdate: (value: string, lpOut: string | undefined) => void,
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {
@@ -274,7 +274,7 @@ function useSetMaxValue(
         tokenPoolReserves,
         otherTokenPoolReserves,
         totalSupply,
-        tokenDecimals
+        tokenDecimals,
       );
       onPreviewUpdate(otherNeeded, lpOut);
     }

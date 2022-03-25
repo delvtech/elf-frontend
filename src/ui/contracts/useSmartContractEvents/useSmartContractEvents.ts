@@ -7,7 +7,7 @@ import { ContractFilterArgs, ContractFilterName } from "elf/contracts/types";
 
 export interface UseSmartContractEventsCallOptions<
   TContract extends Contract,
-  TFilterName extends ContractFilterName<TContract>
+  TFilterName extends ContractFilterName<TContract>,
 > {
   callArgs?: ContractFilterArgs<TContract, TFilterName>;
   enabled?: boolean;
@@ -21,11 +21,11 @@ export interface UseSmartContractEventsCallOptions<
 
 export function useSmartContractEvents<
   TContract extends Contract,
-  TFilterName extends ContractFilterName<TContract>
+  TFilterName extends ContractFilterName<TContract>,
 >(
   contract: TContract | undefined,
   filterName: TFilterName,
-  options?: UseSmartContractEventsCallOptions<TContract, TFilterName>
+  options?: UseSmartContractEventsCallOptions<TContract, TFilterName>,
 ): QueryObserverResult<Event[]> {
   const queryOptions = makeSmartContractEventsUseQueryOptions<
     TContract,
@@ -39,11 +39,11 @@ export function useSmartContractEvents<
 
 export function makeSmartContractEventsUseQueryOptions<
   TContract extends Contract,
-  TFilterName extends ContractFilterName<TContract>
+  TFilterName extends ContractFilterName<TContract>,
 >(
   contract: TContract | undefined,
   filterName: TFilterName,
-  options?: UseSmartContractEventsCallOptions<TContract, TFilterName>
+  options?: UseSmartContractEventsCallOptions<TContract, TFilterName>,
 ): UseQueryOptions<Event[]> {
   const {
     enabled = true,
@@ -60,7 +60,7 @@ export function makeSmartContractEventsUseQueryOptions<
     filterName,
     callArgs,
     fromBlock,
-    toBlock
+    toBlock,
   );
 
   const queryFn = async (): Promise<Event[]> => {
@@ -69,12 +69,12 @@ export function makeSmartContractEventsUseQueryOptions<
 
     const finalArgs = callArgs || [];
     const eventFilter = finalContract.filters[filterName as string](
-      ...finalArgs
+      ...finalArgs,
     );
     const result = await finalContract.queryFilter(
       eventFilter,
       fromBlock,
-      toBlock
+      toBlock,
     );
     return result;
   };
@@ -86,7 +86,7 @@ export function makeSmartContractEventsUseQueryOptions<
       const addressesJsonKey = lookupAddressKey(contract?.address);
       console.error(
         `Error calling ${filterName} on ${addressesJsonKey}: ${contract?.address} with arguments:`,
-        callArgs
+        callArgs,
       );
     },
     enabled: !!contract && enabled,
@@ -98,20 +98,20 @@ export function makeSmartContractEventsUseQueryOptions<
 
 export function makeSmartContractEventsQueryKey<
   TContract extends Contract,
-  TFilterName extends ContractFilterName<TContract>
+  TFilterName extends ContractFilterName<TContract>,
 >(
   contract: TContract | undefined,
   filterName: TFilterName,
   callArgs: Parameters<TContract["filters"][TFilterName]> | undefined,
   fromBlock?: number,
-  toBlock?: number
+  toBlock?: number,
 ): [
   string,
   TFilterName,
   string | undefined,
   number | undefined,
   number | undefined,
-  Parameters<TContract["filters"][TFilterName]> | undefined
+  Parameters<TContract["filters"][TFilterName]> | undefined,
 ] {
   return [
     "contractQueryFilter",

@@ -26,14 +26,14 @@ export function PrincipalPoolCardList({
       [...principalPoolsToShow]
         .sort((info) => info.extensions.createdAtTimestamp)
         .reverse(),
-    [principalPoolsToShow]
+    [principalPoolsToShow],
   );
 
   return (
     <div
       className={classNames(
         tw("flex-col", "items-center", "space-y-5", "w-full"),
-        className
+        className,
       )}
     >
       {sortedPools.map((poolInfo) => {

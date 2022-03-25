@@ -8,7 +8,7 @@ import { defaultProvider } from "elf/providers/providers";
  * Returns the block number (or height) of the most recently mined block.
  */
 export function useLatestBlockNumber(
-  provider?: Provider | undefined
+  provider?: Provider | undefined,
 ): QueryObserverResult<number> {
   const finalProvider = provider || defaultProvider;
   return useQuery({

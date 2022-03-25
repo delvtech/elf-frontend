@@ -3,5 +3,5 @@ import { Contract, Signer } from "ethers";
 
 export type FactoryConnectFn<TReturnContract extends Contract> = (
   address: string,
-  signerOrProvider: Signer | Provider
+  signerOrProvider: Signer | Provider,
 ) => TReturnContract;

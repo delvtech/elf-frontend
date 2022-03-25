@@ -13,20 +13,20 @@ import {
  * Returns the Fixed APR for a principal token
  */
 export function usePrincipalTokenYield(
-  principalTokenPoolInfo: PrincipalPoolTokenInfo
+  principalTokenPoolInfo: PrincipalPoolTokenInfo,
 ): number {
   const nowMs = useNowMs();
   const principalTokenPoolContract =
     principalPoolContractsByAddress[principalTokenPoolInfo.address];
 
   const principalTokenInfo = getTokenInfo<PrincipalTokenInfo>(
-    principalTokenPoolInfo.extensions.bond
+    principalTokenPoolInfo.extensions.bond,
   );
 
   // get fixed yield
   const principalPrice = usePoolSpotPrice(
     principalTokenPoolContract,
-    principalTokenInfo.address
+    principalTokenInfo.address,
   );
 
   const {

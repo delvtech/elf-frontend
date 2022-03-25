@@ -143,12 +143,12 @@ export function StakingForm(props: StakingFormProps): ReactElement {
 
   const baseAssetReserves = formatUnits(
     baseAssetPoolBalance ?? 0,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
 
   const yieldAssetReserves = formatUnits(
     termAssetPoolBalance ?? 0,
-    termAssetDecimals
+    termAssetDecimals,
   );
 
   const { stringValue: baseAssetIn, setValue: onChangeBaseAssetIn } =
@@ -159,13 +159,13 @@ export function StakingForm(props: StakingFormProps): ReactElement {
   const isValidBaseAssetValue = validateStakingValue(
     baseAssetIn,
     baseAssetBalanceOf,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
 
   const isValidTermAssetValue = validateStakingValue(
     termAssetIn,
     termAssetBalanceOf,
-    termAssetDecimals
+    termAssetDecimals,
   );
 
   const onClose = useCallback(() => {
@@ -177,11 +177,11 @@ export function StakingForm(props: StakingFormProps): ReactElement {
   const poolTokenMaxAmounts = [BigNumber.from(0), BigNumber.from(0)];
   poolTokenMaxAmounts[baseAssetIndex] = parseUnits(
     baseAssetIn || "0",
-    baseAssetDecimals
+    baseAssetDecimals,
   );
   poolTokenMaxAmounts[termAssetIndex] = parseUnits(
     termAssetIn || "0",
-    termAssetDecimals
+    termAssetDecimals,
   );
 
   const {
@@ -197,7 +197,7 @@ export function StakingForm(props: StakingFormProps): ReactElement {
     account,
     pool,
     poolTokenMaxAmounts,
-    onClose
+    onClose,
   );
 
   const {
@@ -213,7 +213,7 @@ export function StakingForm(props: StakingFormProps): ReactElement {
     account,
     pool as WeightedPool,
     poolTokenMaxAmounts,
-    onClose
+    onClose,
   );
 
   const onStake = useCallback(() => {
@@ -226,10 +226,10 @@ export function StakingForm(props: StakingFormProps): ReactElement {
 
   const insufficientBalance =
     parseUnits(baseAssetIn || "0", baseAssetDecimals).gt(
-      baseAssetBalanceOf ?? 0
+      baseAssetBalanceOf ?? 0,
     ) ||
     parseUnits(termAssetIn || "0", termAssetDecimals).gt(
-      termAssetBalanceOf ?? 0
+      termAssetBalanceOf ?? 0,
     );
 
   const invalidInput =
@@ -339,7 +339,7 @@ function useTokenInfoForTradeInput(
   pool: PoolContract,
   tokenContract: ERC20,
   account: string | null | undefined,
-  library: Web3Provider | undefined
+  library: Web3Provider | undefined,
 ) {
   const isWETH = tokenContract?.address === ContractAddresses.wethAddress;
   const { data: ethBalance } = useEthBalance(library, account);
