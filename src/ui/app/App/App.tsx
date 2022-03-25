@@ -16,7 +16,7 @@ import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { useToastWrongChain } from "ui/provider/useBlockFromTag/useToastWrongChain";
 import { useTransactionToasts } from "ui/transactions/useTransactionToasts";
 import useAddressScreening from "ui/wallets/hooks/useAddressScreening";
-import IneligibleAccountDialog from "ui/base/IneligibleAccountDialog";
+import IneligibleAccountDialog from "ui/wallets/IneligibleAccountDialog";
 import { ConnectWalletButton } from "ui/wallets/ConnectWalletButton/ConnectWalletButton";
 import { useEagerConnect } from "ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "ui/wallets/hooks/useSyncWithInjectedEthereum";
