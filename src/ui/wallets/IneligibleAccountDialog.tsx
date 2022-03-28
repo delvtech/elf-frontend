@@ -26,14 +26,13 @@ export default function IneligibleAccountDialog({
       style={isSmallScreen ? smallScreenStyle : undefined}
       className={classNames(darkModeClassName, "pb-0", "overflow-auto")}
       isOpen={isOpen}
-      // onClose={onClose}
       title={
         <span className="text-center text-base py-6">{t`Ineligible Account`}</span>
       }
     >
       <div className="p-5">
         <Callout intent="danger">
-          This account is not eligible to use this website.
+          {t`This account is not eligible to use this website.`}
         </Callout>
       </div>
     </Dialog>
