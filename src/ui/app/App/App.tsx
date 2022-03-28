@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useEffect, useRef } from "react";
+import React, { FC, Fragment } from "react";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import { Button, FocusStyleManager, H1, Overlay } from "@blueprintjs/core";
@@ -9,6 +9,7 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import { tw } from "efi-tailwindcss-classnames";
+import { useForcedRedirect } from "ui/router/useForcedRedirect";
 import { AppHamburgerButton } from "ui/app/AppHamburgerButton/AppHamburgerButton";
 import { AppHeader } from "ui/app/AppHeader/AppHeader";
 import { Title } from "ui/base/Title";
@@ -25,7 +26,6 @@ import { ChainId, ChainNames } from "base/ethereum/ethereum";
 import { getConnectorName } from "elf/wallets/connectors";
 
 import styles from "./App.module.css";
-import { useRouter } from "next/router";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -36,13 +36,8 @@ const App: FC<AppProps> = ({ children }) => {
     useWeb3React<Web3Provider>();
   const isWrongChain = active && chainId !== AddressesJson.chainId;
   const chainName = ChainNames[AddressesJson.chainId as ChainId];
-  const { route, replace } = useRouter();
   const { pass } = useAddressScreening(account);
-  const safeReplace = useRef(replace).current;
-
-  useEffect(() => {
-    if (pass === false && route !== "/void") safeReplace("/void");
-  }, [pass, safeReplace, route]);
+  useForcedRedirect("/void", pass === false);
 
   const { isDarkMode, darkModeClassName, setDarkModeOff, setDarkModeOn } =
     useDarkMode();
@@ -57,7 +52,7 @@ const App: FC<AppProps> = ({ children }) => {
   return (
     <Fragment>
       <Title />
-      <IneligibleAccountDialog isOpen={!!account && pass === false} />
+      <IneligibleAccountDialog isOpen={pass === false} />
       <div
         className={classNames(
           styles.appBackground,
