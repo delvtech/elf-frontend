@@ -17,7 +17,9 @@ import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { TokenAmountInput2 } from "ui/token/TokenAmountInput/TokenAmountInput2";
 import { getMarketRateLabel } from "ui/tranche/getMarketRateLabel";
 import { useCalculateZapSwapCurveResult } from "ui/zaps/zapSwapCurve/useCalculateZapSwapCurveResult";
+import { useEstimateBaseTokensByZap } from "ui/zaps/zapSwapCurve/useEstimateBaseTokensByZap";
 import { usePrincipalTokenZapPrice } from "ui/zaps/zapSwapCurve/usePrincipalTokenZapPrice";
+import { useValidateBuyPrincipalTokenInputByZap } from "ui/zaps/zapSwapCurve/useValidateBuyPrincipalTokenInputByZap";
 
 interface BuyFixedRatesSwapProps {
   principalToken: PrincipalTokenInfo;
@@ -72,8 +74,14 @@ export function BuyFixedRatesZap({
     account
   );
 
-  const { amountOut: principalTokensOut, error: previewError } =
-    useCalculateZapSwapCurveResult(zapInputs);
+  const { tokenOutError, tokenInError } =
+    useValidateBuyPrincipalTokenInputByZap(
+      library,
+      account,
+      principalToken,
+      inputToken,
+      inputTokenValue
+    );
 
   const buyButtonIntent = hasInputError ? Intent.DANGER : Intent.PRIMARY;
   return (
