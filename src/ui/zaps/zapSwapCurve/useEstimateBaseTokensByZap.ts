@@ -8,5 +8,5 @@ export function useEstimateBaseTokensByZap(
 ) {
   const price = useBaseTokenZapPrice(principalTokenInfo, inputToken);
   if (price === "0" || amountIn === "0") return "0";
-  return (+amountIn * +price).toString();
+  return (+amountIn / +price).toString();
 }

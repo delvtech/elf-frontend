@@ -13,6 +13,7 @@ import { useCalculatePrincipalTokenAmountOut } from "ui/ccpools/useCalculatePrin
 import { useCryptoBalanceOf } from "ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { usePoolTokens } from "ui/pools/hooks/usePoolTokens/usePoolTokens";
 import { useEstimateBaseTokensByZap } from "./useEstimateBaseTokensByZap";
+import { t } from "ttag";
 
 export function useValidateBuyPrincipalTokenInputByZap(
   library: Web3Provider | undefined,
@@ -26,6 +27,7 @@ export function useValidateBuyPrincipalTokenInputByZap(
     inputToken,
     amountIn
   );
+
   const poolInfo = getPoolInfoForPrincipalToken(principalToken.address);
 
   const { address: poolAddress } = poolInfo;
@@ -33,26 +35,40 @@ export function useValidateBuyPrincipalTokenInputByZap(
   const inputAsset = getCryptoAssetForToken(inputToken.address);
   const inputAssetBalanceOf = useCryptoBalanceOf(library, account, inputAsset);
 
-  const { decimals: inputAssetDecimals } = getTokenInfo(inputToken.address);
-
   const { baseAssetIndex, termAssetIndex: principalTokenIndex } =
     getPoolTokens(poolInfo);
 
   const poolContract = getPoolContract(poolAddress);
 
+  const { decimals: inputAssetDecimals } = getTokenInfo(inputToken.address);
+  const { decimals: baseAssetDecimals } = getTokenInfo(
+    principalToken.extensions.underlying
+  );
+
   const { data: [, balances] = [] } = usePoolTokens(poolContract);
   const underlyingReservesBalanceOf = balances?.[baseAssetIndex];
   const principalReservesBalanceOf = balances?.[principalTokenIndex];
 
-  const { amountOut: amountPrincipalTokensOut } =
+  const { amountOut: amountPrincipalTokensOut, error } =
     useCalculatePrincipalTokenAmountOut(poolInfo, baseAssetAmountIn);
 
-  return validateTradeValues(
-    baseAssetAmountIn,
+  const initialValidation = validateTradeValues(
+    amountIn,
     amountPrincipalTokensOut,
     underlyingReservesBalanceOf,
     principalReservesBalanceOf,
     inputAssetBalanceOf,
-    inputAssetDecimals
+    inputAssetDecimals,
+    baseAssetDecimals
   );
+
+  return {
+    ...initialValidation,
+    tokenOutError: !!error
+      ? t`Insufficient pool balance`
+      : initialValidation.tokenOutError,
+    isValidTokenOutValue: !!error
+      ? false
+      : initialValidation.isValidTokenOutValue,
+  };
 }

@@ -19,7 +19,6 @@ import { useCryptoBalanceOf } from "ui/crypto/hooks/useCryptoBalance/useCryptoBa
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { TokenAmountInput2 } from "ui/token/TokenAmountInput/TokenAmountInput2";
 import { getMarketRateLabel } from "ui/tranche/getMarketRateLabel";
-import { useCalculateZapSwapCurveResult } from "ui/zaps/zapSwapCurve/useCalculateZapSwapCurveResult";
 import { useEstimateBaseTokensByZap } from "ui/zaps/zapSwapCurve/useEstimateBaseTokensByZap";
 import { usePrincipalTokenZapPrice } from "ui/zaps/zapSwapCurve/usePrincipalTokenZapPrice";
 import { useValidateBuyPrincipalTokenInputByZap } from "ui/zaps/zapSwapCurve/useValidateBuyPrincipalTokenInputByZap";
