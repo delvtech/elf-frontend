@@ -17,7 +17,7 @@ import { useOpenPrincipalTokenInfos } from "ui/tranche/useOpenPrincipalTokenInfo
 const DynamicEarnTable = dynamic(() => import("ui/earn/EarnTable/EarnTable"));
 
 const DynamicEarnCardList = dynamic(
-  () => import("ui/earn/EarnCardList/EarnCardList")
+  () => import("ui/earn/EarnCardList/EarnCardList"),
 );
 
 interface EarnViewProps {}
@@ -45,7 +45,7 @@ export function EarnView(unusedProps: EarnViewProps): ReactElement {
           "w-full",
           "space-y-12",
           "lg:pb-12",
-          "pb-24"
+          "pb-24",
         )}
       >
         <div style={earnViewStyle}>

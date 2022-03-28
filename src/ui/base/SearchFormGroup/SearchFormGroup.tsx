@@ -25,7 +25,7 @@ export function SearchFormGroup({
     (event: ChangeEvent<HTMLInputElement>) => {
       onChange(event.target.value);
     },
-    [onChange]
+    [onChange],
   );
   return (
     <FormGroup

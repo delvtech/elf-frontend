@@ -17,7 +17,7 @@ export function useValidateBuyPrincipalTokenInput(
   library: Web3Provider | undefined,
   account: string | null | undefined,
   poolInfo: PrincipalPoolTokenInfo,
-  baseAssetAmountIn: string
+  baseAssetAmountIn: string,
 ): TradeValuesValidationResult {
   const {
     address: poolAddress,
@@ -46,6 +46,6 @@ export function useValidateBuyPrincipalTokenInput(
     underlyingReservesBalanceOf,
     principalReservesBalanceOf,
     baseAssetBalanceOf,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
 }

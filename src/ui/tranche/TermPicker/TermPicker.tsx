@@ -15,7 +15,7 @@ interface TermPickerProps {
   onTrancheChange: (newTranche: Tranche) => void;
   buttonLabelRenderer: (
     tranche: Tranche,
-    baseAsset: CryptoAsset
+    baseAsset: CryptoAsset,
   ) => JSX.Element;
 }
 
@@ -50,7 +50,7 @@ export function TermPicker({
         buttonLabelRenderer={buttonLabelRenderer}
       />
     ),
-    [account, buttonLabelRenderer]
+    [account, buttonLabelRenderer],
   );
 
   const hasZeroOrOneTranche = tranches.length < 2;

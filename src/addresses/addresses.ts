@@ -58,15 +58,15 @@ export default ContractAddresses;
  * Helpful debugging tool for making sure a contract is from our contracts json
  */
 export function lookupAddressKey(
-  address: string | undefined
+  address: string | undefined,
 ): string | undefined {
   const [addressesJsonKey] =
     Object.entries(AddressesJson.addresses).find(
-      ([unusedKey, value]) => value === address
+      ([unusedKey, value]) => value === address,
     ) || [];
 
   const safeListedAddress = !!AddressesJson.safelist.find(
-    (safeListedAddress) => address === safeListedAddress
+    (safeListedAddress) => address === safeListedAddress,
   )
     ? "safelisted address"
     : undefined;

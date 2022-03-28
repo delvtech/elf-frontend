@@ -11,7 +11,7 @@ export function getEtherscanDomain(chainId: ChainId): string {
 
 export function makeEtherscanWalletAddressUrl(
   chainId: ChainId,
-  account: string
+  account: string,
 ): string {
   const ETHERSCAN_DOMAIN = getEtherscanDomain(chainId);
   return `${ETHERSCAN_DOMAIN}/address/${account}`;
@@ -19,7 +19,7 @@ export function makeEtherscanWalletAddressUrl(
 
 export function makeEtherscanTokenUrl(
   chainId: ChainId,
-  tokenAddress: string
+  tokenAddress: string,
 ): string {
   const ETHERSCAN_DOMAIN = getEtherscanDomain(chainId);
   return `${ETHERSCAN_DOMAIN}/token/${tokenAddress}`;

@@ -46,7 +46,7 @@ export function GoToPoolButtonOld(props: GoToPoolButtonProps): ReactElement {
             [Classes.FILL]: fill,
           },
           Classes.INTENT_PRIMARY,
-          className
+          className,
         )}
       >
         <div className={tw({ "p-2": !small, "p-0": small })}>{label}</div>

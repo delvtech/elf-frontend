@@ -61,11 +61,11 @@ const calloutClassName = tw(
   "h-full",
   "p-8",
   "items-center",
-  "justify-center"
+  "justify-center",
 );
 
 export function PrincipalTokenCardOld(
-  props: PrincipalTokenCardOldProps
+  props: PrincipalTokenCardOldProps,
 ): ReactElement {
   const {
     library,
@@ -97,7 +97,7 @@ export function PrincipalTokenCardOld(
   const tranche = trancheContractsByAddress[principalTokenAddress];
   const trancheBalance = useTokenBalanceUNSAFE(
     tranche as unknown as ERC20Shim,
-    account
+    account,
   );
 
   const vaultContract = getVaultContractForTranche(principalTokenAddress);
@@ -110,7 +110,7 @@ export function PrincipalTokenCardOld(
     usePoolSpotPrice(pool, principalTokenAddress) ?? 0;
   const exitValue = trancheBalance * tranchePriceInBaseAsset;
   const { data: baseAssetCoinGeckoPrice } = useCoinGeckoPrice(
-    getCoinGeckoId(baseAssetSymbol)
+    getCoinGeckoId(baseAssetSymbol),
   );
 
   let fiatPrice;
@@ -123,7 +123,7 @@ export function PrincipalTokenCardOld(
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = useMemo(
     () => convertEpochSecondsToDate(unlockTimestamp),
-    [unlockTimestamp]
+    [unlockTimestamp],
   );
 
   let trancheAPY = 0;
@@ -131,7 +131,7 @@ export function PrincipalTokenCardOld(
     trancheAPY = calculateTrancheAPY(
       tranchePriceInBaseAsset,
       nowMs,
-      maturationDate?.getTime()
+      maturationDate?.getTime(),
     );
   }
 
@@ -145,7 +145,7 @@ export function PrincipalTokenCardOld(
         tw("p-8", "flex", "flex-col", "m-4", "space-y-5", "text-base", {
           "text-gray-700": !isDarkMode,
           "text-white": isDarkMode,
-        })
+        }),
       )}
     >
       <div className={tw("flex", "space-x-4")}>
@@ -157,7 +157,7 @@ export function PrincipalTokenCardOld(
               "items-center",
               "space-x-2",
               "text-2xl",
-              "font-semibold"
+              "font-semibold",
             )}
           >
             <Link href={`/pools/${pool?.address}`}>
@@ -183,7 +183,7 @@ export function PrincipalTokenCardOld(
               "w-full",
               "items-center",
               "justify-center",
-              "space-x-8"
+              "space-x-8",
             )}
           >
             <Tag
@@ -283,7 +283,7 @@ export function PrincipalTokenCardOld(
 
 function getTableRowLink(
   vaultAddress: string | undefined,
-  vaultName: string | undefined
+  vaultName: string | undefined,
 ): ReactElement | null {
   if (!vaultAddress || !vaultName) {
     return null;

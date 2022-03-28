@@ -8,18 +8,18 @@ import keyBy from "lodash.keyby";
  * The list of all yield tokens
  */
 export const yieldTokenInfos: YieldTokenInfo[] = tokenListJson.tokens.filter(
-  (tokenInfo): tokenInfo is YieldTokenInfo => isYieldToken(tokenInfo)
+  (tokenInfo): tokenInfo is YieldTokenInfo => isYieldToken(tokenInfo),
 );
 export const interestTokenContracts = yieldTokenInfos.map(({ address }) =>
-  InterestToken__factory.connect(address, defaultProvider)
+  InterestToken__factory.connect(address, defaultProvider),
 );
 export const interestTokenContractsByAddress = keyBy(
   interestTokenContracts,
-  (interestToken) => interestToken.address
+  (interestToken) => interestToken.address,
 );
 
 export function isYieldToken(
-  tokenInfo: TokenInfo
+  tokenInfo: TokenInfo,
 ): tokenInfo is YieldTokenInfo {
   return !!tokenInfo?.tags?.includes(TokenTag.YIELD);
 }

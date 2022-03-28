@@ -9,7 +9,7 @@ import { QueryObserverResult } from "react-query";
 export function useTokenAllowance(
   contract: ERC20 | ERC20Permit | undefined,
   owner: string | null | undefined,
-  spender: string | null | undefined
+  spender: string | null | undefined,
 ): QueryObserverResult<BigNumber> {
   return useSmartContractReadCall(contract, "allowance", {
     enabled: !!owner && !!spender,
@@ -19,7 +19,7 @@ export function useTokenAllowance(
 export function useTokenAllowanceMulti(
   contracts: (ERC20 | undefined)[],
   owners: (string | null | undefined)[],
-  spenders: (string | null | undefined)[]
+  spenders: (string | null | undefined)[],
 ): QueryObserverResult<BigNumber>[] {
   const callArgs = zip(owners, spenders).map(([owner, spender]) => {
     return {

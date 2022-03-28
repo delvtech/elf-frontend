@@ -41,7 +41,7 @@ interface SellPrincipalTokensFormProps {
 }
 
 export function SellPrincipalTokensForm(
-  props: SellPrincipalTokensFormProps
+  props: SellPrincipalTokensFormProps,
 ): ReactElement {
   const {
     library,
@@ -74,7 +74,7 @@ export function SellPrincipalTokensForm(
   const trancheContract = trancheContractsByAddress[ptAddress];
   const { data: ptBalanceOf } = useTokenBalanceOf(
     trancheContract as unknown as ERC20,
-    account
+    account,
   );
   const ptBalanceLabel = formatBalance(ptBalanceOf, ptDecimals, ptDecimals);
   const principalTokenCryptoAsset = getCryptoAssetForToken(ptAddress);
@@ -85,7 +85,7 @@ export function SellPrincipalTokensForm(
   const { tokenOutError, tokenInError } = useValidateInput(
     account,
     poolInfo,
-    amountIn
+    amountIn,
   );
   const previewAmountOut = useCalculateUnderlyingTokenOut(poolInfo, amountIn);
   const poolContract = getPoolContract(poolInfo.address) as ConvergentCurvePool;
@@ -175,7 +175,7 @@ export function SellPrincipalTokensForm(
 function useValidateInput(
   account: string | null | undefined,
   poolInfo: PrincipalPoolTokenInfo,
-  amountIn: string
+  amountIn: string,
 ) {
   const {
     address: poolAddress,
@@ -185,7 +185,7 @@ function useValidateInput(
   const trancheContract = trancheContractsByAddress[bond];
   const { data: ptBalanceOf } = useTokenBalanceOf(
     trancheContract as unknown as ERC20,
-    account
+    account,
   );
   const { decimals: ptDecimals } = getTokenInfo<PrincipalTokenInfo>(bond);
 
@@ -200,7 +200,7 @@ function useValidateInput(
 
   const amountPrincipalTokensOutBN = useCalculateUnderlyingTokenOut(
     poolInfo,
-    amountIn
+    amountIn,
   );
 
   return validateTradeValues(
@@ -209,13 +209,13 @@ function useValidateInput(
     underlyingReservesBalanceOf,
     principalReservesBalanceOf,
     ptBalanceOf,
-    ptDecimals
+    ptDecimals,
   );
 }
 
 function useCalculateUnderlyingTokenOut(
   poolInfo: PrincipalPoolTokenInfo,
-  amountIn: string
+  amountIn: string,
 ): string {
   const {
     address: poolAddress,
@@ -230,7 +230,7 @@ function useCalculateUnderlyingTokenOut(
   const { data: totalSupplyBN } = usePoolTotalSupply(poolContract);
   const totalSupply = formatUnits(
     totalSupplyBN ?? 0,
-    BALANCER_POOL_LP_TOKEN_DECIMALS
+    BALANCER_POOL_LP_TOKEN_DECIMALS,
   );
 
   const { data: [, balances] = [] } = usePoolTokens(poolContract);
@@ -240,11 +240,11 @@ function useCalculateUnderlyingTokenOut(
   const { decimals: baseAssetDecimals } = getTokenInfo(underlying);
   const underlyingReserves = formatUnits(
     underlyingReservesBalanceOf ?? 0,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
   const principalReserves = formatUnits(
     principalReservesBalanceOf ?? 0,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
 
   const { result: [, amountOut] = [] } = getCalcSwap(
@@ -255,7 +255,7 @@ function useCalculateUnderlyingTokenOut(
     underlying,
     principalReserves,
     underlyingReserves,
-    totalSupply
+    totalSupply,
   );
 
   return clipStringValueToDecimals(amountOut, baseAssetDecimals);

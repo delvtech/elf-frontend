@@ -12,16 +12,16 @@ import { ContractMethodArgs, ContractMethodName } from "elf/contracts/types";
 
 export interface UseSmartContractTransactionOptions<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
 > {
   onTransactionSubmitted?: (
     transaction: ContractTransaction,
-    callArgs: ContractMethodArgs<TContract, TMethodName>
+    callArgs: ContractMethodArgs<TContract, TMethodName>,
   ) => void | Promise<void>;
   onTransactionMined?: (
     transactionReceipt: ContractReceipt,
     callArgs: ContractMethodArgs<TContract, TMethodName>,
-    transactionStatus: TransactionStatus
+    transactionStatus: TransactionStatus,
   ) => void | Promise<void>;
 
   onError?: (error: TransactionError) => void | Promise<void>;
@@ -29,13 +29,13 @@ export interface UseSmartContractTransactionOptions<
 
 export function useSmartContractTransaction<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
 >(
   // TODO: contracts should not be undefined thanks to tokenlist
   contract: TContract | undefined,
   methodName: TMethodName,
   signer: Signer | undefined,
-  options: UseSmartContractTransactionOptions<TContract, TMethodName> = {}
+  options: UseSmartContractTransactionOptions<TContract, TMethodName> = {},
 ): UseMutationResult<
   ContractReceipt | undefined,
   unknown,
@@ -44,7 +44,7 @@ export function useSmartContractTransaction<
   const { onTransactionMined, onTransactionSubmitted, onError } = options;
   return useMutation({
     mutationFn: async (
-      args: ContractMethodArgs<TContract, TMethodName>
+      args: ContractMethodArgs<TContract, TMethodName>,
     ): Promise<ContractReceipt> => {
       if (!signer) {
         console.warn(`Tried to call ${methodName} without a signer.`);
@@ -59,7 +59,7 @@ export function useSmartContractTransaction<
 
       const connected = (await contract.connect(signer)) as TContract;
       const transaction: ContractTransaction = await connected[methodName](
-        ...args
+        ...args,
       );
       onTransactionSubmitted?.(transaction, args);
 
@@ -73,7 +73,7 @@ export function useSmartContractTransaction<
           return onTransactionMined?.(
             error.receipt,
             variables,
-            TransactionStatus.CANCELLED
+            TransactionStatus.CANCELLED,
           );
         }
 
@@ -83,7 +83,7 @@ export function useSmartContractTransaction<
           return onTransactionMined?.(
             error.receipt,
             variables,
-            TransactionStatus.REPRICED
+            TransactionStatus.REPRICED,
           );
         }
       }
@@ -92,7 +92,7 @@ export function useSmartContractTransaction<
       const addressesJsonKey = lookupAddressKey(contract?.address);
       console.error(
         `Error calling ${methodName} on ${addressesJsonKey}: ${contract?.address} with arguments:`,
-        error
+        error,
       );
       await onError?.(error);
     },

@@ -44,7 +44,7 @@ export function YieldTokenPortfolio({
         "flex-1",
         "flex-wrap",
         "justify-center",
-        "items-center"
+        "items-center",
       )}
     >
       {nonIdealStateContent ? (
@@ -70,15 +70,15 @@ export function YieldTokenPortfolio({
 
 function useYieldTokenTab(
   library: Web3Provider | undefined,
-  account: string | null | undefined
+  account: string | null | undefined,
 ) {
   const yieldTokensWithBalanceResults = useTokensWithBalance(
     account,
-    interestTokenContracts as unknown as ERC20Shim[]
+    interestTokenContracts as unknown as ERC20Shim[],
   );
 
   const yieldTokensWithBalance = yieldTokensWithBalanceResults.map(
-    ({ token }) => token as unknown as InterestToken
+    ({ token }) => token as unknown as InterestToken,
   );
 
   return {

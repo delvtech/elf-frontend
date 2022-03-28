@@ -29,11 +29,11 @@ const calloutClassName = tw(
   "p-8",
   "w-full",
   "items-center",
-  "justify-between"
+  "justify-between",
 );
 
 export function PoolStakeStats(
-  props: PoolStakeStatsProps
+  props: PoolStakeStatsProps,
 ): ReactElement | null {
   const { account, poolInfo } = props;
   const { baseAssetInfo, termAssetInfo } = getPoolTokens(poolInfo);
@@ -52,7 +52,7 @@ export function PoolStakeStats(
     addresses,
     poolBalances,
     baseAssetInfo.address,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
 
   const termAssetLiquidity = calculatePoolShareLiquidity(
@@ -60,7 +60,7 @@ export function PoolStakeStats(
     addresses,
     poolBalances,
     termAssetInfo.address,
-    termAssetInfo.decimals
+    termAssetInfo.decimals,
   );
 
   const baseAssetLiquidityLabel = baseAssetLiquidity
@@ -79,7 +79,7 @@ export function PoolStakeStats(
           "flex",
           "flex-col",
           "justify-center",
-          "items-center"
+          "items-center",
         )}
         bold
         textClassName={tw("text-2xl")}
@@ -93,7 +93,7 @@ export function PoolStakeStats(
           "flex",
           "flex-col",
           "justify-center",
-          "items-center"
+          "items-center",
         )}
         bold
         textClassName={tw("text-2xl")}
@@ -107,7 +107,7 @@ export function PoolStakeStats(
           "flex",
           "flex-col",
           "justify-center",
-          "items-center"
+          "items-center",
         )}
         bold
         textClassName={tw("text-2xl")}
@@ -124,7 +124,7 @@ function calculatePoolShareLiquidity(
   poolTokenAddresses: string[] | undefined,
   poolTokenReserves: BigNumber[] | undefined,
   tokenAddress: string | undefined,
-  tokenDecimals: number | undefined
+  tokenDecimals: number | undefined,
 ): number | undefined {
   let baseAssetLiquidity: number | undefined;
   if (

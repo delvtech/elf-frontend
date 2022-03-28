@@ -66,7 +66,7 @@ function PrincipalTokenCards(props: PrincipalTokenCardsProps) {
         "flex-1",
         "flex-wrap",
         "justify-center",
-        "items-center"
+        "items-center",
       )}
     >
       {nonIdealStateContent ? (

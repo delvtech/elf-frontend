@@ -13,7 +13,7 @@ export function logAppVersion(): void {
   // eslint-disable-next-line no-console
   console.log(
     `%cContracts: ${JSON.stringify(AddressesJson, null, 2)}`,
-    "font-size:12px"
+    "font-size:12px",
   );
   // eslint-disable-next-line no-console
   console.log(`%cUnreleased commits: ${unreleasedUrl}`, "font-size:12px");

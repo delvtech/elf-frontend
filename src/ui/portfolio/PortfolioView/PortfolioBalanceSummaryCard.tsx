@@ -23,7 +23,7 @@ export function PortfolioBalanceSummaryCard(): ReactElement {
           key={label}
           className={classNames(
             tw("w-full", "grid", "grid-cols-2", "gap-1"),
-            className
+            className,
           )}
         >
           <span>{label}</span>

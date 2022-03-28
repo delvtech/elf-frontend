@@ -1,7 +1,7 @@
 import { PendingTransactionPref } from "ui/transactions/usePendingTransactionPref/usePendingTransactionPref";
 
 export function isApprovalPendingTransaction(
-  pendingTransactionPref: PendingTransactionPref
+  pendingTransactionPref: PendingTransactionPref,
 ): boolean {
   const { methodName } = pendingTransactionPref;
   // no pending transactions

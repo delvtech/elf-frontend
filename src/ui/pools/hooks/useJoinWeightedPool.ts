@@ -25,7 +25,7 @@ export function useJoinWeightedPool(
   account: string | null | undefined,
   pool: WeightedPool | undefined,
   poolTokenMaxAmounts: BigNumber[] | undefined,
-  onTransactionSubmitted?: () => void
+  onTransactionSubmitted?: () => void,
 ): {
   onJoinPool: () => void;
   mutationResult: UseMutationResult<
@@ -40,14 +40,14 @@ export function useJoinWeightedPool(
     "getNormalizedWeights",
     {
       enabled: isWeightedPool(pool),
-    }
+    },
   );
   const { data: [poolTokens] = [] } = usePoolTokens(pool);
   const mutationResult = useSmartContractTransactionPersisted(
     balancerVaultContract,
     "joinPool",
     signer,
-    { onTransactionSubmitted }
+    { onTransactionSubmitted },
   );
 
   const { mutate: joinPool } = mutationResult;
@@ -57,7 +57,7 @@ export function useJoinWeightedPool(
     account,
     poolTokens,
     poolWeights,
-    poolTokenMaxAmounts
+    poolTokenMaxAmounts,
   );
   const onJoinPool = useCallback(() => {
     if (!joinPoolCallArgs) {
@@ -73,7 +73,7 @@ function makeJoinPoolCallArgs(
   account: string | null | undefined,
   poolTokens: string[] | undefined,
   poolWeights: BigNumber[] | undefined,
-  poolTokenMaxAmounts: BigNumber[] | undefined
+  poolTokenMaxAmounts: BigNumber[] | undefined,
 ): ContractMethodArgs<Vault, "joinPool"> | undefined {
   if (
     !poolId ||
@@ -98,7 +98,7 @@ function makeJoinPoolCallArgs(
   const minBPTOut = 0;
   const userData = defaultAbiCoder.encode(
     ["uint8", "uint256[]", "uint256"],
-    [JoinKind.EXACT_TOKENS_IN_FOR_BPT_OUT, poolTokenMaxAmounts, minBPTOut]
+    [JoinKind.EXACT_TOKENS_IN_FOR_BPT_OUT, poolTokenMaxAmounts, minBPTOut],
   );
 
   const joinRequest: JoinRequest = {

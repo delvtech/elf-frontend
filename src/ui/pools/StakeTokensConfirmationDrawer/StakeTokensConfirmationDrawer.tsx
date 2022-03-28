@@ -78,11 +78,11 @@ export function StakingConfirmationDrawer({
 
   const baseAssetInBigNumber = parseUnits(
     baseAssetIn || "0",
-    baseAssetDecimals
+    baseAssetDecimals,
   );
   const trancheAssetInBigNumber = parseUnits(
     termAssetIn || "0",
-    termAssetDecimals
+    termAssetDecimals,
   );
 
   const hasTokenApprovals = useHasTokenApprovals(
@@ -91,7 +91,7 @@ export function StakingConfirmationDrawer({
     baseAsset,
     termAsset,
     baseAssetInBigNumber,
-    trancheAssetInBigNumber
+    trancheAssetInBigNumber,
   );
 
   // TODO: validate inputs as well
@@ -103,7 +103,7 @@ export function StakingConfirmationDrawer({
     termAsset,
     termAssetIn,
     account,
-    AddressesJson.addresses.balancerVaultAddress
+    AddressesJson.addresses.balancerVaultAddress,
   );
 
   return (
@@ -156,7 +156,7 @@ function useFeePercent(poolInfo: PoolInfo, termAssetIn: string) {
 function useShareOfPool(
   poolInfo: PoolInfo,
   baseAssetDecimals: number,
-  baseAssetIn: string
+  baseAssetIn: string,
 ) {
   const poolContract = getPoolContract(poolInfo.address);
   const { baseAssetIndex } = getPoolTokens(poolInfo);
@@ -164,7 +164,7 @@ function useShareOfPool(
   const baseAssetReservesBN = balances?.[baseAssetIndex] ?? BigNumber.from(0);
   const baseAssetReserves = +formatUnits(
     baseAssetReservesBN,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
   // because we limit staking of assets to the current reserves ratio, we can just use one side to
   // calculate share of pool
@@ -178,7 +178,7 @@ function useWalletApprovalInfos(
   trancheAsset: CryptoAsset,
   trancheAssetAmount: string,
   account: string | null | undefined,
-  vaultAddress: string | undefined
+  vaultAddress: string | undefined,
 ) {
   return useMemo(() => {
     const walletApprovalInfos: WalletApprovalInfo[] = [
@@ -214,7 +214,7 @@ function getConfirmButtonDisabled(
   account: string | null | undefined,
   baseAsset: CryptoAsset | undefined,
   amountIn: BigNumber | undefined,
-  marketAllowance: BigNumber | undefined
+  marketAllowance: BigNumber | undefined,
 ) {
   // can't confirm anything w/out a base asset
   if (!baseAsset) {
@@ -236,7 +236,7 @@ function getConfirmButtonDisabled(
   // support that
   if (
     [CryptoAssetType.ERC20, CryptoAssetType.ERC20PERMIT].includes(
-      baseAsset.type
+      baseAsset.type,
     )
   ) {
     const hasEnoughAllowance = marketAllowance?.gte(amountIn);
@@ -255,30 +255,30 @@ const useHasTokenApprovals = (
   baseAsset: CryptoAsset | undefined,
   trancheAsset: CryptoAsset | undefined,
   baseAssetIn: BigNumber | undefined,
-  trancheAssetIn: BigNumber | undefined
+  trancheAssetIn: BigNumber | undefined,
 ) => {
   const { data: baseAssetAllowance } = useTokenAllowance(
     findTokenContract(baseAsset) as ERC20Shim,
     ownerAddress,
-    spenderAddress
+    spenderAddress,
   );
   const { data: trancheAssetAllowance } = useTokenAllowance(
     findTokenContract(trancheAsset) as ERC20Shim,
     ownerAddress,
-    spenderAddress
+    spenderAddress,
   );
 
   const hasEnoughBaseAssetAllowance = getConfirmButtonDisabled(
     ownerAddress,
     baseAsset,
     baseAssetIn,
-    baseAssetAllowance
+    baseAssetAllowance,
   );
   const hasEnoughTrancheAssetAllowance = getConfirmButtonDisabled(
     ownerAddress,
     trancheAsset,
     trancheAssetIn,
-    trancheAssetAllowance
+    trancheAssetAllowance,
   );
   return !hasEnoughBaseAssetAllowance || !hasEnoughTrancheAssetAllowance;
 };

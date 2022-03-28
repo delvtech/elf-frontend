@@ -41,7 +41,7 @@ export function useSmartContractReadCalls<
   TContractData extends Unpacked<
     StaticContractReturnType<TContract, TMethodName>
   > = Unpacked<StaticContractReturnType<TContract, TMethodName>>,
-  TData = TContractData
+  TData = TContractData,
 >(
   contracts: (TContract | undefined)[],
   methodName: TMethodName,
@@ -60,7 +60,7 @@ export function useSmartContractReadCalls<
         TMethodName,
         TContractData,
         TData
-      >
+      >,
 ): QueryObserverResult<TContractData>[] {
   let optionsArray: (
     | UseSmartContractReadCallOptions<
@@ -87,13 +87,13 @@ export function useSmartContractReadCalls<
   }
 
   const queryOptions = zip(contracts, optionsArray).map(([contract, options]) =>
-    makeSmartContractReadCallUseQueryOptions(contract, methodName, options)
+    makeSmartContractReadCallUseQueryOptions(contract, methodName, options),
   );
 
   // Cast this to unkown when calling useQueries, because useQueries does not
   // yet support generics and string and unknown are incompatible types.
   const queryResult = useQueries(
-    queryOptions as UseQueryOptions<unknown, unknown, unknown>[]
+    queryOptions as UseQueryOptions<unknown, unknown, unknown>[],
   ) as QueryObserverResult<TContractData, unknown>[];
 
   return queryResult;

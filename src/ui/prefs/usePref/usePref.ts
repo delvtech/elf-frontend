@@ -34,7 +34,7 @@ export function usePref<T>(id: string, defaultValue: T): PrefResult<T> {
       // Invalidate this pref so callers will re-ensure the data as needed
       queryClient.invalidateQueries(queryKey);
     },
-    [id, queryClient, queryKey, efiLocalStorage]
+    [id, queryClient, queryKey, efiLocalStorage],
   );
 
   return {
@@ -59,6 +59,6 @@ function useGetPrefFromLocalStorage(efiLocalStorage: LocalStorage) {
       const prefEnvelope: PrefEnvelope<T> = JSON.parse(prefString);
       return prefEnvelope;
     },
-    [efiLocalStorage]
+    [efiLocalStorage],
   );
 }

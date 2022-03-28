@@ -33,7 +33,7 @@ export function PortfolioTabs({
   // of both there and here..., should we use a dust calc?
   const yieldTokensWithBalanceResults = useTokensWithBalance(
     account,
-    interestTokenContracts as unknown as ERC20[]
+    interestTokenContracts as unknown as ERC20[],
   );
 
   const interestTokenLPs = useWeightedPoolsWithLPBalance(account);

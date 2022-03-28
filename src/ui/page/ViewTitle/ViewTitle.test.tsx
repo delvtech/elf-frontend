@@ -8,7 +8,7 @@ test("should render normally", async () => {
   const queryClient = createQueryClient();
   const { getByText } = await renderWithClient(
     queryClient,
-    <ViewTitle title="sample title" subtitle="sample subtitle" />
+    <ViewTitle title="sample title" subtitle="sample subtitle" />,
   );
 
   expect(getByText("sample title")).toBeVisible();

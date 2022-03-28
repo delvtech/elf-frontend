@@ -69,7 +69,7 @@ const calloutClassName = tw(
   "h-full",
   "p-8",
   "items-center",
-  "justify-center"
+  "justify-center",
 );
 
 export function YieldTokenCard({
@@ -84,11 +84,11 @@ export function YieldTokenCard({
 
   const { data: yieldTokenBalanceOf } = useTokenBalanceOf(
     yieldToken as unknown as ERC20,
-    account
+    account,
   );
   const yieldTokenBalance = +formatUnits(
     yieldTokenBalanceOf ?? 0,
-    yieldTokenInfo?.decimals
+    yieldTokenInfo?.decimals,
   );
 
   // The tranche contains the unlockTimestamp
@@ -138,7 +138,7 @@ export function YieldTokenCard({
         tw("p-8", "flex", "flex-col", "m-4", "space-y-5", "text-base", {
           "text-gray-700": !isDarkMode,
           "text-white": isDarkMode,
-        })
+        }),
       )}
     >
       <div className={tw("flex", "space-x-4")}>
@@ -150,7 +150,7 @@ export function YieldTokenCard({
               "items-center",
               "space-x-2",
               "text-2xl",
-              "font-semibold"
+              "font-semibold",
             )}
           >
             <Link href={`/pools/${pool?.address}`}>
@@ -176,7 +176,7 @@ export function YieldTokenCard({
               "w-full",
               "items-center",
               "justify-center",
-              "space-x-8"
+              "space-x-8",
             )}
           >
             <div>
@@ -283,11 +283,11 @@ function ExitValueCallout({
   const { currency } = useCurrencyPref();
   const { data: baseAssetFiatPrice } = useCoinGeckoPrice(
     getCoinGeckoId(baseAssetSymbol),
-    currency
+    currency,
   );
   const { data: yieldTokenBalanceOf } = useTokenBalanceOf(
     yieldToken as unknown as ERC20,
-    account
+    account,
   );
   const baseAssetDecimals = getCryptoDecimals(baseAsset);
   const spotPrice = usePoolSpotPrice(pool, yieldToken.address);
@@ -314,7 +314,7 @@ function ExitValueCallout({
 
 function getTableRowLink(
   vaultAddress: string | undefined,
-  vaultName: string | undefined
+  vaultName: string | undefined,
 ): ReactNode {
   if (!vaultAddress || !vaultName) {
     return null;

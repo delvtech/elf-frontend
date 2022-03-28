@@ -16,8 +16,8 @@ export function useParams(): { [key: string]: string | undefined } {
           ...reduced,
           [key]: Array.isArray(value) ? value.slice(-1)[0] : value,
         }),
-        {}
+        {},
       ),
-    [query]
+    [query],
   );
 }

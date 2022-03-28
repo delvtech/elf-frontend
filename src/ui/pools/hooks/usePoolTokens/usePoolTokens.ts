@@ -12,12 +12,12 @@ import { BigNumber } from "ethers";
 import { QueryObserverResult } from "react-query";
 
 export function usePoolTokens(
-  pool: PoolContract | undefined
+  pool: PoolContract | undefined,
 ): QueryObserverResult<
   [
     string[], // addresses
     BigNumber[], // balances
-    BigNumber // lastChangeBlock
+    BigNumber, // lastChangeBlock
   ]
 > {
   const poolId = pool?.address
@@ -31,7 +31,7 @@ export function usePoolTokens(
     {
       enabled: !!poolId,
       callArgs: [poolId] as ContractMethodArgs<Vault, "getPoolTokens">,
-    }
+    },
   );
   return poolTokensResults;
 }

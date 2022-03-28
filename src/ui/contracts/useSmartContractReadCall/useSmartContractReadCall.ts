@@ -16,7 +16,7 @@ export interface UseSmartContractReadCallOptions<
   TReturnType extends Unpacked<
     StaticContractReturnType<TContract, TMethodName>
   >,
-  TSelect = TReturnType
+  TSelect = TReturnType,
 > {
   callArgs?: ContractMethodArgs<TContract, TMethodName>;
   enabled?: boolean;
@@ -33,7 +33,7 @@ export function useSmartContractReadCall<
   TContractData extends Unpacked<
     StaticContractReturnType<TContract, TMethodName>
   >,
-  TData = TContractData
+  TData = TContractData,
 >(
   contract: TContract | undefined,
   methodName: TMethodName,
@@ -42,12 +42,12 @@ export function useSmartContractReadCall<
     TMethodName,
     TContractData,
     TData
-  >
+  >,
 ): QueryObserverResult<TData> {
   const queryOptions = makeSmartContractReadCallUseQueryOptions(
     contract,
     methodName,
-    options
+    options,
   );
 
   const queryResult = useQuery(queryOptions);
@@ -61,7 +61,7 @@ export function makeSmartContractReadCallUseQueryOptions<
   TContractData extends Unpacked<
     StaticContractReturnType<TContract, TMethodName>
   >,
-  TData = TContractData
+  TData = TContractData,
 >(
   contract: TContract | undefined,
   methodName: TMethodName,
@@ -70,21 +70,21 @@ export function makeSmartContractReadCallUseQueryOptions<
     TMethodName,
     TContractData,
     TData
-  >
+  >,
 ): UseQueryOptions<TContractData, unknown, TData> {
   const { enabled = true, callArgs, staleTime, select } = options || {};
 
   const queryKey = makeSmartContractReadCallQueryKey<TContract, TMethodName>(
     contract?.address,
     methodName,
-    callArgs
+    callArgs,
   );
 
   const queryFn = async (): Promise<TContractData> => {
     const finalArgs = callArgs || [];
     // Read calls are by definition static, so we make sure to call the static method explicitly
     const result = await contract?.callStatic?.[methodName as string](
-      ...finalArgs
+      ...finalArgs,
     );
     return result;
   };
@@ -96,7 +96,7 @@ export function makeSmartContractReadCallUseQueryOptions<
       const addressesJsonKey = lookupAddressKey(contract?.address);
       console.error(
         `Error calling ${methodName} on contract name: ${addressesJsonKey}: ${contract?.address} with arguments:`,
-        callArgs
+        callArgs,
       );
     },
     select: select || (IDENTITY_FN as (v: TContractData) => TData),
@@ -112,18 +112,18 @@ export function makeSmartContractReadCallUseQueryOptions<
 
 export function makeSmartContractReadCallQueryKey<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
 >(
   contractAddress: string | undefined,
   methodName: TMethodName,
-  callArgs: Parameters<TContract["functions"][TMethodName]> | undefined
+  callArgs: Parameters<TContract["functions"][TMethodName]> | undefined,
 ): [
   string,
   TMethodName,
   string | undefined,
   {
     callArgs: Parameters<TContract["functions"][TMethodName]> | undefined;
-  }
+  },
 ] {
   return ["contractCall", methodName, contractAddress, { callArgs }];
 }

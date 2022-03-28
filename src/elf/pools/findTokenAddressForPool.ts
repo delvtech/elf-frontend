@@ -13,7 +13,7 @@ import { assertNever } from "base/assertNever";
  * substituting weth for eth when appropriate.
  */
 export function findTokenAddressForPool(
-  cryptoAsset: CryptoAsset | undefined
+  cryptoAsset: CryptoAsset | undefined,
 ): string | undefined {
   if (!cryptoAsset) {
     return;

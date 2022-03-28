@@ -4,12 +4,12 @@ import { useMemo } from "react";
 import { getTokenInfo } from "tokenlists/tokenlists";
 
 export function useFixedRateInputTokens(
-  underlyingAddress: string
+  underlyingAddress: string,
 ): TokenInfo[] {
   const underlyingTokenInfo = getTokenInfo(underlyingAddress);
   const zappableTokenInfos = useMemo(
     () => getZappableTokenInfosForUnderlying(underlyingAddress),
-    [underlyingAddress]
+    [underlyingAddress],
   );
   return [underlyingTokenInfo, ...zappableTokenInfos];
 }

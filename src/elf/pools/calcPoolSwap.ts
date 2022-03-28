@@ -5,7 +5,7 @@ export function calcSwapOutGivenInCCPoolUNSAFE(
   totalSupply: string,
   timeRemainingSeconds: number,
   tParamSeconds: number,
-  baseAssetIn: boolean
+  baseAssetIn: boolean,
 ): number {
   const tS = +totalSupply;
   const amountX = +xAmount;
@@ -45,7 +45,7 @@ export function calcSwapInGivenOutCCPoolUNSAFE(
   totalSupply: string,
   timeRemainingSeconds: number,
   tParamSeconds: number,
-  baseAssetIn: boolean
+  baseAssetIn: boolean,
 ): number {
   const tS = +totalSupply;
   const amountX = +xAmount;
@@ -79,7 +79,7 @@ export function calcSwapCCPoolUNSAFE(
   yReserves: string,
   timeRemainingSeconds: number,
   tParamSeconds: number,
-  getOutputQuote: boolean
+  getOutputQuote: boolean,
 ): number {
   const amountX = +xAmount;
 
@@ -118,7 +118,7 @@ export function calcSwapCCPoolUNSAFE(
 export function calcSwapOutGivenInWeightedPoolUNSAFE(
   amountIn: string,
   balanceOut: string,
-  balanceIn: string
+  balanceIn: string,
 ): number {
   const aI = +amountIn;
   const bO = +balanceOut;
@@ -144,7 +144,7 @@ export function calcSwapOutGivenInWeightedPoolUNSAFE(
 export function calcSwapInGivenOutWeightedPoolUNSAFE(
   amountOut: string,
   balanceOut: string,
-  balanceIn: string
+  balanceIn: string,
 ): number {
   const aO = +amountOut;
   const bO = +balanceOut;

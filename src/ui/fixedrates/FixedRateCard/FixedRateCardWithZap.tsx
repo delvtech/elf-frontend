@@ -27,7 +27,7 @@ interface FixedRateCardProps {
 }
 
 export function FixedRateCardWithZap(
-  props: FixedRateCardProps
+  props: FixedRateCardProps,
 ): ReactElement | null {
   const {
     principalToken: {
@@ -68,8 +68,8 @@ export function FixedRateCardWithZap(
           "flex",
           "flex-col",
           "space-y-4",
-          "lg:space-y-0"
-        )
+          "lg:space-y-0",
+        ),
       )}
       onClick={onCardClick}
     >
