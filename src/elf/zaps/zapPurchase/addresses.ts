@@ -13,3 +13,5 @@ export const MainnetExtraAddresses = {
   sEurAddress: "0xD71eCFF9342A5Ced620049e616c5035F1dB98620",
   ethAddress: USER_PROXY_ETH_SENTINEL, // SAME AS CURVE
 };
+
+export const ZapSwapCurveAddress = "0xb2d75b4c0c44e4144Fc8A4F41b2893ef684F3032";

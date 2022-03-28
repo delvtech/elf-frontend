@@ -1,9 +1,11 @@
-import { ERC20__factory } from "@elementfi/core-typechain/dist/libraries/factories/ERC20__factory";
 import { ERC20Permit__factory } from "@elementfi/core-typechain/dist/libraries/factories/ERC20Permit__factory";
-import { MainnetExtraAddresses } from "elf/zaps/zapPurchase/addresses";
-import { defaultProvider } from "elf/providers/providers";
-import { ethers } from "ethers";
+import { ERC20__factory } from "@elementfi/core-typechain/dist/libraries/factories/ERC20__factory";
 import { ZapSwapCurve__factory } from "@elementfi/core-typechain/dist/v1.1";
+import { defaultProvider } from "elf/providers/providers";
+import {
+  MainnetExtraAddresses,
+  ZapSwapCurveAddress,
+} from "elf/zaps/zapPurchase/addresses";
 
 const {
   lusdAddress,
@@ -39,7 +41,6 @@ export const MainnetZapContractsByAddress = Object.freeze({
   [sEurAddress]: sEurContract,
 });
 
-const ZapSwapCurveAddress = ethers.constants.AddressZero;
 export const ZapSwapCurveContract = ZapSwapCurve__factory.connect(
   ZapSwapCurveAddress,
   defaultProvider
