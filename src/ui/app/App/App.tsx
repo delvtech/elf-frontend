@@ -9,12 +9,15 @@ import classNames from "classnames";
 import { t } from "ttag";
 
 import { tw } from "efi-tailwindcss-classnames";
+import { useForcedRedirect } from "ui/router/useForcedRedirect";
 import { AppHamburgerButton } from "ui/app/AppHamburgerButton/AppHamburgerButton";
 import { AppHeader } from "ui/app/AppHeader/AppHeader";
 import { Title } from "ui/base/Title";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { useToastWrongChain } from "ui/provider/useBlockFromTag/useToastWrongChain";
 import { useTransactionToasts } from "ui/transactions/useTransactionToasts";
+import useAddressScreening from "ui/wallets/hooks/useAddressScreening";
+import IneligibleAccountDialog from "ui/wallets/IneligibleAccountDialog";
 import { ConnectWalletButton } from "ui/wallets/ConnectWalletButton/ConnectWalletButton";
 import { useEagerConnect } from "ui/wallets/hooks/useEagerReconnect";
 import { useSyncWithInjectedEthereum } from "ui/wallets/hooks/useSyncWithInjectedEthereum";
@@ -33,6 +36,8 @@ const App: FC<AppProps> = ({ children }) => {
     useWeb3React<Web3Provider>();
   const isWrongChain = active && chainId !== AddressesJson.chainId;
   const chainName = ChainNames[AddressesJson.chainId as ChainId];
+  const { pass } = useAddressScreening(account);
+  useForcedRedirect("/void", pass === false);
 
   const { isDarkMode, darkModeClassName, setDarkModeOff, setDarkModeOn } =
     useDarkMode();
@@ -47,6 +52,7 @@ const App: FC<AppProps> = ({ children }) => {
   return (
     <Fragment>
       <Title />
+      <IneligibleAccountDialog isOpen={pass === false} />
       <div
         className={classNames(
           styles.appBackground,
