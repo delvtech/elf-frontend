@@ -35,6 +35,7 @@ export function FixedRatePreviewCallout(
   );
   const roundedTotalTokensEarned = commify((+totalTokensEarned)?.toFixed(4));
 
+  const roundedBaseTokensIn = commify((+baseAssetIn)?.toFixed(4));
   const percentYield = calculatePercentYield(
     baseAssetIn,
     totalTokensEarned,
@@ -63,11 +64,17 @@ export function FixedRatePreviewCallout(
         <div className={tw("text-right")}>{`${roundedPercentYield}%`}</div>
       </div>
       <div className={reviewOrderGridRowClassName}>
-        <div className={tw("col-span-2")}>{t`Total Tokens Earned`}</div>
+        <div className={tw("col-span-2")}>{t`Total Base Tokens`}</div>
+        <div className={tw("text-right")}>{roundedBaseTokensIn}</div>
+      </div>
+      <div className={reviewOrderGridRowClassName}>
+        <div className={tw("col-span-2")}>{t`Total Base Tokens Earned`}</div>
         <div className={tw("text-right")}>{roundedTotalTokensEarned}</div>
       </div>
       <div className={reviewOrderGridRowClassName}>
-        <div className={tw("col-span-2")}>{t`Total Tokens Receiving`}</div>
+        <div
+          className={tw("col-span-2")}
+        >{t`Total Principal Tokens Receiving`}</div>
         <div className={tw("text-right")}>{`${roundedPrincipalTokensOut}`}</div>
       </div>
     </Callout>

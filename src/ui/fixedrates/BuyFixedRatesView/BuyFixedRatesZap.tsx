@@ -6,11 +6,14 @@ import { formatBalance } from "base/formatBalance/formatBalance";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import { createZapPurchaseInputs } from "elf/zaps/zapSwapCurve/createZapSwapCurveInputs";
 import { commify } from "ethers/lib/utils";
 import { ReactElement } from "react";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { t } from "ttag";
 import { useNumericInput } from "ui/base/hooks/useNumericInput/useNumericInput";
+import { useCalculatePrincipalTokenAmountOut } from "ui/ccpools/useCalculatePrincipalTokenAmountOut";
 import { useMarketPrice } from "ui/ccpools/useMarketPrice";
 import { useCryptoBalanceOf } from "ui/crypto/hooks/useCryptoBalance/useCryptoBalance";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
@@ -20,6 +23,7 @@ import { useCalculateZapSwapCurveResult } from "ui/zaps/zapSwapCurve/useCalculat
 import { useEstimateBaseTokensByZap } from "ui/zaps/zapSwapCurve/useEstimateBaseTokensByZap";
 import { usePrincipalTokenZapPrice } from "ui/zaps/zapSwapCurve/usePrincipalTokenZapPrice";
 import { useValidateBuyPrincipalTokenInputByZap } from "ui/zaps/zapSwapCurve/useValidateBuyPrincipalTokenInputByZap";
+import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
 
 interface BuyFixedRatesSwapProps {
   principalToken: PrincipalTokenInfo;
@@ -44,9 +48,6 @@ export function BuyFixedRatesZap({
     useNumericInput();
 
   const { isDarkMode } = useDarkMode();
-
-  const hasInputError = false; // replace
-  const inputErrorMessage = "";
 
   const principalPriceSwap = useMarketPrice(principalToken);
   const roundedPrincipalPriceSwap = commify((+principalPriceSwap)?.toFixed(4));
@@ -83,7 +84,27 @@ export function BuyFixedRatesZap({
       inputTokenValue
     );
 
+  const poolInfo = getPoolInfoForPrincipalToken(principalToken.address);
+
+  const baseToken = getTokenInfo(principalToken.extensions.underlying);
+  const baseAmountIn = useEstimateBaseTokensByZap(
+    principalToken,
+    inputToken,
+    inputTokenValue
+  );
+
+  const { amountOut: principalTokensOut, error: previewError } =
+    useCalculatePrincipalTokenAmountOut(poolInfo, baseAmountIn);
+
+  const inputErrorMessage = tokenInError || tokenOutError;
+  const hasInputError = !!inputErrorMessage || !!previewError;
+
+  const isBuyButtonDisabled = hasInputError || !+inputTokenValue;
+  const buttonErrorMessage = previewError
+    ? t`Insufficient liquidity in pool`
+    : inputErrorMessage;
   const buyButtonIntent = hasInputError ? Intent.DANGER : Intent.PRIMARY;
+
   return (
     <>
       <div className={tw("flex", "flex-col")}>
@@ -151,16 +172,21 @@ export function BuyFixedRatesZap({
       </div>
       <div className={tw("flex", "flex-col", "space-y-3")}>
         <span className={tw("text-base", "text-left")}>{t`Review Order`}</span>
-        <div>Fixed Preview Callout</div>
+        <FixedRatePreviewCallout
+          principalTokensOut={principalTokensOut}
+          baseAssetIn={baseAmountIn}
+          baseAssetDecimals={baseToken.decimals}
+        />
       </div>
+
       <Button
-        disabled={true}
+        disabled={isBuyButtonDisabled}
         onClick={() => null}
         outlined
         large
         intent={buyButtonIntent}
       >
-        {hasInputError ? "buttonErrorMessage" : t`Buy`}
+        {hasInputError ? buttonErrorMessage : t`Buy`}
       </Button>
     </>
   );
