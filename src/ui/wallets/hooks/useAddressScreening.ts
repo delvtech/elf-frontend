@@ -12,7 +12,7 @@ interface UseAddressScreening {
 }
 
 export default function useAddressScreening(
-  address: string | null | undefined
+  address: string | null | undefined,
 ): UseAddressScreening {
   const { data: result, error } = useQuery<APIResponse>({
     queryKey: ["address-screen", address],
