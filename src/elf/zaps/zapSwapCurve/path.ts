@@ -9,27 +9,27 @@ import {
 } from "elf/curve/tokens";
 import { getTokenInfo } from "tokenlists/tokenlists";
 
-export enum ZapPurchasePathKind {
+export enum ZapSwapCurvePathKind {
   SingleStep = "SingleStep",
   DoubleStep = "DoubleStep",
 }
 
-interface ZapPurchasePathSingleStep {
-  kind: ZapPurchasePathKind.SingleStep;
+interface ZapSwapCurvePathSingleStep {
+  kind: ZapSwapCurvePathKind.SingleStep;
   principalToken: PrincipalTokenInfo;
   baseToken: CurveLpTokenInfo;
   curvePoolToken: TokenInfo;
 }
 
-interface ZapPurchasePathDoubleStep {
-  kind: ZapPurchasePathKind.DoubleStep;
+interface ZapSwapCurvePathDoubleStep {
+  kind: ZapSwapCurvePathKind.DoubleStep;
   principalToken: PrincipalTokenInfo;
   baseToken: CurveLpTokenInfo;
   metaToken: CurveLpTokenInfo;
   curvePoolToken: TokenInfo;
 }
 /**
- * ZapPurchasePath is used to signify the relationship between the
+ * ZapSwapCurvePath is used to signify the relationship between the
  * curvePoolToken and the principalToken. This is required as we must know which
  * internal curvePoolLpTokens that are exchanged for in order to calculate
  * approximate pricing of the principalToken in terms of the curvePoolToken and
@@ -51,7 +51,7 @@ interface ZapPurchasePathDoubleStep {
  * (the metaToken) which must be exchanged into MIM-3LP (the baseToken) which
  * finally is exchanged for the MIM-3LP principalToken
  */
-type ZapPurchasePath = ZapPurchasePathSingleStep | ZapPurchasePathDoubleStep;
+type ZapSwapCurvePath = ZapSwapCurvePathSingleStep | ZapSwapCurvePathDoubleStep;
 
 /**
  * This function assumes that the curvePool token is a valid member of the
@@ -64,14 +64,14 @@ type ZapPurchasePath = ZapPurchasePathSingleStep | ZapPurchasePathDoubleStep;
  * @param principalToken - the principaToken
  * @param curvePoolToken - a token which is a member of a curve pool related to
  *                         the underlying pool of the principal token
- * @returns zapPurchasePath - an object containing the inner lptokens which form
+ * @returns zapSwapCurvePath - an object containing the inner lptokens which form
  *                            the exchange path between the principal and
  *                            curvePool tokens
  * */
-export function getZapPurchasePath(
+export function getZapSwapCurvePath(
   principalToken: PrincipalTokenInfo,
   curvePoolToken: TokenInfo
-): ZapPurchasePath {
+): ZapSwapCurvePath {
   const baseToken = getTokenInfo<CurveLpTokenInfo>(
     principalToken.extensions.underlying
   );
@@ -84,7 +84,7 @@ export function getZapPurchasePath(
 
   if (baseCurvePoolTokensContainsToken)
     return {
-      kind: ZapPurchasePathKind.SingleStep,
+      kind: ZapSwapCurvePathKind.SingleStep,
       curvePoolToken,
       principalToken,
       baseToken,
@@ -99,7 +99,7 @@ export function getZapPurchasePath(
     ) as CurveLpTokenInfo;
 
   return {
-    kind: ZapPurchasePathKind.DoubleStep,
+    kind: ZapSwapCurvePathKind.DoubleStep,
     curvePoolToken,
     principalToken,
     baseToken,

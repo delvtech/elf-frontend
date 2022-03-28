@@ -6,7 +6,7 @@ import { formatBalance } from "base/formatBalance/formatBalance";
 import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
-import { createZapPurchaseInputs } from "elf/zaps/zapPurchase/createZapPurchaseInputs";
+import { createZapPurchaseInputs } from "elf/zaps/zapSwapCurve/createZapSwapCurveInputs";
 import { commify } from "ethers/lib/utils";
 import { ReactElement } from "react";
 import { t } from "ttag";
@@ -16,8 +16,8 @@ import { useCryptoBalanceOf } from "ui/crypto/hooks/useCryptoBalance/useCryptoBa
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { TokenAmountInput2 } from "ui/token/TokenAmountInput/TokenAmountInput2";
 import { getMarketRateLabel } from "ui/tranche/getMarketRateLabel";
-import { useCalculatePrincipalTokensAmountOutByZap } from "ui/zaps/zapPurchase/useCalculatePrincipalTokensAmountOutByZap";
-import { usePrincipalTokenZapPrice } from "ui/zaps/zapPurchase/usePrincipalTokenZapPrice";
+import { useCalculateZapSwapCurveResult } from "ui/zaps/zapSwapCurve/useCalculateZapSwapCurveResult";
+import { usePrincipalTokenZapPrice } from "ui/zaps/zapSwapCurve/usePrincipalTokenZapPrice";
 
 interface BuyFixedRatesSwapProps {
   principalToken: PrincipalTokenInfo;
@@ -41,12 +41,6 @@ export function BuyFixedRatesZap({
   const { stringValue: inputTokenValue, setValue: onInputChange } =
     useNumericInput();
 
-  const zapInputs = createZapPurchaseInputs(
-    principalToken,
-    inputToken,
-    inputTokenValue,
-    account
-  );
   const { isDarkMode } = useDarkMode();
 
   const hasInputError = false; // replace
@@ -71,13 +65,15 @@ export function BuyFixedRatesZap({
     inputToken.symbol
   );
 
+  const zapInputs = createZapPurchaseInputs(
+    principalToken,
+    inputToken,
+    inputTokenValue,
+    account
+  );
+
   const { amountOut: principalTokensOut, error: previewError } =
-    useCalculatePrincipalTokensAmountOutByZap(
-      principalToken,
-      inputToken,
-      account,
-      inputTokenValue
-    );
+    useCalculateZapSwapCurveResult(zapInputs);
 
   const buyButtonIntent = hasInputError ? Intent.DANGER : Intent.PRIMARY;
   return (

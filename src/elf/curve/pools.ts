@@ -79,7 +79,7 @@ export type CurvePool = CurvePool1 | CurvePool2 | CurvePool3;
  * The other cases, the crv3Crypto and crvTriCrypto are explictly defined as the
  * curve pool address in their respective "pool" extension targets custom zap
  * contracts for using ETH over WETH. This is an important factor for the
- * zapPurchase contract and so for the case of the "calc" functions we wish to
+ * zapSwapCurve contract and so for the case of the "calc" functions we wish to
  * call, we must target the original curve pool addresses which are statically
  * defined above
  *

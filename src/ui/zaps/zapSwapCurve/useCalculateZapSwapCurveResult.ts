@@ -1,13 +1,13 @@
-import { ZapSwapCurveContract } from "elf/zaps/zapPurchase/contracts";
-import { ZapPurchaseInputs } from "elf/zaps/zapPurchase/createZapPurchaseInputs";
+import { ZapSwapCurveContract } from "elf/zaps/zapSwapCurve/contracts";
+import { ZapSwapCurveBuyInputs } from "elf/zaps/zapSwapCurve/createZapSwapCurveInputs";
 import { ethers } from "ethers";
 import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
 
-export function useCalculatePrincipalTokensAmountOutByZap({
+export function useCalculateZapSwapCurveResult({
   info,
   baseZap,
   metaZap,
-}: ZapPurchaseInputs): { amountOut: string; error: boolean } {
+}: ZapSwapCurveBuyInputs): { amountOut: string; error: boolean } {
   const isEmptyCase = baseZap.curvePool === ethers.constants.AddressZero;
 
   const x = useSmartContractReadCall(ZapSwapCurveContract, "zapIn", {

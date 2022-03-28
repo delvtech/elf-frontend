@@ -6,9 +6,9 @@ import { PrincipalTokenInfo, TokenInfo } from "@elementfi/tokenlist";
 import { ONE_HOUR_IN_SECONDS } from "base/time";
 import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import {
-  getZapPurchasePath,
-  ZapPurchasePathKind,
-} from "elf/zaps/zapPurchase/path";
+  getZapSwapCurvePath,
+  ZapSwapCurvePathKind,
+} from "elf/zaps/zapSwapCurve/path";
 import { BigNumberish, ethers } from "ethers";
 
 const emptyZapCurveIn: ZapCurveLpInStruct = {
@@ -20,7 +20,8 @@ const emptyZapCurveIn: ZapCurveLpInStruct = {
   minLpAmount: 0,
 };
 
-export interface ZapPurchaseInputs {
+// To buy principal tokens
+export interface ZapSwapCurveBuyInputs {
   info: ZapInInfoStruct;
   baseZap: ZapCurveLpInStruct;
   metaZap: ZapCurveLpInStruct;
@@ -32,12 +33,12 @@ export function createZapPurchaseInputs(
   amountIn: string,
   recipient: string | null | undefined,
   minAmountOut?: BigNumberish | undefined
-): ZapPurchaseInputs {
+): ZapSwapCurveBuyInputs {
   const principalPool = getPoolInfoForPrincipalToken(principalToken.address);
 
-  const path = getZapPurchasePath(principalToken, inputToken);
+  const path = getZapSwapCurvePath(principalToken, inputToken);
 
-  const needsChildZap = path.kind === ZapPurchasePathKind.DoubleStep;
+  const needsChildZap = path.kind === ZapSwapCurvePathKind.DoubleStep;
 
   const info: ZapInInfoStruct = {
     balancerPoolId: principalPool.extensions.poolId,
@@ -74,7 +75,7 @@ export function createZapPurchaseInputs(
     minLpAmount: 0, // covered by minPtAmount in info
   };
 
-  if (path.kind === ZapPurchasePathKind.SingleStep) {
+  if (path.kind === ZapSwapCurvePathKind.SingleStep) {
     return { info, baseZap, metaZap: emptyZapCurveIn };
   } else {
     const metaZapAmounts = new Array<BigNumberish>(

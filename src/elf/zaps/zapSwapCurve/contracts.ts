@@ -5,7 +5,7 @@ import { defaultProvider } from "elf/providers/providers";
 import {
   MainnetExtraAddresses,
   ZapSwapCurveAddress,
-} from "elf/zaps/zapPurchase/addresses";
+} from "elf/zaps/zapSwapCurve/addresses";
 
 const {
   lusdAddress,
