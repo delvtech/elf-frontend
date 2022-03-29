@@ -1,5 +1,6 @@
 import { ERC20Permit__factory } from "@elementfi/core-typechain/dist/libraries/factories/ERC20Permit__factory";
 import { ERC20__factory } from "@elementfi/core-typechain/dist/libraries/factories/ERC20__factory";
+import { Tranche__factory } from "@elementfi/core-typechain/dist/v1";
 import { ZapSwapCurve__factory } from "@elementfi/core-typechain/dist/v1.1";
 import { defaultProvider } from "elf/providers/providers";
 import {
@@ -40,8 +41,7 @@ export const MainnetZapContractsByAddress = Object.freeze({
   [eursAddress]: eursContract,
   [sEurAddress]: sEurContract,
 });
-
-export const ZapSwapCurveContract = ZapSwapCurve__factory.connect(
+export const zapSwapCurveContract = ZapSwapCurve__factory.connect(
   ZapSwapCurveAddress,
   defaultProvider
 );

@@ -7,9 +7,8 @@ import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
 import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
-import { createZapPurchaseInputs } from "elf/zaps/zapSwapCurve/createZapSwapCurveInputs";
 import { commify } from "ethers/lib/utils";
-import { ReactElement } from "react";
+import { ReactElement, useCallback, useState } from "react";
 import { getTokenInfo } from "tokenlists/tokenlists";
 import { t } from "ttag";
 import { useNumericInput } from "ui/base/hooks/useNumericInput/useNumericInput";
@@ -22,6 +21,7 @@ import { getMarketRateLabel } from "ui/tranche/getMarketRateLabel";
 import { useEstimateBaseTokensByZap } from "ui/zaps/zapSwapCurve/useEstimateBaseTokensByZap";
 import { usePrincipalTokenZapPrice } from "ui/zaps/zapSwapCurve/usePrincipalTokenZapPrice";
 import { useValidateBuyPrincipalTokenInputByZap } from "ui/zaps/zapSwapCurve/useValidateBuyPrincipalTokenInputByZap";
+import { ZapTokensTransactionConfirmationDrawer } from "ui/zaps/zapSwapCurve/ZapTokensTransactionConfirmationDrawer";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
 
 interface BuyFixedRatesSwapProps {
@@ -45,6 +45,11 @@ export function BuyFixedRatesZap({
   );
   const { stringValue: inputTokenValue, setValue: onInputChange } =
     useNumericInput();
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => {
+    setDrawerOpen(false);
+  }, []);
 
   const { isDarkMode } = useDarkMode();
 
@@ -65,13 +70,6 @@ export function BuyFixedRatesZap({
     inputTokens[0].symbol,
     roundedPrincipalPriceZap,
     inputToken.symbol
-  );
-
-  const zapInputs = createZapPurchaseInputs(
-    principalToken,
-    inputToken,
-    inputTokenValue,
-    account
   );
 
   const { tokenOutError, tokenInError } =
@@ -180,13 +178,25 @@ export function BuyFixedRatesZap({
 
       <Button
         disabled={isBuyButtonDisabled}
-        onClick={() => null}
+        onClick={openDrawer}
         outlined
         large
         intent={buyButtonIntent}
       >
         {hasInputError ? buttonErrorMessage : t`Buy`}
       </Button>
+
+      <ZapTokensTransactionConfirmationDrawer
+        account={account}
+        library={library}
+        buttonLabel={t`Buy`}
+        amountIn={inputTokenValue}
+        estimatedAmountOut={principalTokensOut}
+        principalToken={principalToken}
+        inputToken={inputToken}
+        isOpen={isDrawerOpen}
+        onClose={closeDrawer}
+      />
     </>
   );
 }

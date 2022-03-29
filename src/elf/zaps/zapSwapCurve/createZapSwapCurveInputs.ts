@@ -27,7 +27,7 @@ export interface ZapSwapCurveBuyInputs {
   metaZap: ZapCurveLpInStruct;
 }
 
-export function createZapPurchaseInputs(
+export function createZapSwapCurveBuyInputs(
   principalToken: PrincipalTokenInfo,
   inputToken: TokenInfo,
   amountIn: string,
