@@ -72,19 +72,20 @@ const App: FC<AppProps> = ({ children }) => {
           deactivate={deactivate}
           hamburgerButton={<AppHamburgerButton />}
         />
-        <div className="flex items-center justify-center h-12 max-w-3xl p-12 m-auto bg-gray-700 border-2 border-white rounded-lg min-w-min">
-          {/* <div className="h-full -ml-8">
-            <ElementMinLogo className="-ml-8" height={128} width={128} />
-          </div> */}
-          <ElementMinLogo className="mt-6 -ml-16" height={101} width={101} />
-          <div className="max-w-lg mr-4 text-xs leading-5">
+        <div className="flex flex-col items-center justify-center max-w-3xl p-2 m-auto mb-4 ml-4 mr-4 bg-gray-700 border-2 border-white rounded-lg sm:p-10 sm:h-12 sm:flex-row sm:min-w-min sm:m-auto">
+          <ElementMinLogo
+            className="hidden mt-6 -ml-12 sm:block"
+            height={110}
+            width={110}
+          />
+          <div className="max-w-lg mr-4 text-xs leading-5 text-center">
             {t`Our Governance Protocol, Council, recently launched live on Mainnet. Check out the launch to see if you’re eligible to claim voting power or an ELF NFT.`}
           </div>
-          <div className="p-3 mr-4 text-xs font-bold text-white whitespace-no-wrap bg-blue-500 rounded-3xl">
+          <div className="p-3 mt-2 mb-2 text-xs font-bold text-white whitespace-no-wrap bg-blue-500 cursor-pointer sm:mt-0 sm:mb-0 sm:mr-4 rounded-3xl hover:bg-blue-600">
             Visit Council
           </div>
-          <div className="p-3 text-xs font-bold text-blue-500 whitespace-no-wrap bg-white rounded-3xl">
-            Decline
+          <div className="p-3 text-xs font-bold text-blue-500 whitespace-no-wrap bg-white cursor-pointer rounded-3xl hover:bg-gray-300">
+            Close
           </div>
         </div>
         {children}
