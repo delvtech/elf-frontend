@@ -26,6 +26,9 @@ import { ChainId, ChainNames } from "base/ethereum/ethereum";
 import { getConnectorName } from "elf/wallets/connectors";
 
 import styles from "./App.module.css";
+import { ElementLogo } from "ui/base/ElementLogo";
+import { ElementIcon } from "ui/token/TokenIcon";
+import { ElementMinLogo } from "ui/base/ElementMinLogo";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -69,6 +72,21 @@ const App: FC<AppProps> = ({ children }) => {
           deactivate={deactivate}
           hamburgerButton={<AppHamburgerButton />}
         />
+        <div className="flex items-center justify-center h-12 max-w-3xl p-12 m-auto bg-gray-700 border-2 border-white rounded-lg min-w-min">
+          {/* <div className="h-full -ml-8">
+            <ElementMinLogo className="-ml-8" height={128} width={128} />
+          </div> */}
+          <ElementMinLogo className="mt-6 -ml-16" height={101} width={101} />
+          <div className="max-w-lg mr-4 text-xs leading-5">
+            {t`Our Governance Protocol, Council, recently launched live on Mainnet. Check out the launch to see if you’re eligible to claim voting power or an ELF NFT.`}
+          </div>
+          <div className="p-3 mr-4 text-xs font-bold text-white whitespace-no-wrap bg-blue-500 rounded-3xl">
+            Visit Council
+          </div>
+          <div className="p-3 text-xs font-bold text-blue-500 whitespace-no-wrap bg-white rounded-3xl">
+            Decline
+          </div>
+        </div>
         {children}
       </div>
 
