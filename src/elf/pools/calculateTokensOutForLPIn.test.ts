@@ -20,8 +20,8 @@ test("should return result with undefined values if inputs aren't finite values"
     args[index] = undefined;
     expect(
       calculateTokensOutForLPInFixed(
-        ...(args as [string, string, string, string, number])
-      )
+        ...(args as [string, string, string, string, number]),
+      ),
     ).toEqual({
       xNeeded: undefined,
       yNeeded: undefined,
@@ -41,7 +41,7 @@ test("should return undefined if lpIn greater than total supply", () => {
     xReserves,
     yReserves,
     totalSupply,
-    tokenDecimals
+    tokenDecimals,
   );
   expect(result).toEqual({
     xNeeded: undefined,
@@ -60,7 +60,7 @@ test("should return valid result for even reserves", () => {
     xReserves,
     yReserves,
     totalSupply,
-    tokenDecimals
+    tokenDecimals,
   );
   expect(result).toEqual({
     xNeeded: "5.0",
@@ -80,7 +80,7 @@ test("should return valid result for uneven reserves", () => {
     xReserves,
     yReserves,
     totalSupply,
-    tokenDecimals
+    tokenDecimals,
   );
   expect(result).toEqual({
     xNeeded: "2.5",
@@ -100,7 +100,7 @@ test("should return valid result for one sided reserves", () => {
     xReserves,
     yReserves,
     totalSupply,
-    tokenDecimals
+    tokenDecimals,
   );
   expect(result).toEqual({
     xNeeded: "10.0",

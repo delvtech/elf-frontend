@@ -62,7 +62,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
   const onChange = useOnInputChange(
     onChangeFromProps,
     cryptoDecimals,
-    swapKind
+    swapKind,
   );
   // TODO: disable setting max value if the user balance >  pool balance.  better yet, disable max
   // value if the trade would cause too much slippage.
@@ -72,7 +72,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
     cryptoBalanceOf, // the max value
     cryptoDecimals,
     swapKind,
-    onChangeFromProps
+    onChangeFromProps,
   );
 
   return (
@@ -94,7 +94,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
               "flex-col",
               "items-center",
               "justify-center",
-              "relative"
+              "relative",
             )}
           >
             <Button disabled={disabled} onClick={setMaxValue} large>
@@ -110,7 +110,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
               "flex-col",
               "items-center",
               "justify-center",
-              "relative"
+              "relative",
             )}
           >
             <div
@@ -121,13 +121,13 @@ export function TradeInput(props: TradeInputProps): ReactElement {
                 "flex",
                 "w-auto",
                 "p-1",
-                "space-x-2"
+                "space-x-2",
               )}
             >
               <span
                 className={classNames(
                   Classes.TEXT_MUTED,
-                  tw("text-xs", "whitespace-no-wrap")
+                  tw("text-xs", "whitespace-no-wrap"),
                 )}
               >
                 {labelTopLeft}
@@ -135,7 +135,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
               <span
                 className={classNames(
                   Classes.TEXT_MUTED,
-                  tw("text-xs", "whitespace-no-wrap", "lg:hidden")
+                  tw("text-xs", "whitespace-no-wrap", "lg:hidden"),
                 )}
               >
                 {cryptoSymbol}
@@ -159,7 +159,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
                 "flex",
                 "w-auto",
                 "p-1",
-                "space-x-2"
+                "space-x-2",
               )}
             >
               <span
@@ -167,7 +167,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
                   tw("text-xs", "whitespace-no-wrap", {
                     "text-danger": !validValue,
                   }),
-                  { [Classes.TEXT_MUTED]: validValue }
+                  { [Classes.TEXT_MUTED]: validValue },
                 )}
               >
                 {t`Balance:`} {`${cryptoDisplayBalance} ${cryptoSymbol}`}
@@ -182,7 +182,7 @@ export function TradeInput(props: TradeInputProps): ReactElement {
 function useOnInputChange(
   onChange: (value: string, swapKind: SwapKind) => void,
   cryptoDecimals: number | undefined,
-  swapKind: SwapKind
+  swapKind: SwapKind,
 ) {
   return useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -190,7 +190,7 @@ function useOnInputChange(
       // checks for valid values before reporting to parent
       validateAndSetValue(userInputValue, onChange, cryptoDecimals, swapKind);
     },
-    [onChange, cryptoDecimals, swapKind]
+    [onChange, cryptoDecimals, swapKind],
   );
 }
 
@@ -198,7 +198,7 @@ function useSetMaxValue(
   tokenBalanceOf: BigNumber | undefined,
   tokenDecimals: number | undefined,
   swapKind: SwapKind,
-  onChange: (value: string, swapKind: SwapKind) => void
+  onChange: (value: string, swapKind: SwapKind) => void,
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {
@@ -212,7 +212,7 @@ function validateAndSetValue(
   value: string,
   onChange: (value: string, swapKind: SwapKind) => void,
   cryptoDecimals: number | undefined,
-  swapKind: SwapKind
+  swapKind: SwapKind,
 ) {
   // allow user to clear input
   if (value === "" || value === undefined) {

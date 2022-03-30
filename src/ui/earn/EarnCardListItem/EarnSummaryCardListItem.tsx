@@ -35,7 +35,7 @@ interface EarnSummaryCardListItemProps {
 }
 
 export function EarnSummaryCardListItem(
-  props: EarnSummaryCardListItemProps
+  props: EarnSummaryCardListItemProps,
 ): JSX.Element {
   const {
     onToggleExpand,

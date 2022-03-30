@@ -5,7 +5,7 @@ import { Contract } from "ethers";
  */
 export type StaticContractCall<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
 > = TContract["callStatic"][TMethodName];
 
 /**
@@ -13,7 +13,7 @@ export type StaticContractCall<
  */
 export type ContractCall<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
 > = TContract[TMethodName];
 
 /**
@@ -21,7 +21,7 @@ export type ContractCall<
  */
 export type ContractFilterCall<
   TContract extends Contract,
-  TFilterName extends ContractFilterName<TContract>
+  TFilterName extends ContractFilterName<TContract>,
 > = TContract["filters"][TFilterName];
 
 export type ContractQueryFilterCall<TContract extends Contract> =
@@ -31,7 +31,7 @@ export type ContractQueryFilterCall<TContract extends Contract> =
  */
 export type ContractFunctionCall<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
 > = TContract["functions"][TMethodName];
 
 /**
@@ -51,12 +51,12 @@ export type ContractFilterName<TContract extends Contract> =
  */
 export type ContractReturnType<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
 > = ReturnType<ContractCall<TContract, TMethodName>>;
 
 export type StaticContractReturnType<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
 > = ReturnType<StaticContractCall<TContract, TMethodName>>;
 
 export type ContractQueryReturnType<TContract extends Contract> = ReturnType<
@@ -68,12 +68,12 @@ export type ContractQueryReturnType<TContract extends Contract> = ReturnType<
  */
 export type ContractMethodArgs<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
 > = Parameters<ContractFunctionCall<TContract, TMethodName>>;
 
 export type StaticContractMethodArgs<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
 > = Parameters<StaticContractCall<TContract, TMethodName>>;
 
 /**
@@ -81,5 +81,5 @@ export type StaticContractMethodArgs<
  */
 export type ContractFilterArgs<
   TContract extends Contract,
-  TFilterName extends ContractFilterName<TContract>
+  TFilterName extends ContractFilterName<TContract>,
 > = Parameters<ContractFilterCall<TContract, TFilterName>>;

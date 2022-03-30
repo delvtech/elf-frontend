@@ -22,7 +22,7 @@ export function ElementLogo({
     () => ({
       height,
     }),
-    [height]
+    [height],
   );
 
   let logoSrc = logo;

@@ -8,7 +8,7 @@ export async function fetchYearnVaults(): Promise<YearnVaultResult[]> {
 }
 
 export function getYearnVaultAPY(
-  apyFromYearn: YearnVaultResult["apy"]
+  apyFromYearn: YearnVaultResult["apy"],
 ): number {
   const { net_apy } = apyFromYearn;
   return net_apy;

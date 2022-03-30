@@ -51,7 +51,7 @@ export function UnstakeConfirmationDrawer({
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
 
   const termAssetSymbol = formatTermAssetShortSymbol(
-    termAssetInfo as PrincipalTokenInfo | YieldTokenInfo
+    termAssetInfo as PrincipalTokenInfo | YieldTokenInfo,
   );
 
   return (

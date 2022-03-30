@@ -17,7 +17,7 @@ export const DARK_MODE_DEFAULT = true;
 export function useDarkMode(): DarkMode {
   const { pref: isDarkMode, setPref: setDarkMode } = usePref(
     DARK_MODE_PREF_ID,
-    DARK_MODE_DEFAULT
+    DARK_MODE_DEFAULT,
   );
 
   const setDarkModeOn = useCallback(() => setDarkMode(true), [setDarkMode]);

@@ -4,6 +4,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { formatBalance } from "base/formatBalance/formatBalance";
 import classNames from "classnames";
+import { symbol } from "d3-shape";
 import tw from "efi-tailwindcss-classnames";
 import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
 import { commify } from "ethers/lib/utils";
@@ -34,7 +35,7 @@ export function BuyFixedRatesZap({
   const inputAssetBalanceOf = useCryptoBalanceOf(library, account, inputAsset);
   const inputAssetDisplayBalance = formatBalance(
     inputAssetBalanceOf,
-    inputToken.decimals
+    inputToken.decimals,
   );
   const { stringValue: inputTokenValue, setValue: onInputChange } =
     useNumericInput();
@@ -49,18 +50,18 @@ export function BuyFixedRatesZap({
   const marketRateLabelSwap = getMarketRateLabel(
     inputTokens[0].symbol,
     roundedPrincipalPriceSwap,
-    inputTokens[0].symbol
+    inputToken.symbol,
   );
 
   const principalPriceZap = usePrincipalTokenZapPrice(
     principalToken,
-    inputToken
+    inputToken,
   );
   const roundedPrincipalPriceZap = commify((+principalPriceZap)?.toFixed(4));
   const marketRateLabelZap = getMarketRateLabel(
     inputTokens[0].symbol,
     roundedPrincipalPriceZap,
-    inputToken.symbol
+    inputToken.symbol,
   );
 
   const buyButtonIntent = hasInputError ? Intent.DANGER : Intent.PRIMARY;
@@ -101,8 +102,8 @@ export function BuyFixedRatesZap({
                 "text-xs",
                 "text-right",
                 "mb-2",
-                isDarkMode ? "text-red-500" : "text-red-700"
-              )
+                isDarkMode ? "text-red-500" : "text-red-700",
+              ),
             )}
           >
             {inputErrorMessage}
@@ -112,7 +113,7 @@ export function BuyFixedRatesZap({
           <span
             className={classNames(
               Classes.TEXT_MUTED,
-              tw("text-xs", "text-right")
+              tw("text-xs", "text-right"),
             )}
           >
             {marketRateLabelSwap}
@@ -122,7 +123,7 @@ export function BuyFixedRatesZap({
           <span
             className={classNames(
               Classes.TEXT_MUTED,
-              tw("text-xs", "text-right")
+              tw("text-xs", "text-right"),
             )}
           >
             {marketRateLabelZap}

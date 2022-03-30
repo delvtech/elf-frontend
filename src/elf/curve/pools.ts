@@ -25,19 +25,19 @@ import { defaultProvider } from "elf/providers/providers";
 const CRVTriCrytoPoolAddress = "0x80466c64868e1ab14a1ddf27a676c3fcbe638fe5";
 export const crvTriCryptoPoolContract = CurveContract__factory.connect(
   CRVTriCrytoPoolAddress,
-  defaultProvider
+  defaultProvider,
 );
 
 const CRV3CrytoPoolAddress = "0xD51a44d3FaE010294C616388b506AcdA1bfAAE46";
 export const crv3CryptoPoolContract = CurveContract__factory.connect(
   CRV3CrytoPoolAddress,
-  defaultProvider
+  defaultProvider,
 );
 
 const steCRVPoolAddress = "0xDC24316b9AE028F1497c275EB9192a3Ea0f67022";
 export const steCrvPoolContract = CurveStethPool__factory.connect(
   steCRVPoolAddress,
-  defaultProvider
+  defaultProvider,
 );
 
 export type CurvePool = CurvePool1 | CurvePool2 | CurvePool3;
@@ -92,7 +92,7 @@ export type CurvePool = CurvePool1 | CurvePool2 | CurvePool3;
  * @returns CurvePool
  * */
 export function getCurvePoolContract(
-  curveLpToken: CurveLpTokenInfo
+  curveLpToken: CurveLpTokenInfo,
 ): CurvePool {
   const isCrv3Crypto = curveLpToken.symbol === "crv3crypto";
   const isCrvTriCrypto = curveLpToken.symbol === "crvTricrypto";
@@ -107,6 +107,6 @@ export function getCurvePoolContract(
     ? CurvePool1__factory.connect(curveLpToken.extensions.pool, defaultProvider)
     : CurvePool2__factory.connect(
         curveLpToken.extensions.pool,
-        defaultProvider
+        defaultProvider,
       );
 }

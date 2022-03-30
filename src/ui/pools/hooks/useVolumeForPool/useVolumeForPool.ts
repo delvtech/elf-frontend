@@ -20,14 +20,14 @@ import { PoolInfo } from "elf/pools/PoolInfo";
 export function useVolumeForPool(
   poolInfo: PoolInfo,
   fromTime: number = ONE_DAY_IN_SECONDS,
-  toTime?: number
+  toTime?: number,
 ): number | undefined {
   const { baseAssetContract, baseAssetInfo } = getPoolTokens(poolInfo);
   const swapEvents = useSwaps(poolInfo, fromTime, toTime);
   const { currency } = useCurrencyPref();
   const { data: baseAssetFiatPrice } = useTokenPrice(
     baseAssetContract,
-    currency
+    currency,
   );
 
   let volume = BigNumber.from(0);
@@ -43,7 +43,7 @@ export function useVolumeForPool(
   const fiatVolume = useConvertToFiat(
     baseAssetFiatPrice,
     volume,
-    baseAssetInfo.decimals
+    baseAssetInfo.decimals,
   );
 
   return fiatVolume?.toDecimal();

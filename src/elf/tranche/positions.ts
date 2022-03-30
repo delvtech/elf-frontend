@@ -11,16 +11,16 @@ import keyBy from "lodash.keyby";
 
 export const assetProxyTokenInfos: AssetProxyTokenInfo[] =
   tokenListJson.tokens.filter((tokenInfo): tokenInfo is AssetProxyTokenInfo =>
-    isAssetProxy(tokenInfo)
+    isAssetProxy(tokenInfo),
   );
 
 const assetProxyContracts = assetProxyTokenInfos.map(({ address }) =>
-  YVaultAssetProxy__factory.connect(address, defaultProvider)
+  YVaultAssetProxy__factory.connect(address, defaultProvider),
 );
 
 export const assetProxyContractsByAddress = keyBy(
   assetProxyContracts,
-  (position) => position.address
+  (position) => position.address,
 );
 
 function isAssetProxy(tokenInfo: TokenInfo): tokenInfo is PrincipalTokenInfo {

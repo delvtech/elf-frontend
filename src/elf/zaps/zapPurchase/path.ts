@@ -70,10 +70,10 @@ type ZapPurchasePath = ZapPurchasePathSingleStep | ZapPurchasePathDoubleStep;
  * */
 export function getZapPurchasePath(
   principalToken: PrincipalTokenInfo,
-  curvePoolToken: TokenInfo
+  curvePoolToken: TokenInfo,
 ): ZapPurchasePath {
   const baseToken = getTokenInfo<CurveLpTokenInfo>(
-    principalToken.extensions.underlying
+    principalToken.extensions.underlying,
   );
 
   const baseCurvePoolTokens = getCurvePoolTokensByCurveLpToken(baseToken);
@@ -95,7 +95,7 @@ export function getZapPurchasePath(
     .find((metaCurvePoolToken) =>
       getCurvePoolTokensByCurveLpToken(metaCurvePoolToken)
         .map(({ address }) => address)
-        .includes(curvePoolToken.address)
+        .includes(curvePoolToken.address),
     ) as CurveLpTokenInfo;
 
   return {

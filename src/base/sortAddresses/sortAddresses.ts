@@ -9,7 +9,7 @@ export function sortAddresses(addresses: string[]): string[] {
 
   const sortedLowerCaseAddresses = lowerCaseAddresses.map((a) => a).sort();
   const sortedAddresses = sortedLowerCaseAddresses.map(
-    (lowerCaseAddress) => addressMap[lowerCaseAddress]
+    (lowerCaseAddress) => addressMap[lowerCaseAddress],
   );
 
   return sortedAddresses;

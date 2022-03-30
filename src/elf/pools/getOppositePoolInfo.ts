@@ -11,7 +11,7 @@ export function getOppositePoolInfo(poolInfo: PoolInfo): PoolInfo | undefined {
   const principalTokenInfo = getPrincipalTokenInfoForPool(poolInfo);
   if (isPrincipalPool(poolInfo)) {
     const yieldToken = getYieldTokenForPrincipalToken(
-      principalTokenInfo.address
+      principalTokenInfo.address,
     );
     return getPoolInfoForYieldToken(yieldToken.address);
   }

@@ -66,7 +66,7 @@ export function PrincipalTokenTermButtonLabel({
 
   const fiatLiquidity = useTotalFiatLiquidity(poolInfo);
   const has200kLiquidity = !!fiatLiquidity?.greaterThan(
-    Money.fromDecimal(200000, Currencies.USD)
+    Money.fromDecimal(200000, Currencies.USD),
   );
   let apyLabel = t`✨ NEW ✨`;
   if (isPool24HoursOld || (!isPool24HoursOld && has200kLiquidity)) {
@@ -77,7 +77,7 @@ export function PrincipalTokenTermButtonLabel({
     <div
       className={classNames(
         tw("flex", "h-full", "space-x-4", "w-full"),
-        className
+        className,
       )}
     >
       <LabeledText
@@ -90,7 +90,7 @@ export function PrincipalTokenTermButtonLabel({
                 "flex-col",
                 "items-center",
                 "justify-center",
-                "mr-4"
+                "mr-4",
               )}
             >
               <span className={tw("text-lg", "text-center")}>{apyLabel}</span>

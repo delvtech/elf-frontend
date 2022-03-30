@@ -16,7 +16,7 @@ export function usePoolSwapFee(poolInfo: PoolInfo): BigNumber | undefined {
     "getSwapFeePercentage",
     {
       enabled: isWeightedPool(pool),
-    }
+    },
   );
 
   const { data: percentFee } = useSmartContractReadCall(
@@ -24,7 +24,7 @@ export function usePoolSwapFee(poolInfo: PoolInfo): BigNumber | undefined {
     "percentFee",
     {
       enabled: isConvergentCurvePool(pool),
-    }
+    },
   );
 
   if (isWeightedPool(pool)) {

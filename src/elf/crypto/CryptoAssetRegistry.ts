@@ -209,7 +209,7 @@ const yieldTokenCryptoAssets: Erc20PermitCryptoAsset[] = yieldTokenInfos.map(
     tokenContract: interestTokenContractsByAddress[
       address
     ] as unknown as ERC20Permit,
-  })
+  }),
 );
 
 /**
@@ -222,10 +222,10 @@ export const CryptoAssets: Record<string, CryptoAsset> = Object.freeze({
   ...zappableAssetCryptoAssets,
   ...keyBy(
     principalTokenCryptoAssets,
-    ({ tokenContract }) => tokenContract.address
+    ({ tokenContract }) => tokenContract.address,
   ),
   ...keyBy(
     yieldTokenCryptoAssets,
-    ({ tokenContract }) => tokenContract.address
+    ({ tokenContract }) => tokenContract.address,
   ),
 });

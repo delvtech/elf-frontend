@@ -32,14 +32,14 @@ export function PrincipalPoolTable({
       [...principalPoolsToShow]
         .sort((info) => info.extensions.createdAtTimestamp)
         .reverse(),
-    [principalPoolsToShow]
+    [principalPoolsToShow],
   );
 
   return (
     <div
       className={classNames(
         tw("flex-col", "items-center", "space-y-5"),
-        className
+        className,
       )}
       style={principalPoolTableStyle}
     >

@@ -12,7 +12,7 @@ import { convertToFiatBalance } from "elf/money/convertToFiatBalance";
 export function useConvertToFiat(
   fiatPrice: Money | undefined,
   balance: BigNumber | undefined,
-  decimals: number | undefined
+  decimals: number | undefined,
 ): Money | undefined {
   return useMemo(() => {
     if (!fiatPrice || !balance || !decimals) {

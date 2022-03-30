@@ -19,7 +19,7 @@ import { getVaultTokenInfoForTranche } from "elf/tranche/tranches";
  */
 export function useTokenYield(
   poolInfo: PoolInfo,
-  termAssetType: TermAssetType
+  termAssetType: TermAssetType,
 ): number {
   const nowMs = useNowMs();
   const pool = getPoolContract(poolInfo.address);

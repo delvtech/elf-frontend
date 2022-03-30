@@ -48,7 +48,7 @@ const calloutClassName = tw(
   "h-full",
   "p-8",
   "items-center",
-  "justify-center"
+  "justify-center",
 );
 
 export function YieldTokenLPCard({
@@ -91,14 +91,14 @@ export function YieldTokenLPCard({
     addresses,
     poolBalances,
     baseAssetInfo.address,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
   const yieldTokenLiquidity = calculatePoolShareLiquidity(
     poolShares,
     addresses,
     poolBalances,
     yieldTokenAddress,
-    yieldTokenDecimals
+    yieldTokenDecimals,
   );
 
   const baseAssetLiquidityLabel = `${baseAssetLiquidity?.toFixed(4)}`;
@@ -115,7 +115,7 @@ export function YieldTokenLPCard({
         tw("p-8", "flex", "flex-col", "m-4", "space-y-5", "text-base", {
           "text-gray-700": !isDarkMode,
           "text-white": isDarkMode,
-        })
+        }),
       )}
     >
       <div>
@@ -133,7 +133,7 @@ export function YieldTokenLPCard({
               "w-full",
               "flex-col",
               "space-y-2",
-              "overflow-hidden"
+              "overflow-hidden",
             )}
           >
             <span
@@ -226,7 +226,7 @@ function calculatePoolShareLiquidity(
   poolTokenAddresses: string[] | undefined,
   poolTokenReserves: BigNumber[] | undefined,
   tokenAddress: string | undefined,
-  tokenDecimals: number | undefined
+  tokenDecimals: number | undefined,
 ): number | undefined {
   let baseAssetLiquidity: number | undefined;
   if (

@@ -11,7 +11,7 @@ export function DarkModeSwitch(): ReactElement {
 
   const onDarkModeChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => setDarkMode(event.target.checked),
-    [setDarkMode]
+    [setDarkMode],
   );
 
   return (

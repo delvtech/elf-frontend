@@ -49,11 +49,11 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
 
   const totalValueLocked = useTotalValueLockedForTranche(
     trancheInfo,
-    baseAssetContract
+    baseAssetContract,
   );
   const { data: interestSupplyBN } = useSmartContractReadCall(
     trancheContract,
-    "interestSupply"
+    "interestSupply",
   );
 
   const volume7d = useVolumeForPool(poolInfo, ONE_WEEK_IN_SECONDS);
@@ -72,7 +72,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           "lg:grid-flow-row",
           "lg:gap-12",
           "lg:grid-cols-3",
-          "lg:auto-rows-max"
+          "lg:auto-rows-max",
         )}
       >
         <PoolSummary
@@ -103,7 +103,7 @@ export function PoolDetails(props: PoolDetailsProps): ReactElement {
           "lg:grid-flow-row",
           "lg:gap-12",
           "lg:grid-cols-2",
-          "lg:auto-rows-max"
+          "lg:auto-rows-max",
         )}
       >
         <PoolCharts poolInfo={poolInfo} />
