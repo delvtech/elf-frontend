@@ -23,7 +23,7 @@ export function useExitConvergentCurvePool(
   account: string | null | undefined,
   poolInfo: PrincipalPoolTokenInfo,
   lpIn: string,
-  onTransactionSubmitted?: () => void
+  onTransactionSubmitted?: () => void,
 ): {
   onExitPool: () => void;
   isLoading: boolean;
@@ -47,7 +47,7 @@ export function useExitConvergentCurvePool(
     signer,
     {
       onTransactionSubmitted,
-    }
+    },
   );
 
   const onExitPool = useCallback(async () => {
@@ -68,7 +68,7 @@ export function useExitConvergentCurvePool(
       poolTokenReserves,
       poolTokenDecimals,
       totalSupply,
-      lpIn
+      lpIn,
     );
 
     if (!exitPoolCallArgs) {
@@ -102,7 +102,7 @@ function makeExitPoolCallArgs(
   poolTokenReserves: BigNumber[] | undefined,
   poolTokenDecimals: number[],
   totalSupply: BigNumber | undefined,
-  lpIn: string
+  lpIn: string,
 ): ContractMethodArgs<Vault, "exitPool"> | undefined {
   if (
     !poolId ||
@@ -126,13 +126,13 @@ function makeExitPoolCallArgs(
     lpIn,
     totalSupply,
     poolTokenReserves,
-    poolTokenDecimals
+    poolTokenDecimals,
   ) as BigNumber[];
 
   // default to v1.1 userData, but if it's a v1, then use that instead
   let userData = defaultAbiCoder.encode(
     ["uint256"],
-    [parseUnits(lpIn, BALANCER_POOL_LP_TOKEN_DECIMALS)]
+    [parseUnits(lpIn, BALANCER_POOL_LP_TOKEN_DECIMALS)],
   );
   if (poolFactory === AddressesJson.addresses.convergentPoolFactoryAddress.v1) {
     userData = defaultAbiCoder.encode(["uint256[]"], [poolTokenMinAmountsOut]);
@@ -159,20 +159,20 @@ function getPoolTokenMinAmountsOut(
   lpIn: string,
   totalSupply: BigNumber,
   poolTokenReserves: BigNumber[],
-  poolTokenDecimals: number[]
+  poolTokenDecimals: number[],
 ) {
   const totalSupplyString = formatUnits(
     totalSupply,
-    BALANCER_POOL_LP_TOKEN_DECIMALS
+    BALANCER_POOL_LP_TOKEN_DECIMALS,
   );
 
   const xReservesString = formatUnits(
     poolTokenReserves[0],
-    poolTokenDecimals[0]
+    poolTokenDecimals[0],
   );
   const yReservesString = formatUnits(
     poolTokenReserves[1],
-    poolTokenDecimals[1]
+    poolTokenDecimals[1],
   );
 
   // ConvergentCurvePool calculates how many LP tokens are required to provide a given amount of
@@ -183,7 +183,7 @@ function getPoolTokenMinAmountsOut(
     xReservesString,
     yReservesString,
     totalSupplyString,
-    poolTokenDecimals[0]
+    poolTokenDecimals[0],
   );
 
   if (!xNeeded || !yNeeded) {
@@ -195,16 +195,16 @@ function getPoolTokenMinAmountsOut(
   const xNeededPadded = parseUnits(
     clipFixNumberToStringDecimals(
       getSafeFixedNumber(xNeeded).mulUnsafe(getSafeFixedNumber("0.997")),
-      poolTokenDecimals[0]
+      poolTokenDecimals[0],
     ),
-    poolTokenDecimals[0]
+    poolTokenDecimals[0],
   );
   const yNeededPadded = parseUnits(
     clipFixNumberToStringDecimals(
       getSafeFixedNumber(yNeeded).mulUnsafe(getSafeFixedNumber("0.997")),
-      poolTokenDecimals[1]
+      poolTokenDecimals[1],
     ),
-    poolTokenDecimals[1]
+    poolTokenDecimals[1],
   );
 
   const poolTokenMinAmountsOut = [xNeededPadded, yNeededPadded];

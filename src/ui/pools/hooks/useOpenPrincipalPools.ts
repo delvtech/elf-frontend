@@ -9,6 +9,6 @@ import { principalPools } from "elf/pools/ccpool";
 export function useOpenPrincipalPools(): PrincipalPoolTokenInfo[] {
   const nowMs = useNowMs();
   return principalPools.filter(
-    (principalPool) => principalPool.extensions.expiration * 1000 > nowMs
+    (principalPool) => principalPool.extensions.expiration * 1000 > nowMs,
   );
 }

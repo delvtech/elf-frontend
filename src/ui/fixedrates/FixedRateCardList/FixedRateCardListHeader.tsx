@@ -9,7 +9,7 @@ interface FixedRateCardListHeaderProps {
 }
 
 export function FixedRateCardListHeader(
-  props: FixedRateCardListHeaderProps
+  props: FixedRateCardListHeaderProps,
 ): ReactElement | null {
   if (props.hide) {
     return null;
@@ -19,7 +19,7 @@ export function FixedRateCardListHeader(
     <div
       className={classNames(
         styles.fixedRatesGrid,
-        tw("text-base", "text-left", "pb-2")
+        tw("text-base", "text-left", "pb-2"),
       )}
     >
       <span>{t`Featured Principal Tokens`}</span>

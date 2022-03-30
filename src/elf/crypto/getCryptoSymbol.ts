@@ -19,7 +19,7 @@ export function getCryptoSymbol(asset: CryptoAsset): string {
       if (tokenContract?.address) {
         const tokenInfo = TokenMetadata[tokenContract.address];
         const termAssetSymbol = formatTermAssetShortSymbol(
-          tokenInfo as PrincipalTokenInfo | YieldTokenInfo
+          tokenInfo as PrincipalTokenInfo | YieldTokenInfo,
         );
         // if termAssetSymbol is an empty string, just use the symbol
         return termAssetSymbol || tokenInfo.symbol;

@@ -24,7 +24,7 @@ const ChainColor: Record<number, string> = {
   [ChainId.LOCAL]: Colors.WHITE,
 };
 export function ConnectWalletButton(
-  props: ConnectWalletButtonProps
+  props: ConnectWalletButtonProps,
 ): ReactElement {
   const { account, chainId, walletConnectionActive, className } = props;
   const [isWalletDialogOpen, setWalletDialogOpen] = useState(false);

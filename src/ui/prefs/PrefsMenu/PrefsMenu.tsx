@@ -23,7 +23,7 @@ export const PrefsMenu: FC<PrefsMenuProps> = () => {
 
   const onDarkModeChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => setDarkMode(event.target.checked),
-    [setDarkMode]
+    [setDarkMode],
   );
 
   const { currency, setCurrency } = useCurrencyPref();
@@ -41,7 +41,7 @@ export const PrefsMenu: FC<PrefsMenuProps> = () => {
             "flex",
             "justify-between",
             "items-center",
-            "space-x-10"
+            "space-x-10",
           )}
         >
           <span>{t`Base currency`}</span>

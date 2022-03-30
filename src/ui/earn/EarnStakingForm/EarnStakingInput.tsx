@@ -44,7 +44,7 @@ export function EarnStakingInput(props: EarnStakingInputProps): ReactElement {
     cryptoDecimals,
     tokenPoolReserves,
     otherTokenPoolReserves,
-    totalSupply
+    totalSupply,
   );
 
   return (
@@ -68,7 +68,7 @@ function useOnInputChange(
   cryptoDecimals: number | undefined,
   tokenPoolReserves: string | undefined,
   otherTokenPoolReserves: string | undefined,
-  totalSupply: string | undefined
+  totalSupply: string | undefined,
 ) {
   return useCallback(
     (value: string) => {
@@ -106,7 +106,7 @@ function useOnInputChange(
         tokenPoolReserves,
         otherTokenPoolReserves,
         totalSupply,
-        cryptoDecimals
+        cryptoDecimals,
       );
 
       onPreviewUpdate(otherNeeded, lpOut);
@@ -118,6 +118,6 @@ function useOnInputChange(
       otherTokenPoolReserves,
       totalSupply,
       onPreviewUpdate,
-    ]
+    ],
   );
 }

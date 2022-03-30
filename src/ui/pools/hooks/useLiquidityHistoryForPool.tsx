@@ -22,7 +22,7 @@ type PoolBalanceChangedArguments = [
   sender: string,
   assets: string[],
   amounts: BigNumber[],
-  dueProtocolFeeAmounts: BigNumber[]
+  dueProtocolFeeAmounts: BigNumber[],
 ];
 /**
  * Returns the amount of liquidity added or removed for each token in a time
@@ -35,7 +35,7 @@ type PoolBalanceChangedArguments = [
 
 export function useLiquidityHistoryForPool(
   poolInfo: PoolInfo,
-  fromTime: number = ONE_DAY_IN_SECONDS
+  fromTime: number = ONE_DAY_IN_SECONDS,
 ): TimeData[] | undefined {
   const nowInMs = useNowMs();
   const poolContract = getPoolContract(poolInfo.address);
@@ -90,14 +90,14 @@ export function useLiquidityHistoryForPool(
         null,
         null,
         null,
-        null
+        null,
       );
 
       // these are all the events that have liquidity changes when people stake/unstake from the
       // pool.
       const events = await balancerVaultContract.queryFilter(
         filterQuery,
-        fromBlockNumber
+        fromBlockNumber,
       );
 
       // here we take those events, and combine the base and yield asset into a single delta value.
@@ -118,11 +118,11 @@ export function useLiquidityHistoryForPool(
         const [, , , amounts] = changeEvent;
         const baseDelta = +formatUnits(
           amounts[baseAssetIndex],
-          baseAssetDecimals
+          baseAssetDecimals,
         );
         const yieldDelta = +formatUnits(
           amounts[yieldAssetIndex],
-          baseAssetDecimals
+          baseAssetDecimals,
         );
 
         // liquidity delta in base asset units

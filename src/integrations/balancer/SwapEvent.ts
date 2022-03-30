@@ -6,7 +6,7 @@ export type SwapEvent = [
   tokenIn: string,
   tokenOut: string,
   amountIn: BigNumber,
-  amountOut: BigNumber
+  amountOut: BigNumber,
 ];
 
 export type SwapEventWithTimeStamp = [
@@ -15,5 +15,5 @@ export type SwapEventWithTimeStamp = [
   tokenOut: string,
   amountIn: BigNumber,
   amountOut: BigNumber,
-  timeStampMs: number
+  timeStampMs: number,
 ];

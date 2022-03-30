@@ -66,8 +66,8 @@ export function FixedRateCard(props: FixedRateCardProps): ReactElement | null {
           "flex",
           "flex-col",
           "space-y-4",
-          "lg:space-y-0"
-        )
+          "lg:space-y-0",
+        ),
       )}
       onClick={onCardClick}
     >

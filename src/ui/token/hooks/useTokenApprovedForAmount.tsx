@@ -11,7 +11,7 @@ import { ERC20, ERC20Permit } from "@elementfi/core-typechain/dist/libraries";
 export function useTokenAllowance(
   contract: ERC20 | ERC20Permit | undefined,
   owner: string | null | undefined,
-  spender: string | null | undefined
+  spender: string | null | undefined,
 ): QueryObserverResult<BigNumber> {
   return useSmartContractReadCall(contract, "allowance", {
     enabled: !!owner && !!spender,
@@ -21,7 +21,7 @@ export function useTokenAllowance(
 export function useTokenAllowanceMulti(
   contracts: (ERC20 | undefined)[],
   owners: (string | null | undefined)[],
-  spenders: (string | null | undefined)[]
+  spenders: (string | null | undefined)[],
 ): QueryObserverResult<BigNumber>[] {
   const callArgs = zip(owners, spenders).map(([owner, spender]) => {
     return {
@@ -41,7 +41,7 @@ export function useTokenApprovedForAmount(
   spenderAddress: string,
   tokenContract: ERC20 | ERC20Permit | Tranche | InterestToken | undefined,
   tokenDecimals: number,
-  amount: string
+  amount: string,
 ): boolean {
   // safe to cast callArgs since we don't enable the call unless they are defnied
   const callArgs: ContractMethodArgs<ERC20, "allowance"> = [
@@ -55,7 +55,7 @@ export function useTokenApprovedForAmount(
     {
       callArgs,
       enabled: !!ownerAddress,
-    }
+    },
   );
 
   const approved =

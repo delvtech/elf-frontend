@@ -31,7 +31,7 @@ export function WalletConnectionSummary({
         "w-full",
         "items-center",
         "space-x-10",
-        "justify-between"
+        "justify-between",
       )}
     >
       <div className={classNames(tw("flex", "space-x-4", "items-center"))}>

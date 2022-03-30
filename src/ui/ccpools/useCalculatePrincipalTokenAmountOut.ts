@@ -16,7 +16,7 @@ import { PrincipalPoolTokenInfo } from "@elementfi/tokenlist";
 
 export function useCalculatePrincipalTokenAmountOut(
   poolInfo: PrincipalPoolTokenInfo,
-  amountIn: string
+  amountIn: string,
 ): PrincipalPoolCalcSwapResult {
   const {
     address: poolAddress,
@@ -31,7 +31,7 @@ export function useCalculatePrincipalTokenAmountOut(
   const { data: totalSupplyBN } = usePoolTotalSupply(poolContract);
   const totalSupply = formatUnits(
     totalSupplyBN ?? 0,
-    BALANCER_POOL_LP_TOKEN_DECIMALS
+    BALANCER_POOL_LP_TOKEN_DECIMALS,
   );
 
   const { data: [, balances] = [] } = usePoolTokens(poolContract);
@@ -41,11 +41,11 @@ export function useCalculatePrincipalTokenAmountOut(
   const { decimals: baseAssetDecimals } = getTokenInfo(baseAssetAddress);
   const underlyingReserves = formatUnits(
     underlyingReservesBalanceOf ?? 0,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
   const principalReserves = formatUnits(
     principalReservesBalanceOf ?? 0,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
 
   const calcSwapResult = calcSwapPrincipalPool(
@@ -56,7 +56,7 @@ export function useCalculatePrincipalTokenAmountOut(
     baseAssetDecimals,
     underlyingReserves,
     principalReserves,
-    totalSupply
+    totalSupply,
   );
 
   return calcSwapResult;

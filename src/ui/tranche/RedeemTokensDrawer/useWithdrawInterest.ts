@@ -9,7 +9,7 @@ export function useWithdrawInterest(
   tranche: Tranche | undefined,
   account: string | null | undefined,
   amount: BigNumber | undefined,
-  onTransactionSubmitted?: () => void
+  onTransactionSubmitted?: () => void,
 ): {
   withdraw: () => void;
   reset: () => void;
@@ -18,7 +18,7 @@ export function useWithdrawInterest(
 } {
   const withdrawInterestCallArgs = makeWithdrawInterestCallArgs(
     account,
-    amount
+    amount,
   );
 
   const {
@@ -30,7 +30,7 @@ export function useWithdrawInterest(
     tranche,
     "withdrawInterest",
     signer,
-    { onTransactionSubmitted }
+    { onTransactionSubmitted },
   );
 
   const withdraw = useCallback(() => {
@@ -50,7 +50,7 @@ export function useWithdrawInterest(
 
 function makeWithdrawInterestCallArgs(
   account: string | null | undefined,
-  amount: BigNumber | undefined
+  amount: BigNumber | undefined,
 ): ContractMethodArgs<Tranche, "withdrawInterest"> | undefined {
   if (!amount?.gt(0) || !account) {
     return undefined;

@@ -33,7 +33,7 @@ export function BuyFixedRatesZap({
   const inputAssetBalanceOf = useCryptoBalanceOf(library, account, inputAsset);
   const inputAssetDisplayBalance = formatBalance(
     inputAssetBalanceOf,
-    inputToken.decimals
+    inputToken.decimals,
   );
   const { stringValue: inputTokenValue, setValue: onInputChange } =
     useNumericInput();
@@ -48,7 +48,7 @@ export function BuyFixedRatesZap({
   const marketRateLabel = getMarketRateLabel(
     inputTokens[0].symbol,
     roundedPrincipalPrice,
-    inputTokens[0].symbol
+    inputTokens[0].symbol,
   );
 
   const buyButtonIntent = hasInputError ? Intent.DANGER : Intent.PRIMARY;
@@ -89,8 +89,8 @@ export function BuyFixedRatesZap({
                 "text-xs",
                 "text-right",
                 "mb-2",
-                isDarkMode ? "text-red-500" : "text-red-700"
-              )
+                isDarkMode ? "text-red-500" : "text-red-700",
+              ),
             )}
           >
             {inputErrorMessage}
@@ -100,7 +100,7 @@ export function BuyFixedRatesZap({
           <span
             className={classNames(
               Classes.TEXT_MUTED,
-              tw("text-xs", "text-right")
+              tw("text-xs", "text-right"),
             )}
           >
             {marketRateLabel}

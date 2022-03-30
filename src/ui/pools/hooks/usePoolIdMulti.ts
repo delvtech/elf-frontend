@@ -4,7 +4,7 @@ import { useSmartContractReadCalls } from "ui/contracts/useSmartContractReadCall
 import { PoolContract } from "elf/pools/PoolContract";
 
 export function usePoolIdMulti(
-  pools: (PoolContract | undefined)[]
+  pools: (PoolContract | undefined)[],
 ): QueryObserverResult<string>[] {
   return useSmartContractReadCalls(pools, "getPoolId", { staleTime: Infinity });
 }

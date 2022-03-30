@@ -11,16 +11,16 @@ import { ContractMethodName } from "elf/contracts/types";
  */
 export function matchSmartContractReadCallQuery<
   TContract extends Contract,
-  TMethodName extends ContractMethodName<TContract>
+  TMethodName extends ContractMethodName<TContract>,
 >(
   query: Query,
   contractAddress: string | undefined,
   methodName: TMethodName,
-  callArgs: Parameters<TContract["functions"][TMethodName]> | undefined
+  callArgs: Parameters<TContract["functions"][TMethodName]> | undefined,
 ): boolean {
   const match = isEqual(
     query.queryKey,
-    makeSmartContractReadCallQueryKey(contractAddress, methodName, callArgs)
+    makeSmartContractReadCallQueryKey(contractAddress, methodName, callArgs),
   );
   return match;
 }

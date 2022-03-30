@@ -6,7 +6,7 @@ import ContractAddresses from "addresses/addresses";
  * operation
  */
 export function isMintPendingTransaction(
-  pendingTransactionPref: PendingTransactionPref | undefined
+  pendingTransactionPref: PendingTransactionPref | undefined,
 ): boolean {
   const { contractAddress, methodName } = pendingTransactionPref || {};
   // no pending transactions

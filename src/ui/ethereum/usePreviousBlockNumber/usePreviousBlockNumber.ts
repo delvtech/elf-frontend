@@ -5,7 +5,7 @@ import { defaultProvider } from "elf/providers/providers";
 
 export function usePreviousBlockNumber(
   secondsAgo: number | undefined,
-  queryOptions?: UseQueryOptions
+  queryOptions?: UseQueryOptions,
 ): UseQueryResult<number, unknown> {
   const result = useQuery({
     queryKey: [["blockattimestamp"], { secondsAgo: secondsAgo }],
@@ -17,7 +17,7 @@ export function usePreviousBlockNumber(
       }
 
       const numBlocksSinceTimestamp = Math.round(
-        secondsAgo / AVG_MINE_RATE_SECONDS
+        secondsAgo / AVG_MINE_RATE_SECONDS,
       );
       const blockNumberAtTimestamp =
         lastestBlockNumber - numBlocksSinceTimestamp;

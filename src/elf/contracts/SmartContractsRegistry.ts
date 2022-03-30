@@ -14,7 +14,7 @@ const SMART_CONTRACTS_REGISTRY: Record<string, unknown> = {};
 export function getSmartContractFromRegistry<TReturnContract extends Contract>(
   address: string | undefined,
   factoryConnect: FactoryConnectFn<TReturnContract>,
-  signerOrProvider?: Signer | Provider
+  signerOrProvider?: Signer | Provider,
 ): TReturnContract | undefined {
   if (!address) {
     return undefined;
@@ -29,7 +29,7 @@ export function getSmartContractFromRegistry<TReturnContract extends Contract>(
   // Otherwise populate cache and return it
   SMART_CONTRACTS_REGISTRY[address] = factoryConnect(
     address,
-    signerOrProvider ?? defaultProvider
+    signerOrProvider ?? defaultProvider,
   );
 
   return SMART_CONTRACTS_REGISTRY[address] as TReturnContract;

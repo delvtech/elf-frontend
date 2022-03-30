@@ -51,7 +51,7 @@ export function SwapDetailsForm({
       }
       onAmountInChangeFromProps?.(event.target.value);
     },
-    [onAmountInChangeFromProps]
+    [onAmountInChangeFromProps],
   );
   const onAmountOutChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +60,7 @@ export function SwapDetailsForm({
       }
       onAmountOutChangeFromProps?.(event.target.value);
     },
-    [onAmountOutChangeFromProps]
+    [onAmountOutChangeFromProps],
   );
 
   return (
@@ -74,7 +74,7 @@ export function SwapDetailsForm({
             "place-items-stretch",
             "w-full",
             "items-center",
-            "gap-2"
+            "gap-2",
           )}
         >
           <span className={tw("text-sm", "font-semibold")}>
@@ -106,7 +106,7 @@ export function SwapDetailsForm({
               "place-items-stretch",
               "w-full",
               "items-center",
-              "gap-2"
+              "gap-2",
             )}
           >
             <span className={tw("text-sm", "font-semibold")}>

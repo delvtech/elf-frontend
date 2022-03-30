@@ -31,9 +31,9 @@ export function FormGroupLabel({
             "justify-between": fill,
             "space-x-2": !fill,
           },
-          "items-center"
+          "items-center",
         ),
-        Classes.TEXT_MUTED
+        Classes.TEXT_MUTED,
       )}
     >
       {tooltipContent && alignIndicator === Alignment.LEFT && (
@@ -51,7 +51,7 @@ export function FormGroupLabel({
         className={classNames(
           tw({ "text-base": large }),
           Classes.TEXT_MUTED,
-          styles.tooltipLabel
+          styles.tooltipLabel,
         )}
       >
         {label}

@@ -35,7 +35,7 @@ interface BuyPrincipalTokensFormProps {
 }
 
 export function BuyPrincipalTokensForm(
-  props: BuyPrincipalTokensFormProps
+  props: BuyPrincipalTokensFormProps,
 ): ReactElement {
   const {
     library,
@@ -67,7 +67,7 @@ export function BuyPrincipalTokensForm(
   const baseAssetBalanceLabel = formatBalance(
     baseAssetBalanceOf,
     baseAssetDecimals,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
 
   const principalToken = getCryptoAssetForToken(principalTokenAddress);
@@ -76,7 +76,7 @@ export function BuyPrincipalTokensForm(
   // pool
   const poolInfo = getPoolInfoForPrincipalToken(principalTokenAddress);
   const poolContract = getPrincipalPoolContractForTranche(
-    principalTokenAddress
+    principalTokenAddress,
   );
   const apy = useTokenYield(poolInfo, "principal");
   const formattedAPY = apy ? formatPercent(apy) : "-";
@@ -87,13 +87,13 @@ export function BuyPrincipalTokensForm(
   // input validation
   const { amountOut } = useCalculatePrincipalTokenAmountOut(
     poolInfo,
-    baseAssetInputValue
+    baseAssetInputValue,
   );
   const { tokenOutError, tokenInError } = useValidateBuyPrincipalTokenInput(
     library,
     account,
     poolInfo,
-    baseAssetInputValue
+    baseAssetInputValue,
   );
 
   const buttonDisabled =
@@ -116,7 +116,7 @@ export function BuyPrincipalTokensForm(
             "flex-col",
             "w-full",
             "space-y-2",
-            "justify-center"
+            "justify-center",
           )}
         >
           <span

@@ -24,7 +24,7 @@ export function useERC20Approve(
   baseAssetContract: ERC20 | undefined,
   signer: Signer | undefined,
   owner: string | null | undefined,
-  spender: string | null | undefined
+  spender: string | null | undefined,
 ): UseERC20Approve {
   const queryClient = useQueryClient();
   const mutationResult = useSmartContractTransactionPersisted(
@@ -39,13 +39,13 @@ export function useERC20Approve(
               query,
               baseAssetContract?.address,
               "allowance",
-              [owner as string, spender as string]
+              [owner as string, spender as string],
             );
             return match;
           },
         });
       },
-    }
+    },
   );
 
   const { mutate: approve } = mutationResult;
