@@ -14,6 +14,7 @@ interface FixedRatePreviewCalloutProps {
   principalTokensOut: string;
   baseAssetIn: string;
   baseAssetDecimals: number;
+  isApproximate?: boolean;
 }
 
 const reviewOrderGridRowClassName = tw(
@@ -43,6 +44,11 @@ export function FixedRatePreviewCallout(
   );
   const roundedPercentYield = commify((+percentYield)?.toFixed(2));
   const roundedPrincipalTokensOut = commify((+principalTokensOut)?.toFixed(4));
+
+  const showTilde =
+    !!props?.isApproximate &&
+    props.baseAssetIn !== "0" &&
+    props.baseAssetIn !== "";
   return (
     <Callout
       className={tw(
@@ -65,17 +71,23 @@ export function FixedRatePreviewCallout(
       </div>
       <div className={reviewOrderGridRowClassName}>
         <div className={tw("col-span-2")}>{t`Total Base Tokens`}</div>
-        <div className={tw("text-right")}>{roundedBaseTokensIn}</div>
+        <div className={tw("text-right")}>{`${
+          showTilde ? "~" : ""
+        }${roundedBaseTokensIn}`}</div>
       </div>
       <div className={reviewOrderGridRowClassName}>
         <div className={tw("col-span-2")}>{t`Total Base Tokens Earned`}</div>
-        <div className={tw("text-right")}>{roundedTotalTokensEarned}</div>
+        <div className={tw("text-right")}>{`${
+          showTilde ? "~" : ""
+        }${roundedTotalTokensEarned}`}</div>
       </div>
       <div className={reviewOrderGridRowClassName}>
         <div
           className={tw("col-span-2")}
         >{t`Total Principal Tokens Receiving`}</div>
-        <div className={tw("text-right")}>{`${roundedPrincipalTokensOut}`}</div>
+        <div className={tw("text-right")}>{`${
+          showTilde ? "~" : ""
+        }${roundedPrincipalTokensOut}`}</div>
       </div>
     </Callout>
   );

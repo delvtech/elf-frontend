@@ -2,7 +2,6 @@ import { PrincipalTokenInfo, TokenInfo } from "@elementfi/tokenlist";
 import { Web3Provider } from "@ethersproject/providers";
 import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
 import { ZapSwapCurveAddress } from "elf/zaps/zapSwapCurve/addresses";
-import { createZapSwapCurveBuyInputs } from "elf/zaps/zapSwapCurve/createZapSwapCurveInputs";
 import React, { ReactElement, useCallback } from "react";
 import { t } from "ttag";
 import { useSigner } from "ui/provider/useBlockFromTag/useSigner/useSigner";
@@ -35,23 +34,17 @@ export function ZapTokensTransactionConfirmationDrawer({
   onClose,
 }: ZapTokensTransactionConfirmationDrawerProps): ReactElement {
   const signer = useSigner(account, library);
-
-  const zapInputsRaw = createZapSwapCurveBuyInputs(
-    principalToken,
-    inputToken,
-    amountIn,
-    account
-  );
-
-  const { zap: onConfirmZapTokens, mutationResult: zapResult } = useZapIn(
-    account,
-    signer,
-    zapInputsRaw
-  );
+  const {
+    zap: onConfirmZapTokens,
+    mutationResult: zapResult,
+    canZap,
+    amountOut,
+  } = useZapIn(account, signer, principalToken, inputToken, amountIn);
 
   const { isLoading, isError, isSuccess, reset, error } = zapResult;
 
   const inputAsset = getCryptoAssetForToken(inputToken.address);
+
   const walletApprovalInfos = useWalletApprovalInfos(
     inputAsset,
     account,
@@ -71,6 +64,7 @@ export function ZapTokensTransactionConfirmationDrawer({
       account={account}
       library={library}
       onConfirmTransaction={onConfirmZapTokens}
+      confirmButtonDisabled={!canZap}
       buttonLabel={buttonLabel}
       walletApprovalInfos={walletApprovalInfos}
       transactionPending={isLoading}
@@ -80,7 +74,8 @@ export function ZapTokensTransactionConfirmationDrawer({
       transactionDetails={
         <SwapDetailsForm
           amountIn={amountIn}
-          amountOut={estimatedAmountOut}
+          amountOut={amountOut ?? estimatedAmountOut}
+          amountOutLabel={t`To ~`}
           assetInSymbol={inputToken.symbol}
           assetOutSymbol={principalToken.symbol}
         ></SwapDetailsForm>

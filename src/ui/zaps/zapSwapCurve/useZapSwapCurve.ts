@@ -1,19 +1,27 @@
 import { ZapSwapCurve } from "@elementfi/core-typechain/dist/v1.1/ZapSwapCurve";
+import { PrincipalTokenInfo, TokenInfo } from "@elementfi/tokenlist";
+import { MainnetExtraAddresses } from "elf/zaps/zapSwapCurve/addresses";
 import { zapSwapCurveContract } from "elf/zaps/zapSwapCurve/contracts";
-import { ZapSwapCurveBuyInputs } from "elf/zaps/zapSwapCurve/createZapSwapCurveInputs";
+import { createZapSwapCurveBuyInputs } from "elf/zaps/zapSwapCurve/createZapSwapCurveInputs";
 import { serializeError } from "eth-rpc-errors";
 import { ContractReceipt, Signer } from "ethers";
+import { parseUnits } from "ethers/lib/utils";
 import { useCallback } from "react";
 import { UseMutationResult } from "react-query";
 import { AppToaster, makeErrorToast } from "ui/toaster/AppToaster/AppToaster";
 import { useSmartContractTransactionPersisted } from "ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
+import { useSimulateZapSwapCurveBuy } from "./useSimulateZapSwapCurveBuy";
 
 export function useZapIn(
   account: string | null | undefined,
   signer: Signer | undefined,
-  { info, baseZap, metaZap }: ZapSwapCurveBuyInputs,
+  principalToken: PrincipalTokenInfo,
+  inputToken: TokenInfo,
+  amountIn: string,
   onTransactionSubmitted?: () => void
 ): {
+  amountOut: string | undefined;
+  canZap: boolean;
   zap: () => void;
   mutationResult: UseMutationResult<
     ContractReceipt | undefined,
@@ -21,6 +29,15 @@ export function useZapIn(
     Parameters<ZapSwapCurve["zapIn"]>
   >;
 } {
+  const amountOut = useSimulateZapSwapCurveBuy(
+    principalToken,
+    inputToken,
+    account,
+    amountIn
+  );
+
+  console.log("AMOUNT OUT:", inputToken.symbol, amountOut);
+
   const mutationResult = useSmartContractTransactionPersisted(
     zapSwapCurveContract,
     "zapIn",
@@ -38,9 +55,49 @@ export function useZapIn(
 
   const { mutate: zap } = mutationResult;
 
-  const onZap = useCallback(() => {
-    zap([info, baseZap, metaZap, []]);
-  }, [zap, info, baseZap, metaZap]);
+  const canZap = !!amountOut && !!account;
 
-  return { zap: onZap, mutationResult };
+  const minAmountOut = parseUnits(
+    (+(amountOut ?? "0") - +(amountOut ?? "0") * 0.01).toString()
+  );
+
+  const onZap = useCallback(() => {
+    if (canZap) {
+      const { info, baseZap, metaZap } = createZapSwapCurveBuyInputs(
+        principalToken,
+        inputToken,
+        amountIn,
+        account!,
+        minAmountOut.toString()
+      );
+      zap([
+        info,
+        baseZap,
+        metaZap,
+        [],
+        {
+          value:
+            inputToken.address === MainnetExtraAddresses.ethAddress
+              ? amountIn
+              : "0",
+        },
+      ]);
+    }
+  }, [
+    zap,
+    amountIn,
+    account,
+    canZap,
+    inputToken,
+    principalToken,
+    amountOut,
+    minAmountOut,
+  ]);
+
+  return {
+    zap: onZap,
+    mutationResult,
+    canZap,
+    amountOut,
+  };
 }
