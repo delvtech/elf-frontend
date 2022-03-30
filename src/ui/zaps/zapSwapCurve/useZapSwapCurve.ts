@@ -36,8 +36,6 @@ export function useZapIn(
     amountIn
   );
 
-  console.log("AMOUNT OUT:", inputToken.symbol, amountOut);
-
   const mutationResult = useSmartContractTransactionPersisted(
     zapSwapCurveContract,
     "zapIn",
@@ -63,7 +61,7 @@ export function useZapIn(
 
   const onZap = useCallback(() => {
     if (canZap) {
-      const { info, baseZap, metaZap } = createZapSwapCurveBuyInputs(
+      const { info, baseZap, metaZap, value } = createZapSwapCurveBuyInputs(
         principalToken,
         inputToken,
         amountIn,
@@ -76,10 +74,7 @@ export function useZapIn(
         metaZap,
         [],
         {
-          value:
-            inputToken.address === MainnetExtraAddresses.ethAddress
-              ? amountIn
-              : "0",
+          value,
         },
       ]);
     }

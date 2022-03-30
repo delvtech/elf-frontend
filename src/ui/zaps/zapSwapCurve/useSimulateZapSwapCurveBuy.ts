@@ -1,6 +1,5 @@
 import { PrincipalTokenInfo, TokenInfo } from "@elementfi/tokenlist";
 import { ONE_MINUTE_IN_MILLISECONDS } from "base/time";
-import { MainnetExtraAddresses } from "elf/zaps/zapSwapCurve/addresses";
 import { zapSwapCurveContract } from "elf/zaps/zapSwapCurve/contracts";
 import { createZapSwapCurveBuyInputs } from "elf/zaps/zapSwapCurve/createZapSwapCurveInputs";
 import { formatUnits } from "ethers/lib/utils";
@@ -15,7 +14,7 @@ export function useSimulateZapSwapCurveBuy(
 ): string | undefined {
   const hasAllowance = useHasZapAllowance(account, inputToken, amountIn);
 
-  const { info, baseZap, metaZap } = createZapSwapCurveBuyInputs(
+  const { info, baseZap, metaZap, value } = createZapSwapCurveBuyInputs(
     principalToken,
     inputToken,
     amountIn,
@@ -30,13 +29,10 @@ export function useSimulateZapSwapCurveBuy(
       [],
       {
         from: account ? account : undefined,
-        value:
-          inputToken.address === MainnetExtraAddresses.ethAddress
-            ? amountIn
-            : "0",
+        value,
       },
     ],
-    enabled: hasAllowance,
+    enabled: hasAllowance && amountIn !== "0" && amountIn !== "",
     staleTime: ONE_MINUTE_IN_MILLISECONDS,
     select: formatUnits,
   });
