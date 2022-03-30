@@ -1,7 +1,7 @@
 import { CSSProperties, ReactElement } from "react";
 
 import Logo from "static/logos/svg/ELEMENT-super-light.svg?url";
-import { SvgIcon } from "ui/token/TokenIcon";
+import { SvgIcon } from "./SvgIcon";
 
 export interface IconProps {
   height: number;
