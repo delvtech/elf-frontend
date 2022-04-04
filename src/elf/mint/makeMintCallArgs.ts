@@ -12,7 +12,7 @@ export function makeMintCallArgs(
   baseAssetAddress: string,
   trancheUnlockTimestamp: number,
   positionAddress: string,
-  permitCallData: PermitCallData[]
+  permitCallData: PermitCallData[],
 ): StaticContractMethodArgs<UserProxy, "mint"> | undefined {
   if (
     !amount?.gt(0) ||
@@ -40,7 +40,7 @@ export function makeMintCallArgs(
 }
 function getMintOverrides(
   baseAssetAddress: string,
-  amount: BigNumber
+  amount: BigNumber,
 ): CallOverrides | undefined {
   // Don't send any eth in this transaction if the base asset is a different token.
   if (baseAssetAddress === USER_PROXY_ETH_SENTINEL) {

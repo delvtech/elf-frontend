@@ -8,11 +8,11 @@ import { useCurveLpTokenPrice } from "ui/curve/pools";
 
 export function useBaseTokenZapPrice(
   principalTokenInfo: PrincipalTokenInfo,
-  inputToken: TokenInfo
+  inputToken: TokenInfo,
 ): string {
   const path = useMemo(
     () => getZapSwapCurvePath(principalTokenInfo, inputToken),
-    [principalTokenInfo, inputToken]
+    [principalTokenInfo, inputToken],
   );
 
   const { data: price1 } = useCurveLpTokenPrice(
@@ -20,7 +20,7 @@ export function useBaseTokenZapPrice(
       ? path.metaToken
       : path.baseToken,
     path.curvePoolToken,
-    "1"
+    "1",
   );
 
   const { data: price2 } = useCurveLpTokenPrice(
@@ -28,7 +28,7 @@ export function useBaseTokenZapPrice(
     path.kind === ZapSwapCurvePathKind.DoubleStep
       ? path.metaToken
       : path.curvePoolToken,
-    path.kind === ZapSwapCurvePathKind.DoubleStep ? price1 : "1"
+    path.kind === ZapSwapCurvePathKind.DoubleStep ? price1 : "1",
   );
 
   const curvePoolTokenPricePerBaseUnit =

@@ -10,13 +10,13 @@ export type CurvePoolTokenInfo = TokenInfo & {
 };
 
 export function isCurveLpToken(
-  tokenInfo: TokenInfo
+  tokenInfo: TokenInfo,
 ): tokenInfo is CurveLpTokenInfo {
   return !!tokenInfo?.tags?.includes(TokenTag.CURVE);
 }
 
 export function getCurvePoolTokensByCurveLpToken(
-  tokenInfo: CurveLpTokenInfo
+  tokenInfo: CurveLpTokenInfo,
 ): TokenInfo[] {
   return tokenInfo.extensions.poolAssets.map(getTokenInfo);
 }
@@ -51,10 +51,10 @@ export function getCurvePoolTokensByCurveLpToken(
  * @returns array of tokenInfos
  * */
 export function getCurvePoolTokensByPrincipalToken(
-  principalTokenInfo: PrincipalTokenInfo
+  principalTokenInfo: PrincipalTokenInfo,
 ): TokenInfo[] {
   const underlyingTokenInfo = getTokenInfo(
-    principalTokenInfo.extensions.underlying
+    principalTokenInfo.extensions.underlying,
   );
 
   if (!isCurveLpToken(underlyingTokenInfo)) return [];

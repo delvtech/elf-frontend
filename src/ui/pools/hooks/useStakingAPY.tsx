@@ -7,14 +7,14 @@ import { PoolInfo } from "elf/pools/PoolInfo";
 export function useStakingAPY(
   poolInfo: PoolInfo,
   fromTime: number = ONE_WEEK_IN_SECONDS,
-  toTime?: number
+  toTime?: number,
 ): number {
   const nowMs = useNowMs();
   const totalLiquidity = useTotalFiatLiquidity(poolInfo);
   const feeVolumeOverTimePeriod = useFeeVolumeFiatForPool(
     poolInfo,
     fromTime,
-    toTime
+    toTime,
   );
 
   const nowInSeconds = nowMs / 1000;

@@ -69,7 +69,7 @@ function useToastOnMined() {
               target={"_blank"}
             >{t`View on etherscan`}</a>
           ),
-        })
+        }),
       );
 
       // Clear the pending tx after we've toasted about it.

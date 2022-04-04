@@ -53,7 +53,7 @@ export function UnstakeInput(props: UnstakeInputProps): ReactElement {
   const setMaxValue = useSetMaxValue(
     cryptoBalanceOf,
     cryptoDecimals,
-    onChangeFromProps
+    onChangeFromProps,
   );
   return (
     <div className={tw("flex", "flex-col", "space-y-2", "w-full")}>
@@ -74,7 +74,7 @@ export function UnstakeInput(props: UnstakeInputProps): ReactElement {
               "flex-col",
               "items-center",
               "justify-center",
-              "relative"
+              "relative",
             )}
           >
             <Button disabled={disabled} onClick={setMaxValue} large>
@@ -90,7 +90,7 @@ export function UnstakeInput(props: UnstakeInputProps): ReactElement {
               "flex-col",
               "items-center",
               "justify-center",
-              "relative"
+              "relative",
             )}
           >
             <div
@@ -101,13 +101,13 @@ export function UnstakeInput(props: UnstakeInputProps): ReactElement {
                 "flex",
                 "w-auto",
                 "p-1",
-                "space-x-2"
+                "space-x-2",
               )}
             >
               <span
                 className={classNames(
                   Classes.TEXT_MUTED,
-                  tw("text-xs", "whitespace-no-wrap")
+                  tw("text-xs", "whitespace-no-wrap"),
                 )}
               >
                 {cryptoSymbol}
@@ -129,7 +129,7 @@ export function UnstakeInput(props: UnstakeInputProps): ReactElement {
                 "flex",
                 "w-auto",
                 "p-1",
-                "space-x-2"
+                "space-x-2",
               )}
             >
               <span
@@ -137,7 +137,7 @@ export function UnstakeInput(props: UnstakeInputProps): ReactElement {
                   tw("text-xs", "whitespace-no-wrap", {
                     "text-danger": !validValue,
                   }),
-                  { [Classes.TEXT_MUTED]: validValue }
+                  { [Classes.TEXT_MUTED]: validValue },
                 )}
               >
                 {t`Balance: ${cryptoDisplayBalance}`}
@@ -152,7 +152,7 @@ export function UnstakeInput(props: UnstakeInputProps): ReactElement {
 
 function useOnInputChange(
   onChangeFromProps: (inputValue: string) => void,
-  cryptoDecimals: number | undefined
+  cryptoDecimals: number | undefined,
 ) {
   return useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -167,7 +167,7 @@ function useOnInputChange(
       // try to get safe value by handling edge cases and clipping decimals
       const safeValue = clipStringValueToDecimals(
         userInputValue,
-        cryptoDecimals || 18
+        cryptoDecimals || 18,
       );
 
       // if value is not undefiend, then check if it is valid.  if not, we want to ignore the user's
@@ -184,14 +184,14 @@ function useOnInputChange(
         return;
       }
     },
-    [cryptoDecimals, onChangeFromProps]
+    [cryptoDecimals, onChangeFromProps],
   );
 }
 
 function useSetMaxValue(
   tokenBalanceOf: BigNumber | undefined,
   tokenDecimals: number | undefined,
-  onChange: (value: string) => void
+  onChange: (value: string) => void,
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {

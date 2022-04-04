@@ -19,7 +19,7 @@ interface ViewTitleProps {
 const subtitleClassName = classNames(
   Classes.RUNNING_TEXT,
   Classes.TEXT_MUTED,
-  tw("text-base")
+  tw("text-base"),
 );
 
 export function ViewTitle({

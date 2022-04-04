@@ -57,7 +57,7 @@ export function BuyFixedRatesSwap({
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
   const baseAssetDisplayBalance = formatBalance(
     baseAssetBalanceOf,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
 
   const AssetIcon = findAssetIcon(baseAsset);
@@ -66,7 +66,7 @@ export function BuyFixedRatesSwap({
   const marketRateLabel = getMarketRateLabel(
     baseAssetSymbol,
     roundedPrincipalPrice,
-    baseAssetSymbol
+    baseAssetSymbol,
   );
 
   // Deposit Amount stuff
@@ -76,12 +76,12 @@ export function BuyFixedRatesSwap({
     library,
     account,
     principalTokenPoolInfo,
-    baseAssetInputValue
+    baseAssetInputValue,
   );
   const { amountOut: principalTokensOut, error: previewError } =
     useCalculatePrincipalTokenAmountOut(
       principalTokenPoolInfo,
-      baseAssetInputValue
+      baseAssetInputValue,
     );
 
   const inputErrorMessage = tokenInError || tokenOutError;
@@ -131,8 +131,8 @@ export function BuyFixedRatesSwap({
                 "text-xs",
                 "text-right",
                 "mb-2",
-                isDarkMode ? "text-red-500" : "text-red-700"
-              )
+                isDarkMode ? "text-red-500" : "text-red-700",
+              ),
             )}
           >
             {inputErrorMessage}
@@ -142,7 +142,7 @@ export function BuyFixedRatesSwap({
           <span
             className={classNames(
               Classes.TEXT_MUTED,
-              tw("text-xs", "text-right")
+              tw("text-xs", "text-right"),
             )}
           >
             {marketRateLabel}

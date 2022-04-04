@@ -109,7 +109,7 @@ export function LineChart(props: LineChartProps): ReactElement {
   const SliceTooltip = makeSliceTooltip(
     tooltipBackground,
     tooltipColor,
-    currency
+    currency,
   );
 
   const xScale: ScaleTimeSpec = useXScale(chartType, groupBarData, data);
@@ -179,7 +179,7 @@ function useXScale(chartType: string, groupVolumeData: boolean, data: Serie[]) {
     const midnightInMs = todayAtMidnight.getTime();
 
     const noonSixDaysAgo = new Date(
-      midnightInMs - ONE_WEEK_IN_MILLISECONDS + ONE_DAY_IN_MILLISECONDS / 2
+      midnightInMs - ONE_WEEK_IN_MILLISECONDS + ONE_DAY_IN_MILLISECONDS / 2,
     );
 
     const noonToday = new Date(midnightInMs + ONE_DAY_IN_MILLISECONDS / 2);
@@ -205,7 +205,7 @@ function useXScale(chartType: string, groupVolumeData: boolean, data: Serie[]) {
 // this allows for smooth transitions when data changes
 function useLoadChartData(data: Serie[]): [Serie[], (data: Serie[]) => void] {
   const [chartData, setChartData] = useState<Serie[]>(
-    data.map((serie) => ({ ...serie, data: [] }))
+    data.map((serie) => ({ ...serie, data: [] })),
   );
   useEffect(() => {
     const animation = setTimeout(() => {
@@ -224,7 +224,7 @@ function useLoadChartData(data: Serie[]): [Serie[], (data: Serie[]) => void] {
 function useClearDataWhenChartTypeChanges(
   setChartData: (data: Serie[]) => void,
   data: Serie[],
-  chartType: string
+  chartType: string,
 ) {
   useEffect(() => {
     setChartData(data.map((serie) => ({ ...serie, data: [] })));
@@ -263,7 +263,7 @@ function getTheme(textColor: string) {
 function makeSliceTooltip(
   tooltipBackground: string,
   tooltipColor: string,
-  currency: Currency
+  currency: Currency,
 ) {
   return function SliceTooltip({ slice }: SliceTooltipProps) {
     const value = slice.points[0].data.y as number;
@@ -290,10 +290,10 @@ function makeBarLayer(dataColor: string) {
       ?.map((datum) => {
         const timeStamp = (datum.x as Date).getTime();
         const xMin = xScale(
-          new Date(timeStamp - ONE_DAY_IN_MILLISECONDS / 2)
+          new Date(timeStamp - ONE_DAY_IN_MILLISECONDS / 2),
         ) as number;
         const xMax = xScale(
-          new Date(timeStamp + ONE_DAY_IN_MILLISECONDS / 2)
+          new Date(timeStamp + ONE_DAY_IN_MILLISECONDS / 2),
         ) as number;
         const yMin = yScale(0) as number;
         const yMax = yScale(datum.y as number) as number;
@@ -312,7 +312,7 @@ function makeBarLayer(dataColor: string) {
           true,
           true,
           false,
-          false
+          false,
         );
       })
       ?.filter(Boolean) as string[];
@@ -411,7 +411,7 @@ function roundedRect(
   tl: boolean,
   tr: boolean,
   bl: boolean,
-  br: boolean
+  br: boolean,
 ) {
   let retval;
   retval = `M${x + r},${y}`;

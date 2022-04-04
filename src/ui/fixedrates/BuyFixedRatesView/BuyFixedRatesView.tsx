@@ -83,7 +83,7 @@ export function BuyFixedRatesView({
   const baseAssetBalanceOf = useCryptoBalanceOf(library, account, baseAsset);
   const baseAssetDisplayBalance = formatBalance(
     baseAssetBalanceOf,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
 
   // Market price stuff
@@ -92,7 +92,7 @@ export function BuyFixedRatesView({
   const marketRateLabel = getMarketRateLabel(
     baseAssetSymbol,
     roundedPrincipalPrice,
-    baseAssetSymbol
+    baseAssetSymbol,
   );
 
   // Deposit Amount stuff
@@ -102,12 +102,12 @@ export function BuyFixedRatesView({
     library,
     account,
     principalTokenPoolInfo,
-    baseAssetInputValue
+    baseAssetInputValue,
   );
   const { amountOut: principalTokensOut, error: previewError } =
     useCalculatePrincipalTokenAmountOut(
       principalTokenPoolInfo,
-      baseAssetInputValue
+      baseAssetInputValue,
     );
 
   const inputErrorMessage = tokenInError || tokenOutError;
@@ -133,7 +133,7 @@ export function BuyFixedRatesView({
             "w-full",
             "space-x-5",
             "lg:px-16",
-            "lg:text-lg"
+            "lg:text-lg",
           )}
         >
           <Button
@@ -147,7 +147,7 @@ export function BuyFixedRatesView({
                   // transform is a weird property that requires casting in tw()
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   "transform" as any,
-                  "rotate-90"
+                  "rotate-90",
                 )}
               />
             }
@@ -172,7 +172,7 @@ export function BuyFixedRatesView({
             "px-6",
             "pb-24",
             "lg:py-10",
-            "lg:max-w-4xl"
+            "lg:max-w-4xl",
           )}
         >
           <Card className={tw("flex", "flex-col", "w-400", "p-6", "space-y-8")}>
@@ -186,7 +186,7 @@ export function BuyFixedRatesView({
                   background: isDarkMode ? "var(--bp3-dark-bg-color)" : "",
                 }}
                 className={classNames(
-                  tw("flex", "p-1", "border", "rounded", "border-gray-500")
+                  tw("flex", "p-1", "border", "rounded", "border-gray-500"),
                 )}
               >
                 <LabeledText
@@ -212,7 +212,7 @@ export function BuyFixedRatesView({
                   background: isDarkMode ? "var(--bp3-dark-bg-color)" : "",
                 }}
                 className={classNames(
-                  tw("flex", "p-1", "border", "rounded", "border-gray-500")
+                  tw("flex", "p-1", "border", "rounded", "border-gray-500"),
                 )}
               >
                 {availablePrincipalTokens.length > 1 ? (
@@ -241,7 +241,7 @@ export function BuyFixedRatesView({
                 <span
                   className={classNames(
                     Classes.TEXT_MUTED,
-                    tw("text-right", "mb-2")
+                    tw("text-right", "mb-2"),
                   )}
                 >{t`Balance: ${baseAssetDisplayBalance} ${baseAssetSymbol}`}</span>
               )}
@@ -273,8 +273,8 @@ export function BuyFixedRatesView({
                       "text-xs",
                       "text-right",
                       "mb-2",
-                      isDarkMode ? "text-red-500" : "text-red-700"
-                    )
+                      isDarkMode ? "text-red-500" : "text-red-700",
+                    ),
                   )}
                 >
                   {inputErrorMessage}
@@ -284,7 +284,7 @@ export function BuyFixedRatesView({
                 <span
                   className={classNames(
                     Classes.TEXT_MUTED,
-                    tw("text-xs", "text-right")
+                    tw("text-xs", "text-right"),
                   )}
                 >
                   {marketRateLabel}

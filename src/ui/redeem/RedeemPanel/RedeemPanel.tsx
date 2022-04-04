@@ -32,7 +32,7 @@ const calloutClassName = tw(
   "p-4",
   "m-8",
   "items-center",
-  "justify-center"
+  "justify-center",
 );
 
 interface RedeemPanelProps {
@@ -54,22 +54,22 @@ export function RedeemPanel(props: RedeemPanelProps): ReactElement {
   const { data: userProxyAllowanceBN } = useTokenAllowance(
     termAssetContract,
     account,
-    userProxyContractAddress
+    userProxyContractAddress,
   );
 
   const userProxyAllowance = formatUnits(
     userProxyAllowanceBN ?? 1,
-    termAssetInfo.decimals
+    termAssetInfo.decimals,
   );
 
   const termAssetBalance = useTokenBalanceUNSAFE(termAssetContract, account);
   const { data: termAssetBalanceBN = BigNumber.from(0) } = useTokenBalanceOf(
     termAssetContract,
-    account
+    account,
   );
   const hasRedeemableBalance = !isDust(
     termAssetBalanceBN,
-    termAssetInfo.decimals
+    termAssetInfo.decimals,
   );
 
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -93,7 +93,7 @@ export function RedeemPanel(props: RedeemPanelProps): ReactElement {
         "items-center",
         "py-2",
         "space-y-2",
-        "h-full"
+        "h-full",
       )}
     >
       <Callout className={calloutClassName}>

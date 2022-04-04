@@ -54,21 +54,21 @@ export function TransactionDrawer({
 
   const owners = walletApprovalInfos?.map(({ ownerAddress }) => ownerAddress);
   const spenders = walletApprovalInfos?.map(
-    ({ spenderAddress }) => spenderAddress
+    ({ spenderAddress }) => spenderAddress,
   );
   const walletApprovalContracts = walletApprovalInfos?.map(({ cryptoAsset }) =>
-    findTokenContract(cryptoAsset)
+    findTokenContract(cryptoAsset),
   );
   const approvalAllowances = useTokenAllowanceMulti(
     walletApprovalContracts as ERC20Shim[],
     owners,
-    spenders
+    spenders,
   );
 
   const confirmButtonLabel = getConfirmButtonLabel(
     buttonLabel,
     account,
-    transactionFailed
+    transactionFailed,
   );
 
   const confirmButtonDisabled =
@@ -77,12 +77,12 @@ export function TransactionDrawer({
       account,
       walletApprovalInfos,
       getQueriesData(approvalAllowances),
-      transactionPending
+      transactionPending,
     );
 
   const buttonIntent = getConfirmButtonIntent(
     transactionSuccess,
-    transactionFailed
+    transactionFailed,
   );
 
   const helperText = getHelperText(transactionSuccess, transactionError);
@@ -95,7 +95,7 @@ export function TransactionDrawer({
           "flex-col",
           "flex-1",
           "space-y-10",
-          "justify-end"
+          "justify-end",
         )}
       >
         {transactionDetails}
@@ -119,7 +119,7 @@ export function TransactionDrawer({
                 cryptoAsset={cryptoAsset}
               />
             );
-          }
+          },
         )}
 
         <div className={tw("flex", "flex-col", "space-y-2")}>
@@ -158,7 +158,7 @@ export function TransactionDrawer({
 
 function getConfirmButtonIntent(
   transactionSuccess: boolean,
-  transactionError: boolean
+  transactionError: boolean,
 ) {
   let buttonIntent: Intent = Intent.PRIMARY;
   if (transactionSuccess) {
@@ -172,7 +172,7 @@ function getConfirmButtonIntent(
 
 function getHelperText(
   transactionSuccess: boolean,
-  transactionError: Error | undefined
+  transactionError: Error | undefined,
 ) {
   if (transactionSuccess) {
     return `Transaction succeeded`;
@@ -185,7 +185,7 @@ function getHelperText(
     if ((serializedError?.data as any)?.code === errorCodes.rpc.internal) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const message = ((serializedError.data as any).message as string).split(
-        ":"
+        ":",
       );
       return t`Transaction failed: (${message[message.length - 1].trim()})`;
     }
@@ -197,7 +197,7 @@ function getHelperText(
 function getConfirmButtonLabel(
   label: string,
   account: string | null | undefined,
-  transactionError: boolean
+  transactionError: boolean,
 ) {
   if (!account) {
     return t`Connect your wallet to continue`;
@@ -213,7 +213,7 @@ function getConfirmButtonDisabled(
   account: string | null | undefined,
   walletApprovalInfos: WalletApprovalInfo[],
   allowances: (BigNumber | undefined)[],
-  transactionPending: boolean
+  transactionPending: boolean,
 ) {
   if (transactionPending) {
     return true;
@@ -233,7 +233,7 @@ function getConfirmButtonDisabled(
     const amount = parseUnits(
       // since amounts are passed as strings, this could be an empty string
       walletApprovalInfos[i].amount || "0",
-      getCryptoDecimals(walletApprovalInfos[i].cryptoAsset)
+      getCryptoDecimals(walletApprovalInfos[i].cryptoAsset),
     );
     return allowance?.gte(amount);
   });

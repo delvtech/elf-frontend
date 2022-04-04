@@ -5,7 +5,7 @@ export function useWhyDidYouUpdate(
   // has to be 'any' instead of 'unknown' otherwise you force the caller to cast the value.  not worth
   // it for this debug tool
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  props: Record<string, any>
+  props: Record<string, any>,
 ): void {
   // Get a mutable ref object where we can store props ...
   // ... for comparison next time this hook runs.

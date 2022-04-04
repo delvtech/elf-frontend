@@ -45,7 +45,7 @@ const defaultFormat: FixedFormat = {
 };
 export function getSafeFixedNumber(
   value: string,
-  formatOptions?: FixedFormatOptions
+  formatOptions?: FixedFormatOptions,
 ): FixedNumber {
   const format: FixedFormat = {
     ...defaultFormat,
@@ -60,7 +60,7 @@ export function getSafeFixedNumber(
 
 export function clipFixNumberToStringDecimals(
   value: FixedNumber,
-  decimals: number
+  decimals: number,
 ): string {
   const unsafeString = value.toString();
   const safeValue = clipStringValueToDecimals(unsafeString, decimals);
@@ -69,7 +69,7 @@ export function clipFixNumberToStringDecimals(
 
 export function clipStringValueToDecimals(
   value: string | undefined,
-  maxDecimals: number
+  maxDecimals: number,
 ): string {
   if (value === undefined) {
     return "";

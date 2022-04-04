@@ -8,7 +8,7 @@ import { Currency, Money } from "ts-money";
 export function useTokenHistoricalPrice<TContract extends ERC20>(
   contract: TContract | undefined,
   currency: Currency,
-  daysAgo: number
+  daysAgo: number,
 ): QueryObserverResult<Money> {
   const tokenSymbolResult = contract
     ? getTokenInfo(contract.address).symbol
@@ -16,7 +16,7 @@ export function useTokenHistoricalPrice<TContract extends ERC20>(
   const priceResult = useCoinGeckoHistoricalPrice(
     getCoinGeckoId(tokenSymbolResult),
     currency,
-    daysAgo
+    daysAgo,
   );
 
   return priceResult;

@@ -31,7 +31,7 @@ export function PrincipalTokenTermButtonLabel2({
 }: PrincipalTokenTermButtonLabel2Props): ReactElement {
   const nowMs = useNowMs();
   const principalTokenPool = getPoolInfoForPrincipalToken(
-    principalTokenInfo.address
+    principalTokenInfo.address,
   );
 
   const {
@@ -53,7 +53,7 @@ export function PrincipalTokenTermButtonLabel2({
 
   const fiatLiquidity = useTotalFiatLiquidity(principalTokenPool);
   const has200kLiquidity = !!fiatLiquidity?.greaterThan(
-    Money.fromDecimal(200000, Currencies.USD)
+    Money.fromDecimal(200000, Currencies.USD),
   );
   let apyLabel = t`✨ NEW ✨`;
   if (isPool24HoursOld || (!isPool24HoursOld && has200kLiquidity)) {
@@ -64,7 +64,7 @@ export function PrincipalTokenTermButtonLabel2({
     <div
       className={classNames(
         tw("flex", "h-full", "w-full", "justify-between", "items-center"),
-        className
+        className,
       )}
     >
       <div className={tw("flex", "flex-col", "space-y-1")}>

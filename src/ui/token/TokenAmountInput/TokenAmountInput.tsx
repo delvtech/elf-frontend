@@ -43,7 +43,7 @@ export function TokenAmountInput(props: TokenAmountInputProps): ReactElement {
   const setMaxValue = useSetMaxValue(
     maxAmount, // the max value
     tokenDecimals,
-    onChangeFromProps
+    onChangeFromProps,
   );
 
   const maxButtonElement = showMaxButton ? (
@@ -83,7 +83,7 @@ export function TokenAmountInput(props: TokenAmountInputProps): ReactElement {
 
 function useOnInputChange(
   onChange: (value: string) => void,
-  cryptoDecimals: number | undefined
+  cryptoDecimals: number | undefined,
 ) {
   return useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,14 +91,14 @@ function useOnInputChange(
       // checks for valid values before reporting to parent
       validateAndSetValue(userInputValue, onChange, cryptoDecimals);
     },
-    [onChange, cryptoDecimals]
+    [onChange, cryptoDecimals],
   );
 }
 
 function useSetMaxValue(
   tokenBalanceOf: BigNumber | undefined,
   tokenDecimals: number | undefined,
-  onChange: (value: string) => void
+  onChange: (value: string) => void,
 ) {
   return useCallback(() => {
     if (tokenBalanceOf) {
@@ -111,7 +111,7 @@ function useSetMaxValue(
 function validateAndSetValue(
   value: string,
   onChange: (value: string) => void,
-  cryptoDecimals: number | undefined
+  cryptoDecimals: number | undefined,
 ) {
   // allow user to clear input
   if (value === "" || value === undefined) {

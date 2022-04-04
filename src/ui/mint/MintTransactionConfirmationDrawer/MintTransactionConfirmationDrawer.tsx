@@ -98,7 +98,7 @@ export function MintTransactionConfirmationDrawer({
     amountIn,
     includePermits,
     onClose,
-    onError
+    onError,
   );
 
   const onCloseDrawer = useCallback(() => {
@@ -125,7 +125,7 @@ export function MintTransactionConfirmationDrawer({
     trancheInfo,
     yieldTokenInfo,
     baseAsset,
-    account
+    account,
   );
 
   const useApprovals = showPermitCallout && !includePermits;
@@ -133,7 +133,7 @@ export function MintTransactionConfirmationDrawer({
     baseAsset,
     account,
     amountIn,
-    useApprovals || showWalletApprovalCallout
+    useApprovals || showWalletApprovalCallout,
   );
 
   return (
@@ -193,7 +193,7 @@ function useShowCallouts(
   trancheInfo: TrancheInfo,
   yieldTokenInfo: YieldTokenInfo,
   baseAsset: CryptoAsset,
-  account: string | null | undefined
+  account: string | null | undefined,
 ) {
   const { balancerVaultAddress, userProxyContractAddress } = ContractAddresses;
   const baseAssetContract = underlyingContractsByAddress[
@@ -215,7 +215,7 @@ function useShowCallouts(
     yieldTokenContract,
     baseAssetDecimals,
     principalTokenDecimals,
-    yieldTokenDecimals
+    yieldTokenDecimals,
   );
 
   const {
@@ -226,7 +226,7 @@ function useShowCallouts(
   } = approvals;
 
   const baseAssetIsERC20Permit = isUnderlyingAddressERC20Permit(
-    baseAssetContract?.address
+    baseAssetContract?.address,
   );
 
   let showPermitCallout = false;
@@ -254,7 +254,7 @@ function useWalletApprovalInfos(
   tokenInAsset: CryptoAsset,
   account: string | null | undefined,
   amountIn: string,
-  useApprovals: boolean
+  useApprovals: boolean,
 ): WalletApprovalInfo[] {
   const { userProxyContractAddress } = ContractAddresses;
   const assetSymbol = getCryptoSymbol(tokenInAsset);

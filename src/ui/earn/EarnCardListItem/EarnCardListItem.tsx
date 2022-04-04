@@ -58,7 +58,7 @@ interface EarnCardListItemProps {
 }
 
 export function EarnCardListItem(
-  props: EarnCardListItemProps
+  props: EarnCardListItemProps,
 ): ReactElement | null {
   const {
     id,
@@ -80,7 +80,7 @@ export function EarnCardListItem(
   // get token infos
   const yieldPoolInfo = getPoolInfoForYieldToken(interestTokenAddress);
   const principalPoolInfo = getPoolInfoForPrincipalToken(
-    principalTokenInfo.address
+    principalTokenInfo.address,
   );
   const vaultTokenInfo = getVaultTokenInfoForTranche(principalTokenAddress);
   const yieldTokenInfo = getTokenInfo<YieldTokenInfo>(interestTokenAddress);
@@ -109,17 +109,17 @@ export function EarnCardListItem(
   // get dynamic pool information
   const principalPrice = usePoolSpotPrice(
     principalPoolContract,
-    principalTokenInfo.address
+    principalTokenInfo.address,
   )?.toFixed(4);
 
   const yieldPrice = usePoolSpotPrice(
     yieldPoolContract,
-    yieldTokenInfo.address
+    yieldTokenInfo.address,
   )?.toFixed(4);
 
   const tvl = useTotalValueLockedForTranche(
     principalTokenInfo,
-    baseAssetContract as unknown as ERC20
+    baseAssetContract as unknown as ERC20,
   );
   const vaultApy = apy ? getYearnVaultAPY(apy) : 0;
 
@@ -127,7 +127,7 @@ export function EarnCardListItem(
 
   const dayDifference = differenceInDays(
     maturityTime as number,
-    startTime as number
+    startTime as number,
   );
 
   const termLength =
@@ -159,7 +159,7 @@ export function EarnCardListItem(
           "flex",
           "flex-col",
           "p-4",
-          "space-y-2"
+          "space-y-2",
         )}
       >
         <div
@@ -179,7 +179,7 @@ export function EarnCardListItem(
         "flex",
         "flex-col",
         "p-6",
-        "space-y-2"
+        "space-y-2",
       )}
     >
       <EarnSummaryCardListItem
@@ -224,7 +224,7 @@ interface EarnActionsButtonsProps {
 }
 
 export function EarnActionsButtons(
-  props: EarnActionsButtonsProps
+  props: EarnActionsButtonsProps,
 ): ReactElement {
   const { unlockTimestamp, library, account, principalTokenInfo } = props;
   const signer = useSigner(account, library);

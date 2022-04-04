@@ -3,7 +3,7 @@ import { BigNumber } from "ethers";
 
 export async function fetchEthBalance(
   library: Web3Provider,
-  account: string
+  account: string,
 ): Promise<BigNumber> {
   return library.getBalance(account);
 }

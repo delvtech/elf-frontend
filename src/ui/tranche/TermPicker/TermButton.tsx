@@ -18,7 +18,7 @@ interface TrancheButtonProps {
   showCaret?: boolean;
   buttonLabelRenderer: (
     tranche: Tranche,
-    baseAsset: CryptoAsset
+    baseAsset: CryptoAsset,
   ) => JSX.Element;
 }
 
@@ -41,7 +41,7 @@ export function TermButton({
         Classes.BUTTON,
         Classes.FILL,
         Classes.MINIMAL,
-        tw("flex", "justify-start", "w-64", "h-full")
+        tw("flex", "justify-start", "w-64", "h-full"),
       )}
     >
       <div
@@ -51,7 +51,7 @@ export function TermButton({
           "items-center",
           "space-x-4",
           "flex-1",
-          "p-2"
+          "p-2",
         )}
       >
         {buttonLabelRenderer(tranche, baseAsset)}

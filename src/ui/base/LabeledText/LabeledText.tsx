@@ -61,7 +61,7 @@ export function LabeledText({
     <div
       className={classNames(
         tw("flex", { "items-center": containerItemsCenter }, "w-full"),
-        containerClassName
+        containerClassName,
       )}
     >
       {icon && <div className={iconClassName}>{icon}</div>}
@@ -69,7 +69,7 @@ export function LabeledText({
         <span
           className={classNames(
             tw({ "font-semibold": bold, "text-lg": large }),
-            textClassName
+            textClassName,
           )}
         >
           {text}
@@ -77,7 +77,7 @@ export function LabeledText({
         <span
           className={classNames(
             { [Classes.TEXT_MUTED]: muted },
-            labelClassName ? labelClassName : tw("text-sm")
+            labelClassName ? labelClassName : tw("text-sm"),
           )}
         >
           {label}

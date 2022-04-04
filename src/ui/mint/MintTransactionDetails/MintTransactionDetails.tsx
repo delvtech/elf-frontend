@@ -35,7 +35,7 @@ export function MintTransactionDetails({
         text={<span>{t`Principal Tokens you receive`}</span>}
         label={
           <span className={tw("text-base")}>{t`${numPrincipalTokens?.toFixed(
-            4
+            4,
           )} ${principalTokenSymbol}`}</span>
         }
       />

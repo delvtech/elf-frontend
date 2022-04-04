@@ -15,7 +15,7 @@ test("does not run when contract doesn't exist", async () => {
 
   const undefinedContract = undefined;
   const { result } = renderHookWithClient(queryClient, () =>
-    useSmartContractReadCall(undefinedContract, "name")
+    useSmartContractReadCall(undefinedContract, "name"),
   );
 
   // not called, no data
@@ -32,8 +32,8 @@ test("provides data from smart contract read methods", async () => {
     () =>
       useSmartContractReadCall(
         { callStatic: { name: mockNameFn } } as unknown as Contract,
-        "name"
-      )
+        "name",
+      ),
   );
 
   // called but hasn't resolved yet
@@ -62,8 +62,8 @@ test("passes arguments to smart contract read methods", async () => {
         "name",
         {
           callArgs: ["firstarg", "secondArg"],
-        }
-      )
+        },
+      ),
   );
 
   expect(result.current.data).toEqual(undefined);
@@ -96,9 +96,9 @@ test("properly handles enabled option", async () => {
         {
           callArgs: ["firstarg", "secondArg"],
           enabled,
-        }
+        },
       ),
-    { initialProps: { enabled: false } }
+    { initialProps: { enabled: false } },
   );
 
   expect(result.current.data).toEqual(undefined);

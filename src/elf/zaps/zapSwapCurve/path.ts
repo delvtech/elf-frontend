@@ -70,10 +70,10 @@ type ZapSwapCurvePath = ZapSwapCurvePathSingleStep | ZapSwapCurvePathDoubleStep;
  * */
 export function getZapSwapCurvePath(
   principalToken: PrincipalTokenInfo,
-  curvePoolToken: TokenInfo
+  curvePoolToken: TokenInfo,
 ): ZapSwapCurvePath {
   const baseToken = getTokenInfo<CurveLpTokenInfo>(
-    principalToken.extensions.underlying
+    principalToken.extensions.underlying,
   );
 
   const baseCurvePoolTokens = getCurvePoolTokensByCurveLpToken(baseToken);
@@ -95,7 +95,7 @@ export function getZapSwapCurvePath(
     .find((metaCurvePoolToken) =>
       getCurvePoolTokensByCurveLpToken(metaCurvePoolToken)
         .map(({ address }) => address)
-        .includes(curvePoolToken.address)
+        .includes(curvePoolToken.address),
     ) as CurveLpTokenInfo;
 
   return {

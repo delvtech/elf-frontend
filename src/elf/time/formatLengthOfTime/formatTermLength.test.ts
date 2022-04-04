@@ -20,12 +20,12 @@ test("should return round up days when appropriate", () => {
   const oneDayElevenHours = formatLengthOfTime(
     0,
     ONE_DAY_IN_MILLISECONDS +
-      (TWELVE_HOUR_IN_MILLISECONDS - ONE_HOUR_IN_MILLISECONDS)
+      (TWELVE_HOUR_IN_MILLISECONDS - ONE_HOUR_IN_MILLISECONDS),
   );
 
   const oneDayTwelveHours = formatLengthOfTime(
     0,
-    ONE_DAY_IN_MILLISECONDS + TWELVE_HOUR_IN_MILLISECONDS
+    ONE_DAY_IN_MILLISECONDS + TWELVE_HOUR_IN_MILLISECONDS,
   );
 
   expect(oneDayElevenHours).toEqual("1 Day");

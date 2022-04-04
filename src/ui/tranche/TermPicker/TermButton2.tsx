@@ -36,7 +36,7 @@ export function TermButton2({
         Classes.BUTTON,
         Classes.FILL,
         Classes.MINIMAL,
-        tw("flex", "justify-start", "w-64", "h-full")
+        tw("flex", "justify-start", "w-64", "h-full"),
       )}
     >
       <div
@@ -47,7 +47,7 @@ export function TermButton2({
           "space-x-4",
           "flex-1",
           "p-2",
-          isDarkMode ? "text-white" : "text-black"
+          isDarkMode ? "text-white" : "text-black",
         )}
       >
         {buttonLabelRenderer(principalTokenInfo)}

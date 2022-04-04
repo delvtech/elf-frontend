@@ -38,7 +38,7 @@ interface YieldPoolTableRowProps {
 }
 
 export function YieldPoolTableRow(
-  props: YieldPoolTableRowProps
+  props: YieldPoolTableRowProps,
 ): ReactElement | null {
   const {
     yieldPoolInfo,
@@ -78,7 +78,7 @@ export function YieldPoolTableRow(
   const dataToLoad = [liquidity, fees, stakingYield];
   // TODO: this is a big hammer for loading state.  we should use a more granular technique when we can.
   const allDataLoaded = dataToLoad.every(
-    (data): data is typeof data => data !== undefined
+    (data): data is typeof data => data !== undefined,
   );
 
   if (!allDataLoaded) {

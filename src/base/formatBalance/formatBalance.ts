@@ -15,7 +15,7 @@ export function formatBalance(
   balance: BigNumber | undefined,
   decimals: number | undefined,
   maxPrecision = 4,
-  options = defaultOptions
+  options = defaultOptions,
 ): string {
   if (!balance || !decimals) {
     return "0.0000";

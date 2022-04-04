@@ -31,7 +31,7 @@ export function LabeledProgressBar({
         "flex-col",
         "justify-center",
         "space-y-2",
-        "overflow-hidden"
+        "overflow-hidden",
       )}
     >
       <span>{label}</span>
