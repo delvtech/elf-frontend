@@ -15,40 +15,12 @@ import usdcIcon from "static/logos/svg/USDC.svg?url";
 import wethIcon from "static/logos/svg/WETH.svg?url";
 import wbtcIcon from "static/logos/svg/WBTC.svg?url";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
-
-interface SvgIconProps {
-  height: number;
-  width: number;
-  className: string | undefined;
-  style: CSSProperties | undefined;
-  alt: string;
-  src: string;
-}
+import { SvgIcon } from "ui/base/SvgIcon";
 
 /**
  * @deprecated, just use FC<IconProps>;
  */
 export type TokenIcon = FC<IconProps>;
-
-export function SvgIcon({
-  height,
-  width,
-  className = "",
-  style = {},
-  src,
-  alt,
-}: SvgIconProps): ReactElement {
-  return (
-    <img
-      alt={alt}
-      className={className}
-      style={style}
-      src={src}
-      height={height}
-      width={width}
-    />
-  );
-}
 
 export interface IconProps {
   height: number;
