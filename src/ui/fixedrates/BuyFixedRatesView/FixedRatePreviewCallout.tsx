@@ -14,7 +14,6 @@ interface FixedRatePreviewCalloutProps {
   principalTokensOut: string;
   baseAssetIn: string;
   baseAssetDecimals: number;
-  isApproximate?: boolean;
 }
 
 const reviewOrderGridRowClassName = tw(
@@ -36,7 +35,6 @@ export function FixedRatePreviewCallout(
   );
   const roundedTotalTokensEarned = commify((+totalTokensEarned)?.toFixed(4));
 
-  const roundedBaseTokensIn = commify((+baseAssetIn)?.toFixed(4));
   const percentYield = calculatePercentYield(
     baseAssetIn,
     totalTokensEarned,
@@ -44,11 +42,6 @@ export function FixedRatePreviewCallout(
   );
   const roundedPercentYield = commify((+percentYield)?.toFixed(2));
   const roundedPrincipalTokensOut = commify((+principalTokensOut)?.toFixed(4));
-
-  const showTilde =
-    !!props?.isApproximate &&
-    props.baseAssetIn !== "0" &&
-    props.baseAssetIn !== "";
   return (
     <Callout
       className={tw(
@@ -70,24 +63,12 @@ export function FixedRatePreviewCallout(
         <div className={tw("text-right")}>{`${roundedPercentYield}%`}</div>
       </div>
       <div className={reviewOrderGridRowClassName}>
-        <div className={tw("col-span-2")}>{t`Total Base Tokens`}</div>
-        <div className={tw("text-right")}>{`${
-          showTilde ? "~" : ""
-        }${roundedBaseTokensIn}`}</div>
+        <div className={tw("col-span-2")}>{t`Total Tokens Earned`}</div>
+        <div className={tw("text-right")}>{roundedTotalTokensEarned}</div>
       </div>
       <div className={reviewOrderGridRowClassName}>
-        <div className={tw("col-span-2")}>{t`Total Base Tokens Earned`}</div>
-        <div className={tw("text-right")}>{`${
-          showTilde ? "~" : ""
-        }${roundedTotalTokensEarned}`}</div>
-      </div>
-      <div className={reviewOrderGridRowClassName}>
-        <div
-          className={tw("col-span-2")}
-        >{t`Total Principal Tokens Receiving`}</div>
-        <div className={tw("text-right")}>{`${
-          showTilde ? "~" : ""
-        }${roundedPrincipalTokensOut}`}</div>
+        <div className={tw("col-span-2")}>{t`Total Tokens Receiving`}</div>
+        <div className={tw("text-right")}>{`${roundedPrincipalTokensOut}`}</div>
       </div>
     </Callout>
   );
