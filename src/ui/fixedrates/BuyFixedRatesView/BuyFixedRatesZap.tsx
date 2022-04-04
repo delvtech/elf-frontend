@@ -58,13 +58,14 @@ export function BuyFixedRatesZap({
   const marketRateLabelSwap = getMarketRateLabel(
     inputTokens[0].symbol,
     roundedPrincipalPriceSwap,
-    inputToken.symbol,
+    inputTokens[0].symbol,
   );
 
   const principalPriceZap = usePrincipalTokenZapPrice(
     principalToken,
     inputToken,
   );
+
   const roundedPrincipalPriceZap = commify((+principalPriceZap)?.toFixed(4));
   const marketRateLabelZap = getMarketRateLabel(
     inputTokens[0].symbol,
