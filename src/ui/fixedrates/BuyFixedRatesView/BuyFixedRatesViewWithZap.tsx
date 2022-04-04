@@ -133,6 +133,7 @@ export function BuyFixedRatesViewWithZap({
               <BuyFixedRatesZap
                 principalToken={principalTokenInfo}
                 inputToken={selectedInputToken}
+                inputTokens={inputTokenInfos}
               />
             )}
           </Card>

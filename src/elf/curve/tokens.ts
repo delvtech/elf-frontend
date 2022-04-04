@@ -5,6 +5,9 @@ import {
   TokenTag,
 } from "@elementfi/tokenlist";
 import { getTokenInfo } from "tokenlists/tokenlists";
+export type CurvePoolTokenInfo = TokenInfo & {
+  readonly CurvePoolToken: unique symbol;
+};
 
 export function isCurveLpToken(
   tokenInfo: TokenInfo,
@@ -12,19 +15,56 @@ export function isCurveLpToken(
   return !!tokenInfo?.tags?.includes(TokenTag.CURVE);
 }
 
-export function getCurvePoolTokensByPrincipalToken(
-  tokenInfo: PrincipalTokenInfo,
+export function getCurvePoolTokensByCurveLpToken(
+  tokenInfo: CurveLpTokenInfo,
 ): TokenInfo[] {
-  const underlyingTokenInfo = getTokenInfo(tokenInfo.extensions.underlying);
+  return tokenInfo.extensions.poolAssets.map(getTokenInfo);
+}
+
+/**
+ *
+ * Returns the constituent tokenInfos of the tokens which are members of curve
+ * pools related to the underlying principal token address.
+ *
+ * Visually the hierarchy of principalToken - curvePoolToken relationship
+ * follows three general cases:
+ *
+ *
+ *
+ * 1) CurveLpTokenA :: STECRV
+ *      - CurvePoolTokenA :: ETH
+ *      - CurvePoolTokenB :: STETH
+ *
+ * 2) CurveLpTokenA :: CRVTRICRYPTO
+ *      - CurvePoolTokenA :: USDT
+ *      - CurvePoolTokenB :: WBTC
+ *      - CurvePoolTokenC :: ETH
+ *
+ * 3) CurveLpTokenA :: MIM-3LP
+ *      - CurvePoolTokenA :: MIM
+ *      - CurveLpTokenB   :: 3CRV
+ *          - CurvePoolTokenB :: DAI
+ *          - CurvePoolTokenC :: USDC
+ *          - CurvePoolTokenD :: USDT
+ *
+ * @param principalTokenInfo - The principal token
+ * @returns array of tokenInfos
+ * */
+export function getCurvePoolTokensByPrincipalToken(
+  principalTokenInfo: PrincipalTokenInfo,
+): TokenInfo[] {
+  const underlyingTokenInfo = getTokenInfo(
+    principalTokenInfo.extensions.underlying,
+  );
 
   if (!isCurveLpToken(underlyingTokenInfo)) return [];
 
   const baseCurvePoolTokens =
-    underlyingTokenInfo.extensions.poolAssets.map(getTokenInfo);
+    getCurvePoolTokensByCurveLpToken(underlyingTokenInfo);
 
   const metaCurvePoolTokens = baseCurvePoolTokens
     .filter(isCurveLpToken)
-    .map((token) => token.extensions.poolAssets.map(getTokenInfo))
+    .map(getCurvePoolTokensByCurveLpToken)
     .flat();
 
   return [...baseCurvePoolTokens, ...metaCurvePoolTokens];
