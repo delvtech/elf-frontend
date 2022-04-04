@@ -5,11 +5,7 @@
       "last 1 firefox version",
       "last 1 safari version"
     ],
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ]
+    "production": [">0.2%", "not dead", "not op_mini all"]
   },
   "dependencies": {
     "@alch/alchemy-web3": "^1.1.9",
@@ -18,7 +14,7 @@
     "@blueprintjs/popover2": "^0.12.8",
     "@blueprintjs/select": "^3.18.11",
     "@elementfi/core-typechain": "^2.0.6",
-    "@elementfi/tokenlist": "^2.3.1",
+    "@elementfi/tokenlist": "^2.4.0",
     "@ethersproject/abi": "^5.5.0",
     "@ethersproject/abstract-signer": "^5.4.1",
     "@ethersproject/bytes": "^5.5.0",
@@ -139,9 +135,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "prettier --write"
-    ]
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": ["prettier --write"]
   },
   "name": "elf-frontend",
   "private": true,
