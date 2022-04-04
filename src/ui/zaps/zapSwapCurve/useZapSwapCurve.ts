@@ -1,6 +1,5 @@
 import { ZapSwapCurve } from "@elementfi/core-typechain/dist/v1.1/ZapSwapCurve";
 import { PrincipalTokenInfo, TokenInfo } from "@elementfi/tokenlist";
-import { MainnetExtraAddresses } from "elf/zaps/zapSwapCurve/addresses";
 import { zapSwapCurveContract } from "elf/zaps/zapSwapCurve/contracts";
 import { createZapSwapCurveBuyInputs } from "elf/zaps/zapSwapCurve/createZapSwapCurveInputs";
 import { serializeError } from "eth-rpc-errors";
@@ -85,7 +84,6 @@ export function useZapIn(
     canZap,
     inputToken,
     principalToken,
-    amountOut,
     minAmountOut,
   ]);
 
