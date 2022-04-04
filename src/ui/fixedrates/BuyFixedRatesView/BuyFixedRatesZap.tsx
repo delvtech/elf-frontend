@@ -22,7 +22,7 @@ import { useEstimateBaseTokensByZap } from "ui/zaps/zapSwapCurve/useEstimateBase
 import { usePrincipalTokenZapPrice } from "ui/zaps/zapSwapCurve/usePrincipalTokenZapPrice";
 import { useValidateBuyPrincipalTokenInputByZap } from "ui/zaps/zapSwapCurve/useValidateBuyPrincipalTokenInputByZap";
 import { ZapTokensTransactionConfirmationDrawer } from "ui/zaps/zapSwapCurve/ZapTokensTransactionConfirmationDrawer";
-import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
+import { FixedRateZapPreviewCallout } from "./FixedRateZapPreviewCallout";
 
 interface BuyFixedRatesSwapProps {
   principalToken: PrincipalTokenInfo;
@@ -61,6 +61,8 @@ export function BuyFixedRatesZap({
     inputTokens[0].symbol,
   );
 
+  const baseToken = getTokenInfo(principalToken.extensions.underlying);
+
   const principalPriceZap = usePrincipalTokenZapPrice(
     principalToken,
     inputToken,
@@ -68,7 +70,7 @@ export function BuyFixedRatesZap({
 
   const roundedPrincipalPriceZap = commify((+principalPriceZap)?.toFixed(4));
   const marketRateLabelZap = getMarketRateLabel(
-    inputTokens[0].symbol,
+    baseToken.symbol,
     roundedPrincipalPriceZap,
     inputToken.symbol,
   );
@@ -84,7 +86,6 @@ export function BuyFixedRatesZap({
 
   const poolInfo = getPoolInfoForPrincipalToken(principalToken.address);
 
-  const baseToken = getTokenInfo(principalToken.extensions.underlying);
   const baseAmountIn = useEstimateBaseTokensByZap(
     principalToken,
     inputToken,
@@ -169,12 +170,16 @@ export function BuyFixedRatesZap({
         )}
       </div>
       <div className={tw("flex", "flex-col", "space-y-3")}>
-        <span className={tw("text-base", "text-left")}>{t`Review Order`}</span>
-        <FixedRatePreviewCallout
-          principalTokensOut={principalTokensOut}
-          baseAssetIn={baseAmountIn}
-          baseAssetDecimals={baseToken.decimals}
-          isApproximate={true}
+        <span
+          className={tw("text-base", "text-left")}
+        >{t`Review Order (Estimated)`}</span>
+        <FixedRateZapPreviewCallout
+          principalToken={principalToken}
+          inputToken={inputToken}
+          baseToken={baseToken}
+          principalTokenAmountOut={principalTokensOut}
+          inputTokenAmountIn={inputTokenValue}
+          baseTokenAmountIn={baseAmountIn}
         />
       </div>
 
