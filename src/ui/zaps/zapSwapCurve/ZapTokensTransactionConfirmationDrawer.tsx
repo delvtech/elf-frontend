@@ -49,7 +49,7 @@ export function ZapTokensTransactionConfirmationDrawer({
     inputAsset,
     account,
     amountIn,
-    ZapSwapCurveAddress
+    ZapSwapCurveAddress,
   );
 
   const resetSwap = useCallback(() => {

@@ -13,7 +13,7 @@ import { useTokenAllowance } from "ui/token/hooks/useTokenAllowance";
 export function useHasZapAllowance(
   account: string | null | undefined,
   inputToken: TokenInfo,
-  amountIn: string
+  amountIn: string,
 ): boolean {
   const inputAsset = getCryptoAssetForToken(inputToken.address);
 

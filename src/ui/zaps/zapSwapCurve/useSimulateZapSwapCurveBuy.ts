@@ -10,7 +10,7 @@ export function useSimulateZapSwapCurveBuy(
   principalToken: PrincipalTokenInfo,
   inputToken: TokenInfo,
   account: string | null | undefined,
-  amountIn: string
+  amountIn: string,
 ): string | undefined {
   const hasAllowance = useHasZapAllowance(account, inputToken, amountIn);
 
@@ -18,7 +18,7 @@ export function useSimulateZapSwapCurveBuy(
     principalToken,
     inputToken,
     amountIn,
-    account
+    account,
   );
 
   const result = useSmartContractReadCall(zapSwapCurveContract, "zapIn", {

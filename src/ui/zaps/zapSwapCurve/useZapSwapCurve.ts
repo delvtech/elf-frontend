@@ -18,7 +18,7 @@ export function useZapIn(
   principalToken: PrincipalTokenInfo,
   inputToken: TokenInfo,
   amountIn: string,
-  onTransactionSubmitted?: () => void
+  onTransactionSubmitted?: () => void,
 ): {
   amountOut: string | undefined;
   canZap: boolean;
@@ -33,7 +33,7 @@ export function useZapIn(
     principalToken,
     inputToken,
     account,
-    amountIn
+    amountIn,
   );
 
   const mutationResult = useSmartContractTransactionPersisted(
@@ -48,7 +48,7 @@ export function useZapIn(
         const serializedError = serializeError(error);
         AppToaster?.show(makeErrorToast(serializedError.message));
       },
-    }
+    },
   );
 
   const { mutate: zap } = mutationResult;
@@ -56,7 +56,7 @@ export function useZapIn(
   const canZap = !!amountOut && !!account;
 
   const minAmountOut = parseUnits(
-    (+(amountOut ?? "0") - +(amountOut ?? "0") * 0.01).toString()
+    (+(amountOut ?? "0") - +(amountOut ?? "0") * 0.01).toString(),
   );
 
   const onZap = useCallback(() => {
@@ -66,7 +66,7 @@ export function useZapIn(
         inputToken,
         amountIn,
         account!,
-        minAmountOut.toString()
+        minAmountOut.toString(),
       );
       zap([
         info,
