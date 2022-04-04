@@ -2,7 +2,7 @@ import { PrincipalTokenInfo, YieldTokenInfo } from "@elementfi/tokenlist";
 import { getTokenInfo } from "tokenlists/tokenlists";
 
 export function getPrincipalTokenForYieldToken(
-  interestTokenAddress: string
+  interestTokenAddress: string,
 ): PrincipalTokenInfo {
   const {
     extensions: { tranche },

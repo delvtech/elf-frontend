@@ -63,7 +63,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
             "flex-col",
             "h-full",
             "space-y-4",
-            "justify-between"
+            "justify-between",
           )}
         >
           {/* Total Value Locked */}
@@ -71,7 +71,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
             <span
               className={classNames(
                 Classes.TEXT_MUTED,
-                tw("text-sm", "lg:truncate")
+                tw("text-sm", "lg:truncate"),
               )}
             >{t`Total Value Locked`}</span>
             <div className={classNames("h5", tw("space-x-4", "lg:truncate"))}>
@@ -85,7 +85,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
               <span
                 className={classNames(
                   Classes.TEXT_MUTED,
-                  tw("text-sm", "lg:truncate")
+                  tw("text-sm", "lg:truncate"),
                 )}
               >{t`Underlying Vault`}</span>
               <div className={classNames("h5", tw("space-x-4", "lg:truncate"))}>
@@ -100,7 +100,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
               <span
                 className={classNames(
                   Classes.TEXT_MUTED,
-                  tw("text-sm", "lg:truncate")
+                  tw("text-sm", "lg:truncate"),
                 )}
               >{t`Vault APY`}</span>
               <div className={classNames("h5", tw("space-x-4", "lg:truncate"))}>
@@ -117,7 +117,7 @@ export function TermSummary(props: TermSummaryProps): ReactElement {
             "justify-between",
             "overflow-hidden",
             "truncate",
-            "xl:ml-4"
+            "xl:ml-4",
           )}
         >
           {/* Start Date */}

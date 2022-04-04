@@ -49,7 +49,7 @@ export function BuyFixedRatesViewWithZap({
   // the underlyingTokenInfo + other input tokens
   const inputTokenInfos = getFixedRateInputTokens(principalTokenInfo);
   const [selectedInputToken, setSelectedInputToken] = useState<TokenInfo>(
-    inputTokenInfos[0]
+    inputTokenInfos[0],
   );
 
   const buyFixedRatesKind =
@@ -71,7 +71,7 @@ export function BuyFixedRatesViewWithZap({
             "w-full",
             "space-x-5",
             "lg:px-16",
-            "lg:text-lg"
+            "lg:text-lg",
           )}
         >
           <Button
@@ -85,7 +85,7 @@ export function BuyFixedRatesViewWithZap({
                   // transform is a weird property that requires casting in tw()
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   "transform" as any,
-                  "rotate-90"
+                  "rotate-90",
                 )}
               />
             }
@@ -110,7 +110,7 @@ export function BuyFixedRatesViewWithZap({
             "px-6",
             "pb-24",
             "lg:py-10",
-            "lg:max-w-4xl"
+            "lg:max-w-4xl",
           )}
         >
           <Card className={tw("flex", "flex-col", "w-400", "p-6", "space-y-8")}>

@@ -55,14 +55,14 @@ export function RedeemForm({
 }: RedeemFormProps): ReactElement {
   const { isDarkMode } = useDarkMode();
   const { symbol: assetSymbol } = getTokenInfo<PrincipalTokenInfo>(
-    tranche.address
+    tranche.address,
   );
   const assetSymbolLabel = assetSymbolFromProps || assetSymbol;
   const onAssetOneAmountChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       onAmountChange?.(event.target.value);
     },
-    [onAmountChange]
+    [onAmountChange],
   );
 
   return (

@@ -20,12 +20,12 @@ export function useValidateBuyPrincipalTokenInputByZap(
   account: string | null | undefined,
   principalToken: PrincipalTokenInfo,
   inputToken: TokenInfo,
-  amountIn: string
+  amountIn: string,
 ): TradeValuesValidationResult {
   const baseAssetAmountIn = useEstimateBaseTokensByZap(
     principalToken,
     inputToken,
-    amountIn
+    amountIn,
   );
 
   const poolInfo = getPoolInfoForPrincipalToken(principalToken.address);
@@ -42,7 +42,7 @@ export function useValidateBuyPrincipalTokenInputByZap(
 
   const { decimals: inputAssetDecimals } = getTokenInfo(inputToken.address);
   const { decimals: baseAssetDecimals } = getTokenInfo(
-    principalToken.extensions.underlying
+    principalToken.extensions.underlying,
   );
 
   const { data: [, balances] = [] } = usePoolTokens(poolContract);
@@ -59,7 +59,7 @@ export function useValidateBuyPrincipalTokenInputByZap(
     principalReservesBalanceOf,
     inputAssetBalanceOf,
     inputAssetDecimals,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
 
   return {

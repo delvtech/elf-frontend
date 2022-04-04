@@ -23,7 +23,7 @@ const lusdContract = ERC20Permit__factory.connect(lusdAddress, defaultProvider);
 const usdtContract = ERC20__factory.connect(usdtAddress, defaultProvider);
 const threeCrvContract = ERC20__factory.connect(
   threeCrvAddress,
-  defaultProvider
+  defaultProvider,
 );
 const alUsdContract = ERC20__factory.connect(alUsdAddress, defaultProvider);
 const mimContract = ERC20__factory.connect(mimAddress, defaultProvider);
@@ -43,5 +43,5 @@ export const MainnetZapContractsByAddress = Object.freeze({
 });
 export const zapSwapCurveContract = ZapSwapCurve__factory.connect(
   ZapSwapCurveAddress,
-  defaultProvider
+  defaultProvider,
 );

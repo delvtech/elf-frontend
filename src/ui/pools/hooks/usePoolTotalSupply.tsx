@@ -4,7 +4,7 @@ import { BigNumber } from "ethers";
 import { QueryObserverResult } from "react-query";
 
 export function usePoolTotalSupply(
-  poolContract: PoolContract
+  poolContract: PoolContract,
 ): QueryObserverResult<BigNumber> {
   return useSmartContractReadCall(poolContract, "totalSupply");
 }

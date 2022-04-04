@@ -36,7 +36,7 @@ export function TermPicker2({
     (principalToken: PrincipalTokenInfo) => {
       navigate(`/${Navigation.FIXED_RATES}/${principalToken.address}`);
     },
-    [navigate]
+    [navigate],
   );
 
   const itemRenderer: ItemRenderer<PrincipalTokenInfo> = useCallback(
@@ -50,7 +50,7 @@ export function TermPicker2({
         onClick={handleClick}
       />
     ),
-    [account, buttonLabelRenderer]
+    [account, buttonLabelRenderer],
   );
 
   const hasZeroOrOneTranche = principalTokenInfos.length < 2;

@@ -22,7 +22,7 @@ const GOERLI_STUB_VIRTUAL_PRICE = {
 
 export function useCurveStablecoinPoolVirtualPrice(
   stablePoolContract: CRVLUSD | undefined,
-  decimals: number
+  decimals: number,
 ): QueryObserverResult<Money> {
   const { currency } = useCurrencyPref();
 
@@ -38,9 +38,9 @@ export function useCurveStablecoinPoolVirtualPrice(
           const price = +formatBalance(virtualPriceBigNumber, decimals);
           return Money.fromDecimal(price, currency, Math.round);
         },
-        [currency, decimals]
+        [currency, decimals],
       ),
-    }
+    },
   );
 
   if (isGoerli(AddressesJson.chainId)) {

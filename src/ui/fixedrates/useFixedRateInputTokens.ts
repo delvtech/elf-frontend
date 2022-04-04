@@ -4,14 +4,14 @@ import { useMemo } from "react";
 import { getTokenInfo } from "tokenlists/tokenlists";
 
 export function useFixedRateInputTokens(
-  principalTokenInfo: PrincipalTokenInfo
+  principalTokenInfo: PrincipalTokenInfo,
 ): TokenInfo[] {
   const underlyingTokenInfo = getTokenInfo(
-    principalTokenInfo.extensions.underlying
+    principalTokenInfo.extensions.underlying,
   );
   const curvePoolTokenInfos = useMemo(
     () => getCurvePoolTokensByPrincipalToken(principalTokenInfo),
-    [principalTokenInfo]
+    [principalTokenInfo],
   );
   return [underlyingTokenInfo, ...curvePoolTokenInfos];
 }

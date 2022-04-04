@@ -24,7 +24,7 @@ interface EarnExpandedSummaryProps {
 }
 
 export function EarnExpandedSummary(
-  props: EarnExpandedSummaryProps
+  props: EarnExpandedSummaryProps,
 ): JSX.Element {
   const { yieldPoolInfo, principalPoolInfo, yieldPrice, principalPrice } =
     props;

@@ -14,7 +14,7 @@ export function calculateLPOutGivenIn(
   yReserves: string,
   xReserves: string,
   totalSupply: string, // lp tokens, always 18 point decimal
-  tokenDecimals: number
+  tokenDecimals: number,
 ): LPOutGivenTokenIn {
   const _yIn = getSafeFixedNumber(yIn);
   const _xReserves = getSafeFixedNumber(xReserves);
@@ -40,12 +40,12 @@ export function calculateLPOutGivenIn(
 
   const otherNeeded = clipFixNumberToStringDecimals(
     _otherNeeded,
-    tokenDecimals
+    tokenDecimals,
   );
 
   const givenInNeeded = clipFixNumberToStringDecimals(
     _givenInNeeded,
-    tokenDecimals
+    tokenDecimals,
   );
   const lpOut = _lpOut.toString();
 

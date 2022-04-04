@@ -62,9 +62,9 @@ export function WalletDrawer({
           {
             "text-gray-700": !isDarkMode,
             "text-white": isDarkMode,
-          }
+          },
         ),
-        className
+        className,
       )}
     >
       <div className={tw("flex", "flex-1", "flex-col", "justify-between")}>

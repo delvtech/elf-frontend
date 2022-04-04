@@ -10,7 +10,7 @@ export function useMarketPrice(principalTokenInfo: PrincipalTokenInfo): string {
     extensions: { underlying },
   } = principalTokenInfo;
   const poolContract = getPrincipalPoolContractForTranche(
-    principalTokenAddress
+    principalTokenAddress,
   );
   const underlyingPoolTokenContract = underlyingContractsByAddress[
     underlying

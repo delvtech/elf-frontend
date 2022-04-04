@@ -41,7 +41,7 @@ export function useCrv3CryptoPrice({
   // tricrypto is made up of usdt, eth, and wbtc so we get a price in usdt
   const { data: usdtPrice } = useCoinGeckoPrice(
     getCoinGeckoId("usdt"),
-    currency
+    currency,
   );
 
   const calcWithdrawOneCoinResult = useSmartContractReadCall(
@@ -58,9 +58,9 @@ export function useCrv3CryptoPrice({
             +(usdtPrice as Money).toString();
           return Money.fromDecimal(price, currency, Math.round);
         },
-        [currency, usdtPrice]
+        [currency, usdtPrice],
       ),
-    }
+    },
   );
 
   if (isGoerli(AddressesJson.chainId)) {
@@ -77,7 +77,7 @@ export function useTriCryptoPrice({
   // tricrypto is made up of usdt, eth, and wbtc so we get a price in usdt
   const { data: usdtPrice } = useCoinGeckoPrice(
     getCoinGeckoId("usdt"),
-    currency
+    currency,
   );
 
   const calcWithdrawOneCoinResult = useSmartContractReadCall(
@@ -94,9 +94,9 @@ export function useTriCryptoPrice({
             +(usdtPrice as Money).toString();
           return Money.fromDecimal(price, currency, Math.round);
         },
-        [currency, usdtPrice]
+        [currency, usdtPrice],
       ),
-    }
+    },
   );
 
   if (isGoerli(AddressesJson.chainId)) {
@@ -127,9 +127,9 @@ export function useSteCrvPrice({
             +(ethPrice as Money).toString();
           return Money.fromDecimal(price, currency.code, Math.round);
         },
-        [currency.code, ethPrice]
+        [currency.code, ethPrice],
       ),
-    }
+    },
   );
 
   if (isGoerli(AddressesJson.chainId)) {
@@ -146,14 +146,14 @@ type CurveAmountArrayParam =
 function buildCurveAmountArrayParam(
   curveLpToken: CurveLpTokenInfo,
   token: TokenInfo,
-  amount: string
+  amount: string,
 ): CurveAmountArrayParam {
   const tokenIdxInPool = curveLpToken.extensions.poolAssets.findIndex(
-    (address) => address === token.address
+    (address) => address === token.address,
   );
   const amountInputLength = curveLpToken.extensions.poolAssets.length as 2 | 3;
   const amountInput = new Array(amountInputLength).fill(
-    0
+    0,
   ) as CurveAmountArrayParam;
   amountInput[tokenIdxInPool] = parseUnits(amount, token.decimals);
   return amountInput;
@@ -162,7 +162,7 @@ function buildCurveAmountArrayParam(
 export function useCurveLpTokenPrice(
   curveLpToken: CurveLpTokenInfo,
   token: TokenInfo,
-  amount: string | undefined
+  amount: string | undefined,
 ): QueryObserverResult<string> {
   const curvePoolContract = getCurvePoolContract(curveLpToken);
   const amountInput = !!amount
@@ -179,7 +179,7 @@ export function useCurveLpTokenPrice(
       enabled: !!amountInput,
       select: (lpAmount) =>
         ethers.utils.formatUnits(lpAmount, curveLpToken.decimals),
-    }
+    },
   );
 
   return price;

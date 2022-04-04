@@ -9,7 +9,7 @@ import { PoolInfo } from "elf/pools/PoolInfo";
 import { useAccumulatedInterestForTranche } from "./useAccumulatedInterestForTranche";
 
 export function useAccumulatedFiatInterestForTranche(
-  poolInfo: PoolInfo
+  poolInfo: PoolInfo,
 ): Money | undefined {
   const { currency } = useCurrencyPref();
   const {
@@ -25,7 +25,7 @@ export function useAccumulatedFiatInterestForTranche(
     accumulatedInterestFiat = convertToFiatBalance(
       baseAssetPrice,
       accumulatedInterest,
-      baseAssetDecimals
+      baseAssetDecimals,
     );
   }
 

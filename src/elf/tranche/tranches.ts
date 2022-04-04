@@ -18,26 +18,26 @@ import { vaultContractsByAddress } from "elf/tranche/vaults";
 import keyBy from "lodash.keyby";
 
 export function isPrincipalToken(
-  tokenInfo: TokenInfo
+  tokenInfo: TokenInfo,
 ): tokenInfo is PrincipalTokenInfo {
   return !!tokenInfo?.tags?.includes(TokenTag.PRINCIPAL);
 }
 
 export const principalTokenInfos: PrincipalTokenInfo[] =
   tokenListJson.tokens.filter((tokenInfo): tokenInfo is PrincipalTokenInfo =>
-    isPrincipalToken(tokenInfo)
+    isPrincipalToken(tokenInfo),
   );
 
 export const getAllPrincipalTokenAddresses = (): string[] =>
   principalTokenInfos.map(({ address }) => address);
 
 export const trancheContracts = principalTokenInfos.map(({ address }) =>
-  Tranche__factory.connect(address, defaultProvider)
+  Tranche__factory.connect(address, defaultProvider),
 );
 
 export const trancheContractsByAddress = keyBy(
   trancheContracts,
-  (tranche) => tranche.address
+  (tranche) => tranche.address,
 );
 
 export function getVaultContractForTranche(trancheAddress: string): TestYVault {
@@ -55,7 +55,7 @@ export function getVaultContractForTranche(trancheAddress: string): TestYVault {
 }
 
 export function getVaultTokenInfoForTranche(
-  trancheAddress: string
+  trancheAddress: string,
 ): VaultTokenInfo {
   const {
     extensions: { position },
@@ -71,7 +71,7 @@ export function getVaultTokenInfoForTranche(
 }
 
 export function getYieldTokenForPrincipalToken(
-  principalTokenAddress: string
+  principalTokenAddress: string,
 ): YieldTokenInfo {
   const {
     extensions: { interestToken },
@@ -81,7 +81,7 @@ export function getYieldTokenForPrincipalToken(
 }
 
 export function getOpenPrincipalTokensWithSameBaseAsset(
-  principalTokenAddress: string | undefined
+  principalTokenAddress: string | undefined,
 ): PrincipalTokenInfo[] {
   if (!principalTokenAddress) {
     return EMPTY_ARRAY as PrincipalTokenInfo[];

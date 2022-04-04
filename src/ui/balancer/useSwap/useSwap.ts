@@ -39,7 +39,7 @@ export function useSwap(
   amountIn: BigNumber,
   limit: BigNumber,
   swapKind: SwapKind,
-  onTransactionSubmitted?: () => void
+  onTransactionSubmitted?: () => void,
 ): {
   swap: () => void;
   mutationResult: UseMutationResult<
@@ -60,7 +60,7 @@ export function useSwap(
         const serializedError = serializeError(error);
         AppToaster?.show(makeErrorToast(serializedError.message));
       },
-    }
+    },
   );
 
   const { mutate: swap } = mutationResult;
@@ -72,7 +72,7 @@ export function useSwap(
       tokenOutAddress,
       amountIn,
       limit,
-      swapKind
+      swapKind,
     );
     if (callArgs) {
       swap(callArgs);
@@ -98,7 +98,7 @@ function makeSwapCallArgs(
   tokenOutAddress: string,
   amount: BigNumber,
   limit: BigNumber,
-  swapKind: SwapKind
+  swapKind: SwapKind,
 ): ContractMethodArgs<Vault, "swap"> | undefined {
   if (!account || !poolId || !tokenInAddress || !tokenOutAddress || !amount) {
     return;
@@ -111,7 +111,7 @@ function makeSwapCallArgs(
   // it were WETH.
   if (assets.includes(BALANCER_ETH_SENTINEL)) {
     assets = sortAddresses(assets.map(mapETHSentinalToWETH)).map(
-      mapWETHToETHSentinal
+      mapWETHToETHSentinal,
     );
   }
 

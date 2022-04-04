@@ -47,7 +47,7 @@ export function CryptoAssetButton({
           [Classes.OUTLINED]: outlined,
           [Classes.FILL]: fill,
         },
-        tw("flex", "justify-start")
+        tw("flex", "justify-start"),
       )}
     >
       <AssetLabel

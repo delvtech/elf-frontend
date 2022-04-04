@@ -18,7 +18,7 @@ export function TermTag({
   const nowMs = useNowMs();
   const termLength = formatLengthOfTime(
     createdAtTimestamp * 1000,
-    unlockTimestamp * 1000
+    unlockTimestamp * 1000,
   );
   const isMature = nowMs > unlockTimestamp * 1000;
 

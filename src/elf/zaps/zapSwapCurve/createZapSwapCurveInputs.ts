@@ -34,7 +34,7 @@ export function createZapSwapCurveBuyInputs(
   inputToken: TokenInfo,
   amountIn: string,
   recipient: string | null | undefined,
-  minAmountOut?: BigNumberish | undefined
+  minAmountOut?: BigNumberish | undefined,
 ): ZapSwapCurveBuyInputs {
   const principalPool = getPoolInfoForPrincipalToken(principalToken.address);
 
@@ -67,11 +67,11 @@ export function createZapSwapCurveBuyInputs(
       : ethers.constants.Zero;
 
   const baseZapAmounts = new Array<BigNumberish>(
-    path.baseToken.extensions.poolAssets.length
+    path.baseToken.extensions.poolAssets.length,
   ).fill(0);
 
   const idxOfInputInBasePool = path.baseToken.extensions.poolAssets.findIndex(
-    (address) => address === inputToken.address
+    (address) => address === inputToken.address,
   );
 
   if (idxOfInputInBasePool !== -1) {
@@ -91,11 +91,11 @@ export function createZapSwapCurveBuyInputs(
     return { info, baseZap, metaZap: emptyZapCurveIn, value };
   } else {
     const metaZapAmounts = new Array<BigNumberish>(
-      path.metaToken.extensions.poolAssets.length
+      path.metaToken.extensions.poolAssets.length,
     ).fill(0);
 
     const idxOfInputInMetaPool = path.metaToken.extensions.poolAssets.findIndex(
-      (address) => address === inputToken.address
+      (address) => address === inputToken.address,
     );
 
     if (idxOfInputInMetaPool !== -1) {
@@ -103,7 +103,7 @@ export function createZapSwapCurveBuyInputs(
     }
 
     const parentIdx = path.baseToken.extensions.poolAssets.findIndex(
-      (address) => address === path.metaToken.address
+      (address) => address === path.metaToken.address,
     );
     const metaZap: ZapCurveLpInStruct = {
       curvePool: path.metaToken.extensions.pool,

@@ -35,7 +35,7 @@ export function useRedeemTermAssetsToEth(
   // note both are required.  set to BigNumber.from(0) if you don't want that one.
   amountPrinicpalToken: BigNumber,
   amountYieldToken: BigNumber,
-  onTransactionSubmitted?: () => void
+  onTransactionSubmitted?: () => void,
 ): {
   withdraw: () => void;
   reset: () => void;
@@ -54,7 +54,7 @@ export function useRedeemTermAssetsToEth(
 
   const userProxy = useMemo(
     () => (signer ? userProxyContract.connect(signer) : userProxyContract),
-    [signer]
+    [signer],
   );
   const {
     mutate: withdrawToEth,
@@ -68,13 +68,13 @@ export function useRedeemTermAssetsToEth(
   const { data: ptApproval } = useTokenAllowance(
     tranche as unknown as ERC20,
     account,
-    userProxy?.address
+    userProxy?.address,
   );
 
   const { data: ytApproval } = useTokenAllowance(
     interestTokenContract as unknown as ERC20,
     account,
-    userProxy?.address
+    userProxy?.address,
   );
 
   const withdraw = useCallback(async () => {
@@ -112,7 +112,7 @@ export function useRedeemTermAssetsToEth(
         account,
         userProxy.address,
         nonce.toNumber(),
-        "1"
+        "1",
       );
       if (ptPermitData) {
         permits.push(ptPermitData);
@@ -137,7 +137,7 @@ export function useRedeemTermAssetsToEth(
         account,
         userProxy.address,
         nonce.toNumber(),
-        "1"
+        "1",
       );
       if (ytPermitData) {
         permits.push(ytPermitData);
@@ -152,7 +152,7 @@ export function useRedeemTermAssetsToEth(
       position,
       amountPrinicpalToken,
       amountYieldToken,
-      permits
+      permits,
     );
 
     withdrawToEth(withdrawInterestToEthCallArgs);
@@ -183,7 +183,7 @@ export function makeWithdrawInterestToEthCallArgs(
   position: string,
   amountPT: BigNumber,
   amountYT: BigNumber,
-  permitCallData: PermitCallData[]
+  permitCallData: PermitCallData[],
 ): ContractMethodArgs<UserProxy, "withdrawWeth"> {
   const callArgs: ContractMethodArgs<UserProxy, "withdrawWeth"> = [
     expiration,

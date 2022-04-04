@@ -4,7 +4,7 @@ import { ChainId, ChainNames } from "base/ethereum/ethereum";
 
 export function formatChainName(
   active: boolean,
-  chainId: ChainId | undefined
+  chainId: ChainId | undefined,
 ): string {
   if (!active) {
     return t`Not connected`;

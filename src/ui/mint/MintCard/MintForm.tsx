@@ -42,7 +42,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
 
   const principalTokenSymbol = formatPrincipalTokenShortSymbol(trancheInfo);
   const yieldTokenSymbol = formatYieldTokenShortSymbol(
-    getTokenInfo(interestToken)
+    getTokenInfo(interestToken),
   );
 
   const canPerformMint = useTrancheCanPerform(trancheAddress, "mint");
@@ -61,16 +61,16 @@ export function MintForm(props: MintFormProps): ReactElement | null {
 
   const activeBaseAssetDisplayBalance = formatBalance(
     baseAssetBalanceOf,
-    baseAssetDecimals
+    baseAssetDecimals,
   );
 
   const { numPrincipalTokensOut, numYieldTokensOut } = useActiveMintPreview(
     trancheInfo,
-    amountIn
+    amountIn,
   );
 
   const insufficientBalance = parseUnits(amountIn || "0", baseAssetDecimals).gt(
-    baseAssetBalanceOf ?? 0
+    baseAssetBalanceOf ?? 0,
   );
 
   const mintButtonDisabled =
@@ -162,7 +162,7 @@ export function MintForm(props: MintFormProps): ReactElement | null {
             label={
               <span className={tw("text-base")}>
                 {t`${(+(numYieldTokensOut || 0))?.toFixed(
-                  4
+                  4,
                 )} ${yieldTokenSymbol}`}
               </span>
             }
@@ -212,11 +212,11 @@ export function MintForm(props: MintFormProps): ReactElement | null {
 
 function useActiveMintPreview(
   activeTrancheInfo: PrincipalTokenInfo,
-  amountIn: string
+  amountIn: string,
 ) {
   const numPrincipalTokensOut = useMintPreview(
     activeTrancheInfo,
-    amountIn
+    amountIn,
   )?.toFixed(4);
 
   // You will always receive the same amount of yield tokens as the amount of

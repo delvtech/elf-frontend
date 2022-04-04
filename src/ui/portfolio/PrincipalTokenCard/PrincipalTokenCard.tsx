@@ -61,11 +61,11 @@ const calloutClassName = tw(
   "h-full",
   "p-4",
   "items-center",
-  "justify-center"
+  "justify-center",
 );
 
 export function PrincipalTokenCard(
-  props: PrincipalTokenCardProps
+  props: PrincipalTokenCardProps,
 ): ReactElement {
   const {
     library,
@@ -97,7 +97,7 @@ export function PrincipalTokenCard(
   const tranche = trancheContractsByAddress[principalTokenAddress];
   const trancheBalance = useTokenBalanceUNSAFE(
     tranche as unknown as ERC20Shim,
-    account
+    account,
   );
 
   const vaultContract = getVaultContractForTranche(principalTokenAddress);
@@ -110,7 +110,7 @@ export function PrincipalTokenCard(
     usePoolSpotPrice(pool, principalTokenAddress) ?? 0;
   const exitValue = trancheBalance * tranchePriceInBaseAsset;
   const { data: baseAssetCoinGeckoPrice } = useCoinGeckoPrice(
-    getCoinGeckoId(baseAssetSymbol)
+    getCoinGeckoId(baseAssetSymbol),
   );
 
   let fiatPrice;
@@ -123,7 +123,7 @@ export function PrincipalTokenCard(
   const tableRowLink = getTableRowLink(vaultContract?.address, vaultName);
   const maturationDate = useMemo(
     () => convertEpochSecondsToDate(unlockTimestamp),
-    [unlockTimestamp]
+    [unlockTimestamp],
   );
 
   let trancheAPY = 0;
@@ -131,7 +131,7 @@ export function PrincipalTokenCard(
     trancheAPY = calculateTrancheAPY(
       tranchePriceInBaseAsset,
       nowMs,
-      maturationDate?.getTime()
+      maturationDate?.getTime(),
     );
   }
 
@@ -144,7 +144,7 @@ export function PrincipalTokenCard(
         tw("p-6", "flex", "flex-col", "m-4", "space-y-5", "max-w-sm", {
           "text-gray-700": !isDarkMode,
           "text-white": isDarkMode,
-        })
+        }),
       )}
     >
       <div className={tw("flex", "space-x-3", "items-start")}>
@@ -163,7 +163,7 @@ export function PrincipalTokenCard(
               "w-full",
               "items-center",
               "justify-center",
-              "space-x-8"
+              "space-x-8",
             )}
           >
             <Tag
@@ -180,7 +180,7 @@ export function PrincipalTokenCard(
                 "flex",
                 "flex-shrink-0",
                 "space-x-6",
-                "justify-end"
+                "justify-end",
               )}
             >
               <LabeledText
@@ -254,7 +254,7 @@ export function PrincipalTokenCard(
 
 function getTableRowLink(
   vaultAddress: string | undefined,
-  vaultName: string | undefined
+  vaultName: string | undefined,
 ): ReactElement | null {
   if (!vaultAddress || !vaultName) {
     return null;

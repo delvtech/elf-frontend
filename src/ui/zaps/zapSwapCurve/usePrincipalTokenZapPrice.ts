@@ -4,12 +4,12 @@ import { useBaseTokenZapPrice } from "./useBaseTokenZapPrice";
 
 export function usePrincipalTokenZapPrice(
   principalTokenInfo: PrincipalTokenInfo,
-  inputToken: TokenInfo
+  inputToken: TokenInfo,
 ): string {
   const basePricePerUnitPrincipal = useMarketPrice(principalTokenInfo);
   const basePricePerUnitCurvePoolToken = useBaseTokenZapPrice(
     principalTokenInfo,
-    inputToken
+    inputToken,
   );
   return (
     +basePricePerUnitCurvePoolToken * +basePricePerUnitPrincipal

@@ -69,7 +69,7 @@ export function TokenSummary({
                 "flex-col",
                 "justify-center",
                 "space-y-1",
-                "overflow-hidden"
+                "overflow-hidden",
               )}
             >
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
@@ -90,7 +90,7 @@ export function TokenSummary({
                 "justify-center",
                 "space-y-1",
                 "overflow-hidden",
-                "lg:truncate"
+                "lg:truncate",
               )}
             >
               <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
@@ -114,13 +114,13 @@ export function TokenSummary({
                 "justify-center",
                 "space-y-1",
                 "overflow-hidden",
-                "lg:truncate"
+                "lg:truncate",
               )}
             >
               <span
                 className={classNames(
                   Classes.TEXT_MUTED,
-                  tw("text-sm", "lg:truncate")
+                  tw("text-sm", "lg:truncate"),
                 )}
               >
                 {t`Acc. Interest (USD)`}
@@ -159,7 +159,7 @@ function TokenInfo({
           "justify-center",
           "space-y-1",
           "overflow-hidden",
-          "lg:truncate"
+          "lg:truncate",
         )}
       >
         <span className={classNames(Classes.TEXT_MUTED, tw("text-sm"))}>
@@ -183,7 +183,7 @@ function TokenInfo({
         <span
           className={classNames(
             Classes.TEXT_MUTED,
-            tw("text-sm", "lg:truncate")
+            tw("text-sm", "lg:truncate"),
           )}
         >
           {baseAssetSymbol ? t`Price (${baseAssetSymbol})` : "Price"}
@@ -213,7 +213,7 @@ interface TokensSummary {
 
 function useTokensSummary(
   poolInfo: PoolInfo,
-  interestSupply: number
+  interestSupply: number,
 ): TokensSummary {
   const pool = getPoolContract(poolInfo.address);
   const { currency } = useCurrencyPref();
@@ -235,7 +235,7 @@ function useTokensSummary(
   const { data: baseAssetPriceYesterday } = useTokenHistoricalPrice(
     baseAssetContract,
     currency,
-    1
+    1,
   );
 
   const fixedYield = useTokenYield(poolInfo, "principal");
@@ -245,7 +245,7 @@ function useTokensSummary(
   const termAssetBalance = balances?.[termAssetIndex];
 
   const termAssetSymbol = formatTermAssetShortSymbol(
-    termAssetInfo as PrincipalTokenInfo | YieldTokenInfo
+    termAssetInfo as PrincipalTokenInfo | YieldTokenInfo,
   );
   const { decimals: termAssetDecimals } = termAssetInfo;
 
@@ -258,7 +258,7 @@ function useTokensSummary(
       ? Money.fromDecimal(
           baseAssetPrice.toDecimal() * termSpotPrice,
           currency,
-          Math.round
+          Math.round,
         )
       : undefined;
 
@@ -277,7 +277,7 @@ function useTokensSummary(
       tokenIn === termAssetContract?.address ? amountIn : amountOut;
     const oldSpotPrice = Math.abs(
       +formatUnits(termAmount, baseAssetDecimals) /
-        +formatUnits(baseAmount, baseAssetDecimals)
+        +formatUnits(baseAmount, baseAssetDecimals),
     );
     // this calculation is pretty iffy.  baseAssetPriceYesterday probably does not line up with
     // oldSpotPrice very well.

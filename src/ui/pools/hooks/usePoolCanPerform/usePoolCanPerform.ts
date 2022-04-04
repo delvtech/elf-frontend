@@ -6,7 +6,7 @@ import { getTokenInfo } from "tokenlists/tokenlists";
 
 export function useCanPerformPool(
   poolAddress: string,
-  action: keyof CanPerformPoolActions
+  action: keyof CanPerformPoolActions,
 ): boolean {
   const {
     canPerform: { convergentPools, weightedPools },
@@ -16,7 +16,7 @@ export function useCanPerformPool(
 
   if (isPrincipalPool(poolTokenInfo)) {
     const convergentPoolCanPerform = convergentPools.find(
-      (covergentPool) => covergentPool.convergentPoolAddress === poolAddress
+      (covergentPool) => covergentPool.convergentPoolAddress === poolAddress,
     );
 
     if (!convergentPoolCanPerform) {
@@ -29,7 +29,7 @@ export function useCanPerformPool(
 
   if (isYieldPool(poolTokenInfo)) {
     const weightedPoolCanPerform = weightedPools.find(
-      (weightedPool) => weightedPool.weightedPoolAddress === poolAddress
+      (weightedPool) => weightedPool.weightedPoolAddress === poolAddress,
     );
     if (!weightedPoolCanPerform) {
       // If there's no canPerform entry for this pool than assume it's not frozen
