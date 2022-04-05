@@ -220,9 +220,7 @@ export function useCurveLpTokenPrice(
     },
   );
 
-  return isPool1
-    ? priceWhenCurvePool1
-    : isPool2
-    ? priceWhenCurvePool2
-    : priceWhenCurvePool3;
+  if (isPool1) return priceWhenCurvePool1;
+  else if (isPool2) return priceWhenCurvePool2;
+  else return priceWhenCurvePool3;
 }
