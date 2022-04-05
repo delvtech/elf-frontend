@@ -10,6 +10,7 @@ import { CurvePool2__factory } from "@elementfi/core-typechain/dist/libraries/fa
 import { CurvePool3__factory } from "@elementfi/core-typechain/dist/libraries/factories/CurvePool3__factory";
 import { CurveLpTokenInfo } from "@elementfi/tokenlist";
 import { defaultProvider } from "elf/providers/providers";
+import { getTokenInfo } from "tokenlists/tokenlists";
 
 /*
  * Curve pools that aren't strictly stablecoins are architected such that the LP
@@ -109,4 +110,31 @@ export function getCurvePoolContract(
         curveLpToken.extensions.pool,
         defaultProvider,
       );
+}
+
+export function isCurvePool1(
+  curvePoolContract: CurvePool,
+): curvePoolContract is CurvePool1 {
+  const tokenInfo = getTokenInfo<CurveLpTokenInfo>(curvePoolContract.address);
+  return (
+    !["crv3crypto", "crvTricrypto"].includes(tokenInfo.symbol) &&
+    tokenInfo.extensions.poolAssets.length == 2
+  );
+}
+
+export function isCurvePool2(
+  curvePoolContract: CurvePool,
+): curvePoolContract is CurvePool2 {
+  const tokenInfo = getTokenInfo<CurveLpTokenInfo>(curvePoolContract.address);
+  return (
+    !["crv3crypto", "crvTricrypto"].includes(tokenInfo.symbol) &&
+    tokenInfo.extensions.poolAssets.length == 3
+  );
+}
+
+export function isCurvePool3(
+  curvePoolContract: CurvePool,
+): curvePoolContract is CurvePool3 {
+  const tokenInfo = getTokenInfo<CurveLpTokenInfo>(curvePoolContract.address);
+  return ["crv3crypto", "crvTricrypto"].includes(tokenInfo.symbol);
 }
