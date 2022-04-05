@@ -30,7 +30,7 @@ export interface BuyFixedRatesViewProps {
   principalTokenAddress?: string;
 }
 
-if (process.browser) {
+if (typeof window !== "undefined") {
   (window as any).setZapSwapCurve = () => {
     window.localStorage.setItem(FeatureFlag.ZAP_SWAP_CURVE, "true");
   };
