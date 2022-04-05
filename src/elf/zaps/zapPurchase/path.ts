@@ -9,7 +9,7 @@ import {
 } from "elf/curve/tokens";
 import { getTokenInfo } from "tokenlists/tokenlists";
 
-enum ZapPurchasePathKind {
+export enum ZapPurchasePathKind {
   SingleStep = "SingleStep",
   DoubleStep = "DoubleStep",
 }
