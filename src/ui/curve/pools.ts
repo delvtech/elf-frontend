@@ -1,37 +1,32 @@
-import { useCallback } from "react";
-import { QueryObserverResult } from "react-query";
-
-import { BigNumber, BigNumberish, ethers } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
-import { Currencies, Money } from "ts-money";
-
-import { getCoinGeckoId } from "integrations/coingecko";
 import {
-  crv3CryptoPoolContract,
-  crvTriCryptoPoolContract,
-  getCurvePoolContract,
-  isCurvePool1,
-  isCurvePool2,
-  isCurvePool3,
-  steCrvPoolContract,
-} from "elf/curve/pools";
-import { useCoinGeckoPrice } from "ui/coingecko/useCoinGeckoPrice";
-import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
-import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
+  CurvePool1,
+  CurvePool2,
+  CurvePool3,
+} from "@elementfi/core-typechain/dist/libraries";
+import { CurveLpTokenInfo, TokenInfo } from "@elementfi/tokenlist";
 import { AddressesJson } from "addresses/addresses";
-import { ONE_MINUTE_IN_MILLISECONDS } from "base/time";
 import {
   isGoerli,
   isMainnet,
   NUM_ETH_DECIMALS,
   ONE_ETHER,
 } from "base/ethereum/ethereum";
-import { CurveLpTokenInfo, TokenInfo } from "@elementfi/tokenlist";
+import { ONE_MINUTE_IN_MILLISECONDS } from "base/time";
 import {
-  CurvePool1,
-  CurvePool2,
-  CurvePool3,
-} from "@elementfi/core-typechain/dist/libraries";
+  crv3CryptoPoolContract,
+  crvTriCryptoPoolContract,
+  getCurvePoolContract,
+  steCrvPoolContract,
+} from "elf/curve/pools";
+import { BigNumber, BigNumberish, ethers } from "ethers";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { getCoinGeckoId } from "integrations/coingecko";
+import { useCallback } from "react";
+import { QueryObserverResult } from "react-query";
+import { Currencies, Money } from "ts-money";
+import { useCoinGeckoPrice } from "ui/coingecko/useCoinGeckoPrice";
+import { useSmartContractReadCall } from "ui/contracts/useSmartContractReadCall/useSmartContractReadCall";
+import { useCurrencyPref } from "ui/prefs/useCurrency/useCurencyPref";
 
 interface HookPriceOptions {
   enabled: boolean;
