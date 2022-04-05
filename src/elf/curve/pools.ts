@@ -111,30 +111,3 @@ export function getCurvePoolContract(
         defaultProvider,
       );
 }
-
-export function isCurvePool1(
-  curvePoolContract: CurvePool,
-): curvePoolContract is CurvePool1 {
-  const tokenInfo = getTokenInfo<CurveLpTokenInfo>(curvePoolContract.address);
-  return (
-    !["crv3crypto", "crvTricrypto"].includes(tokenInfo.symbol) &&
-    tokenInfo.extensions.poolAssets.length == 2
-  );
-}
-
-export function isCurvePool2(
-  curvePoolContract: CurvePool,
-): curvePoolContract is CurvePool2 {
-  const tokenInfo = getTokenInfo<CurveLpTokenInfo>(curvePoolContract.address);
-  return (
-    !["crv3crypto", "crvTricrypto"].includes(tokenInfo.symbol) &&
-    tokenInfo.extensions.poolAssets.length == 3
-  );
-}
-
-export function isCurvePool3(
-  curvePoolContract: CurvePool,
-): curvePoolContract is CurvePool3 {
-  const tokenInfo = getTokenInfo<CurveLpTokenInfo>(curvePoolContract.address);
-  return ["crv3crypto", "crvTricrypto"].includes(tokenInfo.symbol);
-}

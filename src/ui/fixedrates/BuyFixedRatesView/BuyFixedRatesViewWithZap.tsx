@@ -8,6 +8,7 @@ import {
 import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import tw from "efi-tailwindcss-classnames";
+import { FeatureFlag } from "elf/featureFlag/featureFlag";
 import { Fragment, ReactElement, useCallback, useState } from "react";
 import { t } from "ttag";
 import { useNavigation } from "ui/app/navigation/hooks/useNavigation";
@@ -27,6 +28,12 @@ export interface BuyFixedRatesViewProps {
   // principalTokenAddress comes from the url params whos type is
   // `parsedUrlQuery | undefined` so it must be optional.
   principalTokenAddress?: string;
+}
+
+if (process.browser) {
+  (window as any).setZapSwapCurve = () => {
+    window.localStorage.setItem(FeatureFlag.ZAP_SWAP_CURVE, "true");
+  };
 }
 
 export function BuyFixedRatesViewWithZap({
