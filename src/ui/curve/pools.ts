@@ -177,9 +177,13 @@ export function useCurveLpTokenPrice(
     ? buildCurveAmountArrayParam(curveLpToken, token, amount)
     : undefined;
 
-  const isPool1 = isCurvePool1(curvePoolContract);
-  const isPool2 = isCurvePool2(curvePoolContract);
-  const isPool3 = isCurvePool3(curvePoolContract);
+  const isPool1 =
+    !["crv3crypto", "crvTricrypto"].includes(curveLpToken.symbol) &&
+    curveLpToken.extensions.poolAssets.length == 2;
+  const isPool2 =
+    !["crv3crypto", "crvTricrypto"].includes(curveLpToken.symbol) &&
+    curveLpToken.extensions.poolAssets.length == 3;
+  const isPool3 = ["crv3crypto", "crvTricrypto"].includes(curveLpToken.symbol);
 
   const priceWhenCurvePool1 = useSmartContractReadCall(
     curvePoolContract as CurvePool1,
