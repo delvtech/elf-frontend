@@ -10,6 +10,9 @@ import {
   crv3CryptoPoolContract,
   crvTriCryptoPoolContract,
   getCurvePoolContract,
+  isCurvePool1,
+  isCurvePool2,
+  isCurvePool3,
   steCrvPoolContract,
 } from "elf/curve/pools";
 import { useCoinGeckoPrice } from "ui/coingecko/useCoinGeckoPrice";
@@ -24,6 +27,11 @@ import {
   ONE_ETHER,
 } from "base/ethereum/ethereum";
 import { CurveLpTokenInfo, TokenInfo } from "@elementfi/tokenlist";
+import {
+  CurvePool1,
+  CurvePool2,
+  CurvePool3,
+} from "@elementfi/core-typechain/dist/libraries";
 
 interface HookPriceOptions {
   enabled: boolean;
@@ -169,18 +177,53 @@ export function useCurveLpTokenPrice(
     ? buildCurveAmountArrayParam(curveLpToken, token, amount)
     : undefined;
 
-  const price = useSmartContractReadCall(
-    curvePoolContract,
+  const isPool1 = isCurvePool1(curvePoolContract);
+  const isPool2 = isCurvePool2(curvePoolContract);
+  const isPool3 = isCurvePool3(curvePoolContract);
+
+  const priceWhenCurvePool1 = useSmartContractReadCall(
+    curvePoolContract as CurvePool1,
     "calc_token_amount",
     {
-      // see comment in elf/curve/pools
-      callArgs: [amountInput as never, true],
+      callArgs: [amountInput as [BigNumberish, BigNumberish], true],
       staleTime: ONE_MINUTE_IN_MILLISECONDS,
-      enabled: !!amountInput,
+      enabled: isPool1 && !!amountInput,
+      select: (lpAmount) =>
+        ethers.utils.formatUnits(lpAmount, curveLpToken.decimals),
+    },
+  );
+  const priceWhenCurvePool2 = useSmartContractReadCall(
+    curvePoolContract as CurvePool2,
+    "calc_token_amount",
+    {
+      callArgs: [
+        amountInput as [BigNumberish, BigNumberish, BigNumberish],
+        true,
+      ],
+      staleTime: ONE_MINUTE_IN_MILLISECONDS,
+      enabled: isPool2 && !!amountInput,
+      select: (lpAmount) =>
+        ethers.utils.formatUnits(lpAmount, curveLpToken.decimals),
+    },
+  );
+  const priceWhenCurvePool3 = useSmartContractReadCall(
+    curvePoolContract as CurvePool3,
+    "calc_token_amount",
+    {
+      callArgs: [
+        amountInput as [BigNumberish, BigNumberish, BigNumberish],
+        true,
+      ],
+      staleTime: ONE_MINUTE_IN_MILLISECONDS,
+      enabled: isPool3 && !!amountInput,
       select: (lpAmount) =>
         ethers.utils.formatUnits(lpAmount, curveLpToken.decimals),
     },
   );
 
-  return price;
+  return isPool1
+    ? priceWhenCurvePool1
+    : isPool2
+    ? priceWhenCurvePool2
+    : priceWhenCurvePool3;
 }
