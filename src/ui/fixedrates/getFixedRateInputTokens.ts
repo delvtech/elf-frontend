@@ -1,5 +1,5 @@
 import { PrincipalTokenInfo, TokenInfo } from "@elementfi/tokenlist";
-import { getCurvePoolTokensByPrincipalToken } from "elf/curve/tokens";
+import { getCurvePoolTokensForPrincipalToken } from "elf/curve/tokens";
 import { getTokenInfo } from "tokenlists/tokenlists";
 
 export function getFixedRateInputTokens(
@@ -9,7 +9,7 @@ export function getFixedRateInputTokens(
     principalTokenInfo.extensions.underlying,
   );
   const curvePoolTokenInfos =
-    getCurvePoolTokensByPrincipalToken(principalTokenInfo);
+    getCurvePoolTokensForPrincipalToken(principalTokenInfo);
 
   return [underlyingTokenInfo, ...curvePoolTokenInfos];
 }

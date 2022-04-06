@@ -24,7 +24,7 @@ import { useValidateBuyPrincipalTokenInputByZap } from "ui/zaps/zapSwapCurve/use
 import { ZapTokensTransactionConfirmationDrawer } from "ui/zaps/zapSwapCurve/ZapTokensTransactionConfirmationDrawer";
 import { FixedRateZapPreviewCallout } from "./FixedRateZapPreviewCallout";
 
-interface BuyFixedRatesSwapProps {
+interface BuyFixedRatesZapProps {
   principalToken: PrincipalTokenInfo;
   inputToken: TokenInfo;
   inputTokens: TokenInfo[];
@@ -34,7 +34,7 @@ export function BuyFixedRatesZap({
   principalToken,
   inputToken,
   inputTokens,
-}: BuyFixedRatesSwapProps): ReactElement {
+}: BuyFixedRatesZapProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
 
   const inputAsset = getCryptoAssetForToken(inputToken.address);
@@ -55,6 +55,7 @@ export function BuyFixedRatesZap({
 
   const principalPriceSwap = useMarketPrice(principalToken);
   const roundedPrincipalPriceSwap = commify((+principalPriceSwap)?.toFixed(4));
+
   const marketRateLabelSwap = getMarketRateLabel(
     inputTokens[0].symbol,
     roundedPrincipalPriceSwap,
@@ -148,26 +149,22 @@ export function BuyFixedRatesZap({
             {inputErrorMessage}
           </span>
         )}
-        {marketRateLabelSwap && (
-          <span
-            className={classNames(
-              Classes.TEXT_MUTED,
-              tw("text-xs", "text-right"),
-            )}
-          >
-            {marketRateLabelSwap}
-          </span>
-        )}
-        {marketRateLabelZap && (
-          <span
-            className={classNames(
-              Classes.TEXT_MUTED,
-              tw("text-xs", "text-right"),
-            )}
-          >
-            {marketRateLabelZap}
-          </span>
-        )}
+        <span
+          className={classNames(
+            Classes.TEXT_MUTED,
+            tw("text-xs", "text-right"),
+          )}
+        >
+          {marketRateLabelSwap}
+        </span>
+        <span
+          className={classNames(
+            Classes.TEXT_MUTED,
+            tw("text-xs", "text-right"),
+          )}
+        >
+          {marketRateLabelZap}
+        </span>
       </div>
       <div className={tw("flex", "flex-col", "space-y-3")}>
         <span

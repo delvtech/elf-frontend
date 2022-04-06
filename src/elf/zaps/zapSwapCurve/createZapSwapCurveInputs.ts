@@ -89,31 +89,31 @@ export function createZapSwapCurveBuyInputs(
 
   if (path.kind === ZapSwapCurvePathKind.SingleStep) {
     return { info, baseZap, metaZap: emptyZapCurveIn, value };
-  } else {
-    const metaZapAmounts = new Array<BigNumberish>(
-      path.metaToken.extensions.poolAssets.length,
-    ).fill(0);
-
-    const idxOfInputInMetaPool = path.metaToken.extensions.poolAssets.findIndex(
-      (address) => address === inputToken.address,
-    );
-
-    if (idxOfInputInMetaPool !== -1) {
-      metaZapAmounts[idxOfInputInMetaPool] = amountInBn;
-    }
-
-    const parentIdx = path.baseToken.extensions.poolAssets.findIndex(
-      (address) => address === path.metaToken.address,
-    );
-    const metaZap: ZapCurveLpInStruct = {
-      curvePool: path.metaToken.extensions.pool,
-      lpToken: path.metaToken.address,
-      amounts: metaZapAmounts,
-      roots: path.metaToken.extensions.poolAssets,
-      parentIdx,
-      minLpAmount: 0, // covered by minPtAmount in info
-    };
-
-    return { metaZap, baseZap, info, value };
   }
+
+  const metaZapAmounts = new Array<BigNumberish>(
+    path.metaToken.extensions.poolAssets.length,
+  ).fill(0);
+
+  const idxOfInputInMetaPool = path.metaToken.extensions.poolAssets.findIndex(
+    (address) => address === inputToken.address,
+  );
+
+  if (idxOfInputInMetaPool !== -1) {
+    metaZapAmounts[idxOfInputInMetaPool] = amountInBn;
+  }
+
+  const parentIdx = path.baseToken.extensions.poolAssets.findIndex(
+    (address) => address === path.metaToken.address,
+  );
+  const metaZap: ZapCurveLpInStruct = {
+    curvePool: path.metaToken.extensions.pool,
+    lpToken: path.metaToken.address,
+    amounts: metaZapAmounts,
+    roots: path.metaToken.extensions.poolAssets,
+    parentIdx,
+    minLpAmount: 0, // covered by minPtAmount in info
+  };
+
+  return { metaZap, baseZap, info, value };
 }
