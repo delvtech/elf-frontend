@@ -8,7 +8,7 @@ import classNames from "classnames";
 import tw from "efi-tailwindcss-classnames";
 import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
 import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
-import { getCurvePoolTokensByPrincipalToken } from "elf/curve/tokens";
+import { getCurvePoolTokensForPrincipalToken } from "elf/curve/tokens";
 import { getPoolInfoForPrincipalToken } from "elf/pools/ccpool";
 import { getIsMature } from "elf/tranche/getIsMature";
 import { useRouter } from "next/router";
@@ -51,7 +51,7 @@ export function FixedRateCardWithZap(
   const formattedUnlockDate = formatAbbreviatedDate(unlockDate);
   const isRedeemable = getIsMature(unlockTimestamp);
 
-  const curvePoolTokens = getCurvePoolTokensByPrincipalToken(
+  const curvePoolTokens = getCurvePoolTokensForPrincipalToken(
     props.principalToken,
   );
   const isLargeScreen = useIsTailwindLargeScreen();
