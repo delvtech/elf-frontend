@@ -50,10 +50,11 @@ export function BuyFixedRatesZap({
 
   const principalPriceSwap = useMarketPrice(principalToken);
   const roundedPrincipalPriceSwap = commify((+principalPriceSwap)?.toFixed(4));
+
   const marketRateLabelSwap = getMarketRateLabel(
     inputTokens[0].symbol,
     roundedPrincipalPriceSwap,
-    inputToken.symbol,
+    inputTokens[0].symbol,
   );
 
   const principalPriceZap = usePrincipalTokenZapPrice(
