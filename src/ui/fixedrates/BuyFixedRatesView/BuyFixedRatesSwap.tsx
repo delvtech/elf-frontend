@@ -138,16 +138,14 @@ export function BuyFixedRatesSwap({
             {inputErrorMessage}
           </span>
         )}
-        {marketRateLabel && (
-          <span
-            className={classNames(
-              Classes.TEXT_MUTED,
-              tw("text-xs", "text-right"),
-            )}
-          >
-            {marketRateLabel}
-          </span>
-        )}
+        <span
+          className={classNames(
+            Classes.TEXT_MUTED,
+            tw("text-xs", "text-right"),
+          )}
+        >
+          {marketRateLabel}
+        </span>
       </div>
 
       <div className={tw("flex", "flex-col", "space-y-3")}>

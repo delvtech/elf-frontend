@@ -24,7 +24,7 @@ import { usePrincipalTokenZapPrice } from "ui/zaps/zapSwapCurve/usePrincipalToke
 import { useValidateBuyPrincipalTokenInputByZap } from "ui/zaps/zapSwapCurve/useValidateBuyPrincipalTokenInputByZap";
 import { FixedRatePreviewCallout } from "./FixedRatePreviewCallout";
 
-interface BuyFixedRatesSwapProps {
+interface BuyFixedRatesZapProps {
   principalToken: PrincipalTokenInfo;
   inputToken: TokenInfo;
   inputTokens: TokenInfo[];
@@ -34,7 +34,7 @@ export function BuyFixedRatesZap({
   principalToken,
   inputToken,
   inputTokens,
-}: BuyFixedRatesSwapProps): ReactElement {
+}: BuyFixedRatesZapProps): ReactElement {
   const { account, library } = useWeb3React<Web3Provider>();
 
   const inputAsset = getCryptoAssetForToken(inputToken.address);
@@ -148,26 +148,22 @@ export function BuyFixedRatesZap({
             {inputErrorMessage}
           </span>
         )}
-        {marketRateLabelSwap && (
-          <span
-            className={classNames(
-              Classes.TEXT_MUTED,
-              tw("text-xs", "text-right"),
-            )}
-          >
-            {marketRateLabelSwap}
-          </span>
-        )}
-        {marketRateLabelZap && (
-          <span
-            className={classNames(
-              Classes.TEXT_MUTED,
-              tw("text-xs", "text-right"),
-            )}
-          >
-            {marketRateLabelZap}
-          </span>
-        )}
+        <span
+          className={classNames(
+            Classes.TEXT_MUTED,
+            tw("text-xs", "text-right"),
+          )}
+        >
+          {marketRateLabelSwap}
+        </span>
+        <span
+          className={classNames(
+            Classes.TEXT_MUTED,
+            tw("text-xs", "text-right"),
+          )}
+        >
+          {marketRateLabelZap}
+        </span>
       </div>
       <div className={tw("flex", "flex-col", "space-y-3")}>
         <span className={tw("text-base", "text-left")}>{t`Review Order`}</span>
