@@ -15,12 +15,19 @@ import {
   WethIcon,
   WbtcIcon,
   CrvMimIcon,
+  LusdIcon,
   CrvEursIcon,
+  UsdtIcon,
+  ThreeCrvIcon,
+  AlusdIcon,
+  MimIcon,
+  StethIcon,
 } from "ui/token/TokenIcon";
 import ContractAddresses from "addresses/addresses";
 import { CryptoAsset, CryptoAssetType } from "elf/crypto/CryptoAsset";
 import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
 import { getCryptoAssetForToken } from "elf/crypto/getCryptoAssetForToken";
+import { MainnetExtraAddresses } from "elf/zaps/zapSwapCurve/addresses";
 
 const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.usdcAddress]: UsdcIcon,
@@ -34,6 +41,13 @@ const CryptoIconSvg: Record<string, TokenIcon> = {
   [ContractAddresses.wbtcAddress]: WbtcIcon,
   [ContractAddresses["mim-3lp3crv-fAddress"]]: CrvMimIcon,
   [ContractAddresses.eurscrvAddress]: CrvEursIcon,
+  [MainnetExtraAddresses.lusdAddress]: LusdIcon,
+
+  [MainnetExtraAddresses.threeCrvAddress]: ThreeCrvIcon,
+  [MainnetExtraAddresses.usdtAddress]: UsdtIcon,
+  [MainnetExtraAddresses.alUsdAddress]: AlusdIcon,
+  [MainnetExtraAddresses.mimAddress]: MimIcon,
+  [MainnetExtraAddresses.stEthAddress]: StethIcon,
 };
 
 function makeTagIcon(cryptoAsset: CryptoAsset) {
