@@ -51,7 +51,6 @@ export function BuyFixedRatesSwap({
 
   const { isDarkMode } = useDarkMode();
 
-  const baseToken = getTokenInfo(underlying);
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetUnderlyingAddress = getTokenAddressForBalancer(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
@@ -154,8 +153,7 @@ export function BuyFixedRatesSwap({
         <span className={tw("text-base", "text-left")}>{t`Review Order`}</span>
 
         <FixedRatePreviewCallout
-          principalToken={principalToken}
-          baseToken={baseToken}
+          baseAssetSymbol={baseAssetSymbol}
           principalTokensOut={principalTokensOut}
           baseAssetIn={baseAssetInputValue}
           baseAssetDecimals={baseAssetDecimals}

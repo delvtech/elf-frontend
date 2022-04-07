@@ -12,8 +12,7 @@ import { getSafeFixedNumber } from "base/math/fixedPoint";
 import { PrincipalTokenInfo, TokenInfo } from "@elementfi/tokenlist";
 
 interface FixedRatePreviewCalloutProps {
-  principalToken: PrincipalTokenInfo;
-  baseToken: TokenInfo;
+  baseAssetSymbol: string;
   principalTokensOut: string;
   baseAssetIn: string;
   baseAssetDecimals: number;
@@ -68,7 +67,7 @@ export function FixedRatePreviewCallout(
       <div className={reviewOrderGridRowClassName}>
         <div
           className={tw("col-span-2")}
-        >{t`Total ${props.baseToken.symbol} Earned`}</div>
+        >{t`Total ${props.baseAssetSymbol} Earned`}</div>
         <div className={tw("text-right")}>{roundedTotalTokensEarned}</div>
       </div>
       <div className={reviewOrderGridRowClassName}>
