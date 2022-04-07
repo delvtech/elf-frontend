@@ -56,6 +56,10 @@ export function FixedRateZapPreviewCallout(
   const totalInputTokensEarned =
     +totalBaseTokensEarned * +basePricePerInputToken;
 
+  const roundedTotalBaseTokensEarned = commify(
+    (+totalBaseTokensEarned)?.toFixed(4),
+  );
+
   const roundedTotalInputTokensEarned = commify(
     (+totalInputTokensEarned)?.toFixed(4),
   );
@@ -73,7 +77,7 @@ export function FixedRateZapPreviewCallout(
         "flex",
         "flex-col",
         "items-center",
-        "px-8",
+        "px-4",
         "space-y-1",
         "text-sm",
       )}
@@ -92,6 +96,15 @@ export function FixedRateZapPreviewCallout(
         <div className={tw("col-span-2")}>{t`Total Tokens Receiving`}</div>
         <div className={tw("text-right")}>{`${roundedPrincipalTokens}`}</div>
       </div>
+      <div className={reviewOrderGridRowClassName}>
+        <div
+          className={tw("col-span-2")}
+        >{t`Total ${baseToken.symbol.toUpperCase()} Earned`}</div>
+        <div
+          className={tw("text-right")}
+        >{`${roundedTotalBaseTokensEarned}`}</div>
+      </div>
+
       <div className={reviewOrderGridRowClassName}>
         <div
           className={tw("col-span-2")}

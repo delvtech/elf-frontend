@@ -15,6 +15,7 @@ import { getCryptoSymbol } from "elf/crypto/getCryptoSymbol";
 import { commify } from "ethers/lib/utils";
 import { SwapKind } from "integrations/balancer/SwapKind";
 import { ReactElement, useCallback, useState } from "react";
+import { getTokenInfo } from "tokenlists/tokenlists";
 import { t } from "ttag";
 import { useNumericInput } from "ui/base/hooks/useNumericInput/useNumericInput";
 import { useCalculatePrincipalTokenAmountOut } from "ui/ccpools/useCalculatePrincipalTokenAmountOut";
@@ -50,6 +51,7 @@ export function BuyFixedRatesSwap({
 
   const { isDarkMode } = useDarkMode();
 
+  const baseToken = getTokenInfo(underlying);
   const baseAsset = getCryptoAssetForToken(underlying);
   const baseAssetUnderlyingAddress = getTokenAddressForBalancer(baseAsset);
   const baseAssetSymbol = getCryptoSymbol(baseAsset);
@@ -152,6 +154,8 @@ export function BuyFixedRatesSwap({
         <span className={tw("text-base", "text-left")}>{t`Review Order`}</span>
 
         <FixedRatePreviewCallout
+          principalToken={principalToken}
+          baseToken={baseToken}
           principalTokensOut={principalTokensOut}
           baseAssetIn={baseAssetInputValue}
           baseAssetDecimals={baseAssetDecimals}

@@ -9,8 +9,11 @@ import { t } from "ttag";
 import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
 import { getSafeFixedNumber } from "base/math/fixedPoint";
+import { PrincipalTokenInfo, TokenInfo } from "@elementfi/tokenlist";
 
 interface FixedRatePreviewCalloutProps {
+  principalToken: PrincipalTokenInfo;
+  baseToken: TokenInfo;
   principalTokensOut: string;
   baseAssetIn: string;
   baseAssetDecimals: number;
@@ -48,7 +51,7 @@ export function FixedRatePreviewCallout(
         "flex",
         "flex-col",
         "items-center",
-        "px-8",
+        "px-4",
         "space-y-1",
         "text-sm",
       )}
@@ -63,7 +66,9 @@ export function FixedRatePreviewCallout(
         <div className={tw("text-right")}>{`${roundedPercentYield}%`}</div>
       </div>
       <div className={reviewOrderGridRowClassName}>
-        <div className={tw("col-span-2")}>{t`Total Tokens Earned`}</div>
+        <div
+          className={tw("col-span-2")}
+        >{t`Total ${props.baseToken.symbol} Earned`}</div>
         <div className={tw("text-right")}>{roundedTotalTokensEarned}</div>
       </div>
       <div className={reviewOrderGridRowClassName}>
