@@ -22,7 +22,8 @@ export function FixedRateCardListHeader(
         tw("text-base", "text-left", "pb-2"),
       )}
     >
-      <span>{t`Featured Principal Tokens`}</span>
+      <span>{t`Principal Tokens`}</span>
+      <span>{t`Input Tokens`}</span>
       <span>{t`Term Period`}</span>
       <span>{t`Fixed APR`}</span>
       <span />

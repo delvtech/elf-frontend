@@ -18,7 +18,7 @@ import { t } from "ttag";
 import { Navigation } from "ui/app/navigation/navigation";
 import { LabeledText } from "ui/base/LabeledText/LabeledText";
 import { useIsTailwindLargeScreen } from "ui/base/mediaBreakpoints";
-import { findAssetIcon } from "ui/crypto/CryptoIcon";
+import { findAssetIcon, findAssetIconByAddress } from "ui/crypto/CryptoIcon";
 import styles from "ui/fixedrates/grid.module.css";
 import { usePrincipalTokenYield } from "ui/pools/hooks/usePrincipalTokenYield";
 
@@ -71,6 +71,7 @@ export function FixedRateCardWithZap(
           "flex-col",
           "space-y-4",
           "lg:space-y-0",
+          "items-center",
         ),
       )}
       onClick={onCardClick}
@@ -80,22 +81,29 @@ export function FixedRateCardWithZap(
           className={tw("text-left", "pl-2")}
           icon={BaseAssetIcon ? <BaseAssetIcon height={36} width={36} /> : null}
           iconClassName={tw("flex-shrink-0")}
-          label={t`via ${positionName}`}
+          label={t`${positionName}`}
           labelClassName={tw("text-xs")}
           textClassName={tw("text-base")}
-          text={t`${baseAssetSymbol} Principal Token`}
+          text={t`${baseAssetSymbol}`}
         />
-        <span>{curvePoolTokens.map(({ symbol }) => symbol).join(", ")}</span>
       </div>
+      <div
+        className={classNames(
+          tw("grid", "grid-cols-3", "content-center", "gap-2"),
+        )}
+      >
+        {curvePoolTokens.map(({ address }) =>
+          findAssetIconByAddress(address)({ height: 20, width: 20 }),
+        )}
+      </div>
+
       <span>
         <Tag large fill intent={isRedeemable ? Intent.SUCCESS : Intent.PRIMARY}>
           {formattedUnlockDate}
         </Tag>
       </span>
       <span className={tw("text-base")}>
-        {t`${isLargeScreen ? "" : t`Fixed APR: `} ${formatPercent(fixedRate)} ${
-          isLargeScreen ? t`APR` : ""
-        }`}
+        {t`${isLargeScreen ? "" : t`Fixed APR: `} ${formatPercent(fixedRate)}`}
       </span>
       <div className={tw("text-right")}>
         <Button minimal rightIcon={IconNames.CARET_RIGHT} onClick={() => {}}>
