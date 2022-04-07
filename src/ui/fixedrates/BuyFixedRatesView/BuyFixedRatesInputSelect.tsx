@@ -52,10 +52,14 @@ export function BuyFixedRatesInputSelect({
         )}
       >
         <TokenInfoSelect
+          className={tw("w-full", "cursor-pointer")}
           items={inputTokens}
           itemPredicate={(_, s) => s.address !== selectedToken.address}
-          itemRenderer={({ name, symbol, address }, { handleClick }) => (
-            <div className={classNames(tw("p-1"))} onClick={handleClick}>
+          itemRenderer={({ symbol, address }, { handleClick }) => (
+            <div
+              className={classNames(tw("p-1", "cursor-pointer"))}
+              onClick={handleClick}
+            >
               <LabeledText
                 containerClassName={tw("p-4")}
                 icon={inputTokenIconsByAddress[address]({
@@ -65,9 +69,9 @@ export function BuyFixedRatesInputSelect({
                 iconClassName={tw("flex-shrink-0", "mr-4")}
                 large={isLargeScreen}
                 labelClassName={tw("text-xs", "text-left")}
-                label={symbol}
+                label={""}
                 textClassName={tw("lg:text-base", "text-left")}
-                text={name}
+                text={symbol}
               />
             </div>
           )}
@@ -84,9 +88,9 @@ export function BuyFixedRatesInputSelect({
             iconClassName={tw("flex-shrink-0", "mr-4")}
             large={isLargeScreen}
             labelClassName={tw("text-xs", "text-left")}
-            label={selectedToken.symbol}
+            label={""}
             textClassName={tw("lg:text-base", "text-left")}
-            text={selectedToken.name}
+            text={selectedToken.symbol}
           />
         </TokenInfoSelect>
       </div>
