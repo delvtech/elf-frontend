@@ -74,7 +74,7 @@ export function ZapTokensTransactionConfirmationDrawer({
       transactionDetails={
         <SwapDetailsForm
           amountIn={amountIn}
-          amountOut={amountOut ?? estimatedAmountOut}
+          amountOut={amountOut ?? "--"}
           amountOutLabel={t`To`}
           assetInSymbol={inputToken.symbol}
           assetOutSymbol={principalToken.symbol}
