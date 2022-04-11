@@ -1,15 +1,12 @@
-import { ReactElement } from "react";
-
 import { Callout } from "@blueprintjs/core";
+import { getSafeFixedNumber } from "base/math/fixedPoint";
 import classNames from "classnames";
+import tw from "efi-tailwindcss-classnames";
 import { BigNumber } from "ethers";
 import { commify, formatUnits, parseUnits } from "ethers/lib/utils";
+import { ReactElement } from "react";
 import { t } from "ttag";
-
-import tw from "efi-tailwindcss-classnames";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
-import { getSafeFixedNumber } from "base/math/fixedPoint";
-import { PrincipalTokenInfo, TokenInfo } from "@elementfi/tokenlist";
 
 interface FixedRatePreviewCalloutProps {
   baseAssetSymbol: string;
