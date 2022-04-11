@@ -111,7 +111,7 @@ export function FixedRateZapPreviewCallout(
         >{t`Total ${inputToken.symbol.toUpperCase()} Earned`}</div>
         <div
           className={tw("text-right")}
-        >{`${roundedTotalInputTokensEarned}`}</div>
+        >{`≈ ${roundedTotalInputTokensEarned}`}</div>
       </div>
     </Callout>
   );
