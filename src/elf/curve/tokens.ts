@@ -50,7 +50,7 @@ export function getCurvePoolTokensByCurveLpToken(
  * @param principalTokenInfo - The principal token
  * @returns array of tokenInfos
  * */
-export function getCurvePoolTokensByPrincipalToken(
+export function getCurvePoolTokensForPrincipalToken(
   principalTokenInfo: PrincipalTokenInfo,
 ): TokenInfo[] {
   const underlyingTokenInfo = getTokenInfo(

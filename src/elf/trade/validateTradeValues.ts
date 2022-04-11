@@ -16,6 +16,7 @@ export function validateTradeValues(
   tokenOutPoolBalance: BigNumber | undefined,
   tokenInBalanceOf: BigNumber | undefined,
   tokenInDecimals: number | undefined,
+  baseAssetInDecimals?: number | undefined,
 ): TradeValuesValidationResult {
   // input value must be lower than the user's balance
   let isValidTokenInValue = true;
@@ -44,7 +45,9 @@ export function validateTradeValues(
   }
 
   if (
-    parseUnits(amountOut || "0", tokenInDecimals).gt(tokenOutPoolBalance ?? 0)
+    parseUnits(amountOut || "0", baseAssetInDecimals ?? tokenInDecimals).gt(
+      tokenOutPoolBalance ?? 0,
+    )
   ) {
     isValidTokenOutValue = false;
     tokenOutError = t`Insufficient pool balance`;

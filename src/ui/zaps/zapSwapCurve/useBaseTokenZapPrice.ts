@@ -4,14 +4,12 @@ import {
   ZapSwapCurvePathKind,
 } from "elf/zaps/zapSwapCurve/path";
 import { useMemo } from "react";
-import { useMarketPrice } from "ui/ccpools/useMarketPrice";
 import { useCurveLpTokenPrice } from "ui/curve/pools";
 
-export function usePrincipalTokenZapPrice(
+export function useBaseTokenZapPrice(
   principalTokenInfo: PrincipalTokenInfo,
   inputToken: TokenInfo,
 ): string {
-  const basePricePerUnitPrincipal = useMarketPrice(principalTokenInfo);
   const path = useMemo(
     () => getZapSwapCurvePath(principalTokenInfo, inputToken),
     [principalTokenInfo, inputToken],
@@ -41,7 +39,5 @@ export function usePrincipalTokenZapPrice(
   const baseCurveLpTokenPricePerCurvePoolTokenUnit =
     (+curvePoolTokenPricePerBaseUnit as number) ** -1;
 
-  return (
-    baseCurveLpTokenPricePerCurvePoolTokenUnit * +basePricePerUnitPrincipal
-  ).toString();
+  return baseCurveLpTokenPricePerCurvePoolTokenUnit.toString();
 }

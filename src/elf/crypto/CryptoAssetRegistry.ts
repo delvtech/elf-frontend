@@ -16,8 +16,8 @@ import {
   trancheContractsByAddress,
 } from "elf/tranche/tranches";
 import { underlyingContractsByAddress } from "elf/underlying/underlying";
-import { MainnetExtraAddresses } from "elf/zaps/zapPurchase/addresses";
-import { MainnetZapContractsByAddress } from "elf/zaps/zapPurchase/contracts";
+import { MainnetExtraAddresses } from "elf/zaps/zapSwapCurve/addresses";
+import { MainnetZapContractsByAddress } from "elf/zaps/zapSwapCurve/contracts";
 import keyBy from "lodash.keyby";
 
 const USDC_CRYPTO_ASSET: Erc20PermitCryptoAsset = {
