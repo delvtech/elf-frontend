@@ -40,7 +40,6 @@ export function useValidateBuyPrincipalTokenInputByZap(
 
   const poolContract = getPoolContract(poolAddress);
 
-  const { decimals: inputAssetDecimals } = getTokenInfo(inputToken.address);
   const { decimals: baseAssetDecimals } = getTokenInfo(
     principalToken.extensions.underlying,
   );
@@ -58,7 +57,7 @@ export function useValidateBuyPrincipalTokenInputByZap(
     underlyingReservesBalanceOf,
     principalReservesBalanceOf,
     inputAssetBalanceOf,
-    inputAssetDecimals,
+    inputToken.decimals,
     baseAssetDecimals,
   );
 
