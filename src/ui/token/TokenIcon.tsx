@@ -42,7 +42,7 @@ export function StethIcon({
 }: IconProps): ReactElement {
   return (
     <SvgIcon
-      alt={"mim"}
+      alt={"steth"}
       className={className}
       style={style}
       src={stethIcon.src}
