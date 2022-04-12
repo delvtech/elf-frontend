@@ -61,7 +61,7 @@ export function FixedRateCardWithZap(
       interactive
       elevation={Elevation.TWO}
       className={classNames(
-        { [styles.fixedRatesGrid]: isLargeScreen },
+        { [styles.fixedRatesZapGrid]: isLargeScreen },
         tw(
           "w-full",
           "max-w-sm",
