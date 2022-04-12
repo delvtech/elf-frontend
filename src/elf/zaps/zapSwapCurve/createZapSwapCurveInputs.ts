@@ -10,6 +10,7 @@ import {
   ZapSwapCurvePathKind,
 } from "elf/zaps/zapSwapCurve/path";
 import { BigNumberish, ethers } from "ethers";
+import { MainnetExtraAddresses } from "./addresses";
 
 const emptyZapCurveIn: ZapCurveLpInStruct = {
   curvePool: ethers.constants.AddressZero,
@@ -25,9 +26,10 @@ export interface ZapSwapCurveBuyInputs {
   info: ZapInInfoStruct;
   baseZap: ZapCurveLpInStruct;
   metaZap: ZapCurveLpInStruct;
+  value: BigNumberish;
 }
 
-export function createZapPurchaseInputs(
+export function createZapSwapCurveBuyInputs(
   principalToken: PrincipalTokenInfo,
   inputToken: TokenInfo,
   amountIn: string,
@@ -50,9 +52,19 @@ export function createZapPurchaseInputs(
   };
 
   if (amountIn === "")
-    return { info, baseZap: emptyZapCurveIn, metaZap: emptyZapCurveIn };
+    return {
+      info,
+      baseZap: emptyZapCurveIn,
+      metaZap: emptyZapCurveIn,
+      value: ethers.constants.Zero,
+    };
 
   const amountInBn = ethers.utils.parseUnits(amountIn, inputToken.decimals);
+
+  const value =
+    inputToken.address === MainnetExtraAddresses.ethAddress
+      ? amountInBn
+      : ethers.constants.Zero;
 
   const baseZapAmounts = new Array<BigNumberish>(
     path.baseToken.extensions.poolAssets.length,
@@ -76,7 +88,7 @@ export function createZapPurchaseInputs(
   };
 
   if (path.kind === ZapSwapCurvePathKind.SingleStep) {
-    return { info, baseZap, metaZap: emptyZapCurveIn };
+    return { info, baseZap, metaZap: emptyZapCurveIn, value };
   }
 
   const metaZapAmounts = new Array<BigNumberish>(
@@ -103,5 +115,5 @@ export function createZapPurchaseInputs(
     minLpAmount: 0, // covered by minPtAmount in info
   };
 
-  return { metaZap, baseZap, info };
+  return { metaZap, baseZap, info, value };
 }

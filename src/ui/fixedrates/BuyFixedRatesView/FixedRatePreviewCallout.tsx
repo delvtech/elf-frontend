@@ -43,6 +43,7 @@ export function FixedRatePreviewCallout(
   );
   const roundedPercentYield = commify((+percentYield)?.toFixed(2));
   const roundedPrincipalTokensOut = commify((+principalTokensOut)?.toFixed(4));
+
   return (
     <Callout
       className={tw(

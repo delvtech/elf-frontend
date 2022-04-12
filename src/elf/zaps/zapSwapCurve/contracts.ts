@@ -41,7 +41,7 @@ export const MainnetZapContractsByAddress = Object.freeze({
   [sEurAddress]: sEurContract,
 });
 
-export const ZapSwapCurveContract = ZapSwapCurve__factory.connect(
+export const zapSwapCurveContract = ZapSwapCurve__factory.connect(
   ZapSwapCurveAddress,
   defaultProvider,
 );

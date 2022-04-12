@@ -221,7 +221,7 @@ export function getPriceImpact(
   return priceImpact;
 }
 
-function useWalletApprovalInfos(
+export function useWalletApprovalInfos(
   tokenInAsset: CryptoAsset | undefined,
   account: string | null | undefined,
   amountIn: string,
