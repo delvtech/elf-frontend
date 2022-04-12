@@ -170,7 +170,6 @@ export function BuyFixedRatesZap({
           principalTokensOut={principalTokensOut}
           baseAssetIn={baseAmountIn}
           baseAssetDecimals={baseToken.decimals}
-          isApproximate={true}
         />
       </div>
 

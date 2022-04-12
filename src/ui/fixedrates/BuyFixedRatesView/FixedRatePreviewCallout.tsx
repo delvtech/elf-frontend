@@ -14,7 +14,6 @@ interface FixedRatePreviewCalloutProps {
   principalTokensOut: string;
   baseAssetIn: string;
   baseAssetDecimals: number;
-  isApproximate?: boolean;
 }
 
 const reviewOrderGridRowClassName = tw(
