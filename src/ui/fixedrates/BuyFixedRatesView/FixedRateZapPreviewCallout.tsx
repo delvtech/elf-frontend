@@ -1,18 +1,21 @@
 import { Callout } from "@blueprintjs/core";
+import { PrincipalTokenInfo, TokenInfo } from "@elementfi/tokenlist";
 import { getSafeFixedNumber } from "base/math/fixedPoint";
-import classNames from "classnames";
-import tw from "efi-tailwindcss-classnames";
+import tw, { classnames } from "efi-tailwindcss-classnames";
 import { BigNumber } from "ethers";
 import { commify, formatUnits, parseUnits } from "ethers/lib/utils";
 import { ReactElement } from "react";
 import { t } from "ttag";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
+import { useBaseTokenZapPrice } from "ui/zaps/zapSwapCurve/useBaseTokenZapPrice";
 
 interface FixedRatePreviewCalloutProps {
-  baseAssetSymbol: string;
-  principalTokensOut: string;
-  baseAssetIn: string;
-  baseAssetDecimals: number;
+  principalToken: PrincipalTokenInfo;
+  baseToken: TokenInfo;
+  inputToken: TokenInfo;
+  principalTokenAmountOut: string;
+  inputTokenAmountIn: string;
+  baseTokenAmountIn: string;
 }
 
 const reviewOrderGridRowClassName = tw(
@@ -22,25 +25,52 @@ const reviewOrderGridRowClassName = tw(
   "text-left",
 );
 
-export function FixedRatePreviewCallout(
+export function FixedRateZapPreviewCallout(
   props: FixedRatePreviewCalloutProps,
 ): ReactElement {
-  const { principalTokensOut, baseAssetDecimals, baseAssetIn } = props;
+  const {
+    principalToken,
+    baseToken,
+    inputToken,
+    principalTokenAmountOut,
+    inputTokenAmountIn,
+    baseTokenAmountIn,
+  } = props;
   const { isDarkMode } = useDarkMode();
-  const totalTokensEarned = calculateTotalYield(
-    principalTokensOut,
-    baseAssetIn,
-    baseAssetDecimals,
+
+  const roundedPrincipalTokens = commify(
+    (+principalTokenAmountOut)?.toFixed(4),
   );
-  const roundedTotalTokensEarned = commify((+totalTokensEarned)?.toFixed(4));
+
+  const basePricePerInputToken = useBaseTokenZapPrice(
+    principalToken,
+    inputToken,
+  );
+
+  const totalBaseTokensEarned = calculateTotalYield(
+    principalTokenAmountOut,
+    baseTokenAmountIn,
+    baseToken.decimals,
+  );
+
+  const totalInputTokensEarned =
+    +totalBaseTokensEarned * +basePricePerInputToken;
+
+  const roundedTotalBaseTokensEarned = commify(
+    (+totalBaseTokensEarned)?.toFixed(4),
+  );
+
+  const roundedTotalInputTokensEarned = commify(
+    (+totalInputTokensEarned)?.toFixed(4),
+  );
 
   const percentYield = calculatePercentYield(
-    baseAssetIn,
-    totalTokensEarned,
-    baseAssetDecimals,
+    inputTokenAmountIn,
+    totalInputTokensEarned.toString(),
+    inputToken.decimals,
   );
+
   const roundedPercentYield = commify((+percentYield)?.toFixed(2));
-  const roundedPrincipalTokensOut = commify((+principalTokensOut)?.toFixed(4));
   return (
     <Callout
       className={tw(
@@ -53,7 +83,7 @@ export function FixedRatePreviewCallout(
       )}
     >
       <div
-        className={classNames(
+        className={classnames(
           reviewOrderGridRowClassName,
           tw(isDarkMode ? "text-green-400" : "text-green-600"),
         )}
@@ -61,15 +91,27 @@ export function FixedRatePreviewCallout(
         <div className={tw("col-span-2")}>{t`Total Rate Earned`}</div>
         <div className={tw("text-right")}>{`${roundedPercentYield}%`}</div>
       </div>
+
+      <div className={reviewOrderGridRowClassName}>
+        <div className={tw("col-span-2")}>{t`Total Tokens Receiving`}</div>
+        <div className={tw("text-right")}>{`${roundedPrincipalTokens}`}</div>
+      </div>
       <div className={reviewOrderGridRowClassName}>
         <div
           className={tw("col-span-2")}
-        >{t`Total ${props.baseAssetSymbol} Earned`}</div>
-        <div className={tw("text-right")}>{roundedTotalTokensEarned}</div>
+        >{t`Total ${baseToken.symbol.toUpperCase()} Earned`}</div>
+        <div
+          className={tw("text-right")}
+        >{`${roundedTotalBaseTokensEarned}`}</div>
       </div>
+
       <div className={reviewOrderGridRowClassName}>
-        <div className={tw("col-span-2")}>{t`Total Tokens Receiving`}</div>
-        <div className={tw("text-right")}>{`${roundedPrincipalTokensOut}`}</div>
+        <div
+          className={tw("col-span-2")}
+        >{t`Total ${inputToken.symbol.toUpperCase()} Earned`}</div>
+        <div
+          className={tw("text-right")}
+        >{`≈ ${roundedTotalInputTokensEarned}`}</div>
       </div>
     </Callout>
   );

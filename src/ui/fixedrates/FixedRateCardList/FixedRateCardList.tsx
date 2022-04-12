@@ -16,7 +16,7 @@ export function FixedRateCardList(props: FixedRateCardListProps): ReactElement {
   const { principalTokens } = props;
   const isLargeScreen = useIsTailwindLargeScreen();
 
-  const featureFlagZapPurchase = useFeatureFlag(FeatureFlag.ZAP_PURCHASE);
+  const featureFlagZapSwapCurve = useFeatureFlag(FeatureFlag.ZAP_SWAP_CURVE);
 
   return (
     <div className={tw("flex", "flex-col", "space-y-4", "items-center")}>
@@ -28,7 +28,7 @@ export function FixedRateCardList(props: FixedRateCardListProps): ReactElement {
           <FixedRateCardListHeader hide={!isLargeScreen} />
 
           {principalTokens.map((principalToken) => {
-            return featureFlagZapPurchase ? (
+            return featureFlagZapSwapCurve ? (
               <FixedRateCardWithZap
                 key={principalToken.address}
                 principalToken={principalToken}

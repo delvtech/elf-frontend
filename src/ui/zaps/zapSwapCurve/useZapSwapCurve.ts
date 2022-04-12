@@ -9,7 +9,7 @@ import { useCallback } from "react";
 import { UseMutationResult } from "react-query";
 import { AppToaster, makeErrorToast } from "ui/toaster/AppToaster/AppToaster";
 import { useSmartContractTransactionPersisted } from "ui/transactions/useSmartContractTransactionPersisted/useSmartContractTransactionPersisted";
-import { useSimulateZapSwapCurveBuy } from "./useSimulateZapSwapCurveBuy";
+import { useSimulateZapSwapCurveBuy } from "ui/zaps/zapSwapCurve/useSimulateZapSwapCurveBuy";
 
 export function useZapIn(
   account: string | null | undefined,

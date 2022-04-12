@@ -5,5 +5,5 @@ export function getMarketRateLabel(
   roundedTranchePrice: string,
   inputAssetSymbol: string,
 ): string {
-  return t`1 ${baseAssetSymbol} Principal Token ≈ ${roundedTranchePrice} ${inputAssetSymbol}`;
+  return t`≈ ${roundedTranchePrice} ${inputAssetSymbol} / ${baseAssetSymbol} Principal Token`;
 }

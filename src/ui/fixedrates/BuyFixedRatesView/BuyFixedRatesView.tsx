@@ -298,6 +298,7 @@ export function BuyFixedRatesView({
               >{t`Review Order`}</span>
 
               <FixedRatePreviewCallout
+                baseAssetSymbol={baseAssetSymbol}
                 principalTokensOut={principalTokensOut}
                 baseAssetIn={baseAssetInputValue}
                 baseAssetDecimals={baseAssetDecimals}

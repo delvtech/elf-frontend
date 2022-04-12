@@ -1,3 +1,3 @@
 export enum FeatureFlag {
-  ZAP_PURCHASE = "ZapPurchase",
+  ZAP_SWAP_CURVE = "ZapSwapCurve",
 }

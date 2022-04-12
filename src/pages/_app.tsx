@@ -44,6 +44,7 @@ import { getEthereumProviderLibrary } from "elf/wallets/providers";
 import { efiQueryClient } from "elf/queryClient";
 import { AddressesJson, lookupAddressKey } from "addresses/addresses";
 import { logAppVersion } from "logAppVersion";
+import { FeatureFlag } from "elf/featureFlag/featureFlag";
 
 logAppVersion();
 
@@ -52,6 +53,12 @@ function ElementUI({ Component, pageProps }: AppProps): ReactElement {
   useEffect(() => {
     window.addresses = AddressesJson;
     window.lookupAddressKey = lookupAddressKey;
+
+    if (typeof window !== "undefined") {
+      (window as any).setZapSwapCurve = () => {
+        window.localStorage.setItem(FeatureFlag.ZAP_SWAP_CURVE, "true");
+      };
+    }
   }, []);
   return (
     <Web3ReactProvider getLibrary={getEthereumProviderLibrary}>

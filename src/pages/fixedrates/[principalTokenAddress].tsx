@@ -50,7 +50,7 @@ export async function getStaticProps({
 export default function BuyFixedRates(
   props: BuyFixedRatesViewProps,
 ): ReactElement | null {
-  const flagToggleZapPurchase = useFeatureFlag(FeatureFlag.ZAP_PURCHASE);
+  const flagToggleZapPurchase = useFeatureFlag(FeatureFlag.ZAP_SWAP_CURVE);
   return flagToggleZapPurchase
     ? BuyFixedRatesViewWithZap(props)
     : BuyFixedRatesView(props);

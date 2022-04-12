@@ -4,6 +4,8 @@ import crvAlusdIcon from "static/logos/crvALUSD.png";
 import crvLusdIcon from "static/logos/svg/crvLUSD.svg?url";
 import crvMimIcon from "static/logos/crvMIM.png";
 import crvEursIcon from "static/logos/crvEURS.png";
+import stethIcon from "static/logos/steth.png";
+import alUsdIcon from "static/logos/alusd.png";
 import crvStethIcon from "static/logos/svg/crvSTETH.svg?url";
 import crvTricryptoIcon from "static/logos/svg/crvtricrypto.svg?url";
 import daiIcon from "static/logos/svg/DAI.svg?url";
@@ -11,7 +13,10 @@ import elementIconDark from "static/logos/svg/ELEMENT-dark.svg?url";
 import elementIcon from "static/logos/svg/ELEMENT-light.svg?url";
 import ethIconGrey from "static/logos/svg/ethereum-eth.svg?url";
 import lusdIcon from "static/logos/svg/LUSD.svg?url";
+import mimIcon from "static/logos/svg/mim.svg?url";
 import usdcIcon from "static/logos/svg/USDC.svg?url";
+import usdtIcon from "static/logos/svg/usdt.svg?url";
+import threeCrvIcon from "static/logos/svg/3crv.svg?url";
 import wethIcon from "static/logos/svg/WETH.svg?url";
 import wbtcIcon from "static/logos/svg/WBTC.svg?url";
 import { useDarkMode } from "ui/prefs/useDarkMode/useDarkMode";
@@ -27,6 +32,96 @@ export interface IconProps {
   width: number;
   className?: string | undefined;
   style?: CSSProperties | undefined;
+}
+
+export function StethIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"steth"}
+      className={className}
+      style={style}
+      src={stethIcon.src}
+      height={height}
+      width={width}
+    />
+  );
+}
+
+export function MimIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"mim"}
+      className={className}
+      style={style}
+      src={mimIcon}
+      height={height}
+      width={width}
+    />
+  );
+}
+
+export function AlusdIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"alusd"}
+      className={className}
+      style={style}
+      src={alUsdIcon.src}
+      height={height}
+      width={width}
+    />
+  );
+}
+
+export function ThreeCrvIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"3CRV"}
+      className={className}
+      style={style}
+      src={threeCrvIcon}
+      height={height}
+      width={width}
+    />
+  );
+}
+
+export function UsdtIcon({
+  height,
+  width,
+  className,
+  style,
+}: IconProps): ReactElement {
+  return (
+    <SvgIcon
+      alt={"USDT"}
+      className={className}
+      style={style}
+      src={usdtIcon}
+      height={height}
+      width={width}
+    />
+  );
 }
 
 export function CrvEursIcon({
