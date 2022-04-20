@@ -46,7 +46,7 @@ export const TermsBanner = (): ReactElement => {
           }}
           className="p-3 mt-2 mb-2 text-xs font-bold text-white whitespace-no-wrap bg-blue-500 cursor-pointer sm:mt-0 sm:mb-0 sm:mr-4 rounded-3xl hover:bg-blue-600"
         >
-          Accept Terms
+          {t`Accept Terms`}
         </div>
         <a
           target="_blank"
@@ -55,7 +55,7 @@ export const TermsBanner = (): ReactElement => {
           className="hover:no-underline"
         >
           <div className="p-3 text-xs font-bold text-blue-500 whitespace-no-wrap bg-white cursor-pointer rounded-3xl hover:bg-gray-300">
-            Learn More
+            {t`Learn More`}
           </div>
         </a>
       </div>
