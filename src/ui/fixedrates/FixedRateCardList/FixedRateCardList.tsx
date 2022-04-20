@@ -21,13 +21,12 @@ export function FixedRateCardList(props: FixedRateCardListProps): ReactElement {
       {process.browser && ( // required for blueprint to render correctly
         <>
           <FixedRateCardListHeader hide={!isLargeScreen} />
-
-          {principalTokens.map((principalToken) => {
+          {principalTokens.map((principalToken) => (
             <FixedRateCardWithZap
               key={principalToken.address}
               principalToken={principalToken}
-            />;
-          })}
+            />
+          ))}
         </>
       )}
     </div>
