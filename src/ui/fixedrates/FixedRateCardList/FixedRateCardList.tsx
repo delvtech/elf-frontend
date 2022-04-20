@@ -1,10 +1,7 @@
 import { PrincipalTokenInfo } from "@elementfi/tokenlist";
 import tw from "efi-tailwindcss-classnames";
-import { FeatureFlag } from "elf/featureFlag/featureFlag";
-import { useFeatureFlag } from "elf/featureFlag/useFeatureFlag";
 import { ReactElement } from "react";
 import { useIsTailwindLargeScreen } from "ui/base/mediaBreakpoints";
-import { FixedRateCard } from "ui/fixedrates/FixedRateCard/FixedRateCard";
 import { FixedRateCardWithZap } from "ui/fixedrates/FixedRateCard/FixedRateCardWithZap";
 import { FixedRateCardListHeader } from "./FixedRateCardListHeader";
 
@@ -16,8 +13,6 @@ export function FixedRateCardList(props: FixedRateCardListProps): ReactElement {
   const { principalTokens } = props;
   const isLargeScreen = useIsTailwindLargeScreen();
 
-  const featureFlagZapSwapCurve = useFeatureFlag(FeatureFlag.ZAP_SWAP_CURVE);
-
   return (
     <div className={tw("flex", "flex-col", "space-y-4", "items-center")}>
       {/* TODO:
@@ -28,17 +23,10 @@ export function FixedRateCardList(props: FixedRateCardListProps): ReactElement {
           <FixedRateCardListHeader hide={!isLargeScreen} />
 
           {principalTokens.map((principalToken) => {
-            return featureFlagZapSwapCurve ? (
-              <FixedRateCardWithZap
-                key={principalToken.address}
-                principalToken={principalToken}
-              />
-            ) : (
-              <FixedRateCard
-                key={principalToken.address}
-                principalToken={principalToken}
-              />
-            );
+            <FixedRateCardWithZap
+              key={principalToken.address}
+              principalToken={principalToken}
+            />;
           })}
         </>
       )}
