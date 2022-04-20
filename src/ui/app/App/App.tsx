@@ -27,6 +27,7 @@ import { getConnectorName } from "elf/wallets/connectors";
 
 import styles from "./App.module.css";
 import { ElementMinLogo } from "ui/base/ElementMinLogo";
+import { TermsBanner } from "../Banner/TermsBanner";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
@@ -39,8 +40,6 @@ const App: FC<AppProps> = ({ children }) => {
   const chainName = ChainNames[AddressesJson.chainId as ChainId];
   const { pass } = useAddressScreening(account);
   useForcedRedirect("/void", pass === false);
-
-  const [councilBannerOpen, setCouncilBannerOpen] = useState(true);
 
   const { isDarkMode, darkModeClassName, setDarkModeOff, setDarkModeOn } =
     useDarkMode();
@@ -72,34 +71,7 @@ const App: FC<AppProps> = ({ children }) => {
           deactivate={deactivate}
           hamburgerButton={<AppHamburgerButton />}
         />
-        {councilBannerOpen && (
-          <div className="flex flex-col items-center justify-center max-w-3xl p-2 m-auto mb-4 ml-4 mr-4 bg-gray-700 border-2 border-white rounded-lg sm:p-10 sm:h-12 sm:flex-row sm:min-w-min sm:m-auto">
-            <ElementMinLogo
-              className="hidden mt-6 -ml-12 sm:block"
-              height={110}
-              width={110}
-            />
-            <div className="max-w-lg mr-4 text-xs leading-5 text-center">
-              {t`Our Governance Protocol, Council, recently launched live on Mainnet. Check out the launch to see if you’re eligible to claim voting power or an ELF NFT.`}
-            </div>
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href={"https://gov.element.fi"}
-              className="hover:no-underline"
-            >
-              <div className="p-3 mt-2 mb-2 text-xs font-bold text-white whitespace-no-wrap bg-blue-500 cursor-pointer sm:mt-0 sm:mb-0 sm:mr-4 rounded-3xl hover:bg-blue-600">
-                Visit Council
-              </div>
-            </a>
-            <div
-              className="p-3 text-xs font-bold text-blue-500 whitespace-no-wrap bg-white cursor-pointer rounded-3xl hover:bg-gray-300"
-              onClick={() => setCouncilBannerOpen(false)}
-            >
-              Close
-            </div>
-          </div>
-        )}
+        <TermsBanner />
         {children}
       </div>
 
