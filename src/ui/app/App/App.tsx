@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useState } from "react";
+import React, { FC, Fragment } from "react";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import { Button, FocusStyleManager, H1, Overlay } from "@blueprintjs/core";
@@ -26,8 +26,7 @@ import { ChainId, ChainNames } from "base/ethereum/ethereum";
 import { getConnectorName } from "elf/wallets/connectors";
 
 import styles from "./App.module.css";
-import { ElementMinLogo } from "ui/base/ElementMinLogo";
-import { TermsBanner } from "../Banner/TermsBanner";
+import { TermsBanner } from "ui/app/Banner/TermsBanner";
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
